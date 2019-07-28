@@ -183,6 +183,7 @@ Partial Class AboutBx
         Me.MinimizeBox = False
         Me.Name = "AboutBx"
         Me.Padding = New System.Windows.Forms.Padding(9)
+        Me.ShowIcon = False
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "AboutBx"

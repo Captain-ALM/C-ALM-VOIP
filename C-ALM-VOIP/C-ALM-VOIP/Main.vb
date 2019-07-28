@@ -56,6 +56,7 @@ Module Main
         AddHandler worker.OnPumpException, AddressOf ope
         worker.addFormInstance(New AboutBx(worker))
         worker.addFormInstance(New MainProgram(worker))
+        worker.addFormInstance(New Configure(worker))
     End Sub
 
     Public Sub runtime()
