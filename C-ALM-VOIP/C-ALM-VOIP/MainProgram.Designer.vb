@@ -36,42 +36,45 @@ Partial Class MainProgram
         Me.SplitContainerTB = New System.Windows.Forms.SplitContainer()
         Me.SplitContainerLR = New System.Windows.Forms.SplitContainer()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
-        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel4 = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
-        Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.TableLayoutPanel7 = New System.Windows.Forms.TableLayoutPanel()
-        Me.butcladd = New System.Windows.Forms.Button()
-        Me.butclrem = New System.Windows.Forms.Button()
-        Me.butclcreatec = New System.Windows.Forms.Button()
+        Me.butclviewc = New System.Windows.Forms.Button()
         Me.butclccls = New System.Windows.Forms.Button()
-        Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
-        Me.butcl2ccls = New System.Windows.Forms.Button()
-        Me.butcl2editc = New System.Windows.Forms.Button()
-        Me.butcl2rem = New System.Windows.Forms.Button()
-        Me.butcl2add = New System.Windows.Forms.Button()
-        Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
-        Me.butscunmutes = New System.Windows.Forms.Button()
-        Me.butscmutes = New System.Windows.Forms.Button()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.TrackBarvol = New System.Windows.Forms.TrackBar()
-        Me.NumericUpDownvol = New System.Windows.Forms.NumericUpDown()
+        Me.butclcreatec = New System.Windows.Forms.Button()
+        Me.butclrem = New System.Windows.Forms.Button()
+        Me.butcladd = New System.Windows.Forms.Button()
         Me.ListViewcl = New System.Windows.Forms.ListView()
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ListViewcl2 = New System.Windows.Forms.ListView()
-        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.GroupBox3 = New System.Windows.Forms.GroupBox()
+        Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
+        Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
+        Me.butcl2cc = New System.Windows.Forms.Button()
+        Me.butcl2ccls = New System.Windows.Forms.Button()
+        Me.butcl2editc = New System.Windows.Forms.Button()
+        Me.butcl2rem = New System.Windows.Forms.Button()
+        Me.butcl2add = New System.Windows.Forms.Button()
+        Me.GroupBox4 = New System.Windows.Forms.GroupBox()
+        Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.ListViewsc = New System.Windows.Forms.ListView()
         Me.ColumnHeader8 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader9 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader10 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader11 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader10 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader12 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.butscunmutes = New System.Windows.Forms.Button()
+        Me.butscmutes = New System.Windows.Forms.Button()
+        Me.TrackBarvol = New System.Windows.Forms.TrackBar()
+        Me.NumericUpDownvol = New System.Windows.Forms.NumericUpDown()
+        Me.ColumnHeader13 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ListViewcl2 = New System.Windows.Forms.ListView()
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -85,13 +88,13 @@ Partial Class MainProgram
         Me.SplitContainerLR.Panel2.SuspendLayout()
         Me.SplitContainerLR.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
-        Me.GroupBox3.SuspendLayout()
-        Me.GroupBox4.SuspendLayout()
         Me.TableLayoutPanel4.SuspendLayout()
-        Me.TableLayoutPanel5.SuspendLayout()
-        Me.TableLayoutPanel6.SuspendLayout()
         Me.TableLayoutPanel7.SuspendLayout()
+        Me.GroupBox3.SuspendLayout()
+        Me.TableLayoutPanel5.SuspendLayout()
         Me.TableLayoutPanel8.SuspendLayout()
+        Me.GroupBox4.SuspendLayout()
+        Me.TableLayoutPanel6.SuspendLayout()
         Me.TableLayoutPanel9.SuspendLayout()
         CType(Me.TrackBarvol, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.NumericUpDownvol, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -128,7 +131,7 @@ Partial Class MainProgram
         Me.TableLayoutPanel2.Name = "TableLayoutPanel2"
         Me.TableLayoutPanel2.RowCount = 1
         Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 34.0!))
+        Me.TableLayoutPanel2.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54.0!))
         Me.TableLayoutPanel2.Size = New System.Drawing.Size(782, 54)
         Me.TableLayoutPanel2.TabIndex = 0
         '
@@ -279,30 +282,6 @@ Partial Class MainProgram
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "Client List"
         '
-        'GroupBox3
-        '
-        Me.GroupBox3.Controls.Add(Me.TableLayoutPanel5)
-        Me.GroupBox3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.GroupBox3.Location = New System.Drawing.Point(0, 0)
-        Me.GroupBox3.Name = "GroupBox3"
-        Me.GroupBox3.Padding = New System.Windows.Forms.Padding(1)
-        Me.GroupBox3.Size = New System.Drawing.Size(375, 198)
-        Me.GroupBox3.TabIndex = 0
-        Me.GroupBox3.TabStop = False
-        Me.GroupBox3.Text = "Contact List"
-        '
-        'GroupBox4
-        '
-        Me.GroupBox4.Controls.Add(Me.TableLayoutPanel6)
-        Me.GroupBox4.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.GroupBox4.Location = New System.Drawing.Point(0, 0)
-        Me.GroupBox4.Name = "GroupBox4"
-        Me.GroupBox4.Padding = New System.Windows.Forms.Padding(1)
-        Me.GroupBox4.Size = New System.Drawing.Size(782, 188)
-        Me.GroupBox4.TabIndex = 0
-        Me.GroupBox4.TabStop = False
-        Me.GroupBox4.Text = "Stream Control"
-        '
         'TableLayoutPanel4
         '
         Me.TableLayoutPanel4.ColumnCount = 1
@@ -320,48 +299,16 @@ Partial Class MainProgram
         Me.TableLayoutPanel4.Size = New System.Drawing.Size(401, 183)
         Me.TableLayoutPanel4.TabIndex = 0
         '
-        'TableLayoutPanel5
-        '
-        Me.TableLayoutPanel5.ColumnCount = 1
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel5.Controls.Add(Me.ListViewcl2, 0, 1)
-        Me.TableLayoutPanel5.Controls.Add(Me.TableLayoutPanel8, 0, 0)
-        Me.TableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel5.Location = New System.Drawing.Point(1, 14)
-        Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(1)
-        Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
-        Me.TableLayoutPanel5.RowCount = 2
-        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.0!))
-        Me.TableLayoutPanel5.Size = New System.Drawing.Size(373, 183)
-        Me.TableLayoutPanel5.TabIndex = 1
-        '
-        'TableLayoutPanel6
-        '
-        Me.TableLayoutPanel6.ColumnCount = 1
-        Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel6.Controls.Add(Me.ListViewsc, 0, 0)
-        Me.TableLayoutPanel6.Controls.Add(Me.TableLayoutPanel9, 0, 1)
-        Me.TableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel6.Location = New System.Drawing.Point(1, 14)
-        Me.TableLayoutPanel6.Margin = New System.Windows.Forms.Padding(1)
-        Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
-        Me.TableLayoutPanel6.RowCount = 2
-        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.0!))
-        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel6.Size = New System.Drawing.Size(780, 173)
-        Me.TableLayoutPanel6.TabIndex = 1
-        '
         'TableLayoutPanel7
         '
-        Me.TableLayoutPanel7.ColumnCount = 4
-        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel7.Controls.Add(Me.butclccls, 3, 0)
+        Me.TableLayoutPanel7.ColumnCount = 5
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel7.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel7.Controls.Add(Me.butclviewc, 3, 0)
+        Me.TableLayoutPanel7.Controls.Add(Me.butclccls, 4, 0)
         Me.TableLayoutPanel7.Controls.Add(Me.butclcreatec, 2, 0)
         Me.TableLayoutPanel7.Controls.Add(Me.butclrem, 1, 0)
         Me.TableLayoutPanel7.Controls.Add(Me.butcladd, 0, 0)
@@ -371,9 +318,56 @@ Partial Class MainProgram
         Me.TableLayoutPanel7.Name = "TableLayoutPanel7"
         Me.TableLayoutPanel7.RowCount = 1
         Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel7.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel7.Size = New System.Drawing.Size(399, 34)
         Me.TableLayoutPanel7.TabIndex = 0
+        '
+        'butclviewc
+        '
+        Me.butclviewc.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butclviewc.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butclviewc.Location = New System.Drawing.Point(237, 0)
+        Me.butclviewc.Margin = New System.Windows.Forms.Padding(0)
+        Me.butclviewc.Name = "butclviewc"
+        Me.butclviewc.Size = New System.Drawing.Size(79, 34)
+        Me.butclviewc.TabIndex = 4
+        Me.butclviewc.Text = "View Client"
+        Me.butclviewc.UseVisualStyleBackColor = True
+        '
+        'butclccls
+        '
+        Me.butclccls.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butclccls.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butclccls.Location = New System.Drawing.Point(316, 0)
+        Me.butclccls.Margin = New System.Windows.Forms.Padding(0)
+        Me.butclccls.Name = "butclccls"
+        Me.butclccls.Size = New System.Drawing.Size(83, 34)
+        Me.butclccls.TabIndex = 3
+        Me.butclccls.Text = "Clear Clients"
+        Me.butclccls.UseVisualStyleBackColor = True
+        '
+        'butclcreatec
+        '
+        Me.butclcreatec.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butclcreatec.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butclcreatec.Location = New System.Drawing.Point(158, 0)
+        Me.butclcreatec.Margin = New System.Windows.Forms.Padding(0)
+        Me.butclcreatec.Name = "butclcreatec"
+        Me.butclcreatec.Size = New System.Drawing.Size(79, 34)
+        Me.butclcreatec.TabIndex = 2
+        Me.butclcreatec.Text = "Create Contact"
+        Me.butclcreatec.UseVisualStyleBackColor = True
+        '
+        'butclrem
+        '
+        Me.butclrem.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butclrem.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butclrem.Location = New System.Drawing.Point(79, 0)
+        Me.butclrem.Margin = New System.Windows.Forms.Padding(0)
+        Me.butclrem.Name = "butclrem"
+        Me.butclrem.Size = New System.Drawing.Size(79, 34)
+        Me.butclrem.TabIndex = 1
+        Me.butclrem.Text = "Remove Client"
+        Me.butclrem.UseVisualStyleBackColor = True
         '
         'butcladd
         '
@@ -381,189 +375,10 @@ Partial Class MainProgram
         Me.butcladd.Location = New System.Drawing.Point(0, 0)
         Me.butcladd.Margin = New System.Windows.Forms.Padding(0)
         Me.butcladd.Name = "butcladd"
-        Me.butcladd.Size = New System.Drawing.Size(99, 34)
+        Me.butcladd.Size = New System.Drawing.Size(79, 34)
         Me.butcladd.TabIndex = 0
         Me.butcladd.Text = "Add Client"
         Me.butcladd.UseVisualStyleBackColor = True
-        '
-        'butclrem
-        '
-        Me.butclrem.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butclrem.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.butclrem.Location = New System.Drawing.Point(99, 0)
-        Me.butclrem.Margin = New System.Windows.Forms.Padding(0)
-        Me.butclrem.Name = "butclrem"
-        Me.butclrem.Size = New System.Drawing.Size(99, 34)
-        Me.butclrem.TabIndex = 1
-        Me.butclrem.Text = "Remove Client"
-        Me.butclrem.UseVisualStyleBackColor = True
-        '
-        'butclcreatec
-        '
-        Me.butclcreatec.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butclcreatec.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.butclcreatec.Location = New System.Drawing.Point(198, 0)
-        Me.butclcreatec.Margin = New System.Windows.Forms.Padding(0)
-        Me.butclcreatec.Name = "butclcreatec"
-        Me.butclcreatec.Size = New System.Drawing.Size(99, 34)
-        Me.butclcreatec.TabIndex = 2
-        Me.butclcreatec.Text = "Create Contact"
-        Me.butclcreatec.UseVisualStyleBackColor = True
-        '
-        'butclccls
-        '
-        Me.butclccls.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butclccls.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.butclccls.Location = New System.Drawing.Point(297, 0)
-        Me.butclccls.Margin = New System.Windows.Forms.Padding(0)
-        Me.butclccls.Name = "butclccls"
-        Me.butclccls.Size = New System.Drawing.Size(102, 34)
-        Me.butclccls.TabIndex = 3
-        Me.butclccls.Text = "Clear Clients"
-        Me.butclccls.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanel8
-        '
-        Me.TableLayoutPanel8.ColumnCount = 4
-        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.TableLayoutPanel8.Controls.Add(Me.butcl2ccls, 3, 0)
-        Me.TableLayoutPanel8.Controls.Add(Me.butcl2editc, 2, 0)
-        Me.TableLayoutPanel8.Controls.Add(Me.butcl2rem, 1, 0)
-        Me.TableLayoutPanel8.Controls.Add(Me.butcl2add, 0, 0)
-        Me.TableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel8.Location = New System.Drawing.Point(1, 1)
-        Me.TableLayoutPanel8.Margin = New System.Windows.Forms.Padding(1)
-        Me.TableLayoutPanel8.Name = "TableLayoutPanel8"
-        Me.TableLayoutPanel8.RowCount = 1
-        Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.TableLayoutPanel8.Size = New System.Drawing.Size(371, 34)
-        Me.TableLayoutPanel8.TabIndex = 1
-        '
-        'butcl2ccls
-        '
-        Me.butcl2ccls.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butcl2ccls.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.butcl2ccls.Location = New System.Drawing.Point(276, 0)
-        Me.butcl2ccls.Margin = New System.Windows.Forms.Padding(0)
-        Me.butcl2ccls.Name = "butcl2ccls"
-        Me.butcl2ccls.Size = New System.Drawing.Size(95, 34)
-        Me.butcl2ccls.TabIndex = 3
-        Me.butcl2ccls.Text = "Clear Contacts"
-        Me.butcl2ccls.UseVisualStyleBackColor = True
-        '
-        'butcl2editc
-        '
-        Me.butcl2editc.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butcl2editc.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.butcl2editc.Location = New System.Drawing.Point(184, 0)
-        Me.butcl2editc.Margin = New System.Windows.Forms.Padding(0)
-        Me.butcl2editc.Name = "butcl2editc"
-        Me.butcl2editc.Size = New System.Drawing.Size(92, 34)
-        Me.butcl2editc.TabIndex = 2
-        Me.butcl2editc.Text = "Edit Contact"
-        Me.butcl2editc.UseVisualStyleBackColor = True
-        '
-        'butcl2rem
-        '
-        Me.butcl2rem.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butcl2rem.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.butcl2rem.Location = New System.Drawing.Point(92, 0)
-        Me.butcl2rem.Margin = New System.Windows.Forms.Padding(0)
-        Me.butcl2rem.Name = "butcl2rem"
-        Me.butcl2rem.Size = New System.Drawing.Size(92, 34)
-        Me.butcl2rem.TabIndex = 1
-        Me.butcl2rem.Text = "Remove Contact"
-        Me.butcl2rem.UseVisualStyleBackColor = True
-        '
-        'butcl2add
-        '
-        Me.butcl2add.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butcl2add.Location = New System.Drawing.Point(0, 0)
-        Me.butcl2add.Margin = New System.Windows.Forms.Padding(0)
-        Me.butcl2add.Name = "butcl2add"
-        Me.butcl2add.Size = New System.Drawing.Size(92, 34)
-        Me.butcl2add.TabIndex = 0
-        Me.butcl2add.Text = "Add Contact"
-        Me.butcl2add.UseVisualStyleBackColor = True
-        '
-        'TableLayoutPanel9
-        '
-        Me.TableLayoutPanel9.ColumnCount = 5
-        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.TableLayoutPanel9.Controls.Add(Me.Label2, 2, 0)
-        Me.TableLayoutPanel9.Controls.Add(Me.butscunmutes, 1, 0)
-        Me.TableLayoutPanel9.Controls.Add(Me.butscmutes, 0, 0)
-        Me.TableLayoutPanel9.Controls.Add(Me.TrackBarvol, 3, 0)
-        Me.TableLayoutPanel9.Controls.Add(Me.NumericUpDownvol, 4, 0)
-        Me.TableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TableLayoutPanel9.Location = New System.Drawing.Point(1, 139)
-        Me.TableLayoutPanel9.Margin = New System.Windows.Forms.Padding(1)
-        Me.TableLayoutPanel9.Name = "TableLayoutPanel9"
-        Me.TableLayoutPanel9.RowCount = 1
-        Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.TableLayoutPanel9.Size = New System.Drawing.Size(778, 33)
-        Me.TableLayoutPanel9.TabIndex = 1
-        '
-        'butscunmutes
-        '
-        Me.butscunmutes.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butscunmutes.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.butscunmutes.Location = New System.Drawing.Point(155, 0)
-        Me.butscunmutes.Margin = New System.Windows.Forms.Padding(0)
-        Me.butscunmutes.Name = "butscunmutes"
-        Me.butscunmutes.Size = New System.Drawing.Size(155, 33)
-        Me.butscunmutes.TabIndex = 1
-        Me.butscunmutes.Text = "Un-Mute Stream"
-        Me.butscunmutes.UseVisualStyleBackColor = True
-        '
-        'butscmutes
-        '
-        Me.butscmutes.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.butscmutes.Location = New System.Drawing.Point(0, 0)
-        Me.butscmutes.Margin = New System.Windows.Forms.Padding(0)
-        Me.butscmutes.Name = "butscmutes"
-        Me.butscmutes.Size = New System.Drawing.Size(155, 33)
-        Me.butscmutes.TabIndex = 0
-        Me.butscmutes.Text = "Mute Stream"
-        Me.butscmutes.UseVisualStyleBackColor = True
-        '
-        'Label2
-        '
-        Me.Label2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Label2.Location = New System.Drawing.Point(313, 0)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(149, 33)
-        Me.Label2.TabIndex = 4
-        Me.Label2.Text = "Volume:"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'TrackBarvol
-        '
-        Me.TrackBarvol.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.TrackBarvol.Location = New System.Drawing.Point(468, 3)
-        Me.TrackBarvol.Maximum = 100
-        Me.TrackBarvol.Name = "TrackBarvol"
-        Me.TrackBarvol.Size = New System.Drawing.Size(149, 27)
-        Me.TrackBarvol.TabIndex = 5
-        Me.TrackBarvol.TickFrequency = 10
-        Me.TrackBarvol.Value = 100
-        '
-        'NumericUpDownvol
-        '
-        Me.NumericUpDownvol.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.NumericUpDownvol.Location = New System.Drawing.Point(623, 6)
-        Me.NumericUpDownvol.Name = "NumericUpDownvol"
-        Me.NumericUpDownvol.Size = New System.Drawing.Size(152, 20)
-        Me.NumericUpDownvol.TabIndex = 6
-        Me.NumericUpDownvol.Value = New Decimal(New Integer() {100, 0, 0, 0})
         '
         'ListViewcl
         '
@@ -596,31 +411,144 @@ Partial Class MainProgram
         Me.ColumnHeader4.Text = "Client Connected"
         Me.ColumnHeader4.Width = 120
         '
-        'ListViewcl2
+        'GroupBox3
         '
-        Me.ListViewcl2.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader7})
-        Me.ListViewcl2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListViewcl2.Location = New System.Drawing.Point(3, 39)
-        Me.ListViewcl2.Name = "ListViewcl2"
-        Me.ListViewcl2.Size = New System.Drawing.Size(367, 141)
-        Me.ListViewcl2.TabIndex = 2
-        Me.ListViewcl2.UseCompatibleStateImageBehavior = False
-        Me.ListViewcl2.View = System.Windows.Forms.View.Details
+        Me.GroupBox3.Controls.Add(Me.TableLayoutPanel5)
+        Me.GroupBox3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.GroupBox3.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox3.Name = "GroupBox3"
+        Me.GroupBox3.Padding = New System.Windows.Forms.Padding(1)
+        Me.GroupBox3.Size = New System.Drawing.Size(375, 198)
+        Me.GroupBox3.TabIndex = 0
+        Me.GroupBox3.TabStop = False
+        Me.GroupBox3.Text = "Contact List"
         '
-        'ColumnHeader5
+        'TableLayoutPanel5
         '
-        Me.ColumnHeader5.Text = "Contact Address"
-        Me.ColumnHeader5.Width = 120
+        Me.TableLayoutPanel5.ColumnCount = 1
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel5.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel5.Controls.Add(Me.ListViewcl2, 0, 1)
+        Me.TableLayoutPanel5.Controls.Add(Me.TableLayoutPanel8, 0, 0)
+        Me.TableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel5.Location = New System.Drawing.Point(1, 14)
+        Me.TableLayoutPanel5.Margin = New System.Windows.Forms.Padding(1)
+        Me.TableLayoutPanel5.Name = "TableLayoutPanel5"
+        Me.TableLayoutPanel5.RowCount = 2
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.0!))
+        Me.TableLayoutPanel5.Size = New System.Drawing.Size(373, 183)
+        Me.TableLayoutPanel5.TabIndex = 1
         '
-        'ColumnHeader6
+        'TableLayoutPanel8
         '
-        Me.ColumnHeader6.Text = "Contact Port"
-        Me.ColumnHeader6.Width = 90
+        Me.TableLayoutPanel8.ColumnCount = 5
+        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel8.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel8.Controls.Add(Me.butcl2cc, 2, 0)
+        Me.TableLayoutPanel8.Controls.Add(Me.butcl2ccls, 4, 0)
+        Me.TableLayoutPanel8.Controls.Add(Me.butcl2editc, 3, 0)
+        Me.TableLayoutPanel8.Controls.Add(Me.butcl2rem, 1, 0)
+        Me.TableLayoutPanel8.Controls.Add(Me.butcl2add, 0, 0)
+        Me.TableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel8.Location = New System.Drawing.Point(1, 1)
+        Me.TableLayoutPanel8.Margin = New System.Windows.Forms.Padding(1)
+        Me.TableLayoutPanel8.Name = "TableLayoutPanel8"
+        Me.TableLayoutPanel8.RowCount = 1
+        Me.TableLayoutPanel8.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel8.Size = New System.Drawing.Size(371, 34)
+        Me.TableLayoutPanel8.TabIndex = 1
         '
-        'ColumnHeader7
+        'butcl2cc
         '
-        Me.ColumnHeader7.Text = "Contact Type"
-        Me.ColumnHeader7.Width = 90
+        Me.butcl2cc.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butcl2cc.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butcl2cc.Location = New System.Drawing.Point(148, 0)
+        Me.butcl2cc.Margin = New System.Windows.Forms.Padding(0)
+        Me.butcl2cc.Name = "butcl2cc"
+        Me.butcl2cc.Size = New System.Drawing.Size(74, 34)
+        Me.butcl2cc.TabIndex = 4
+        Me.butcl2cc.Text = "Create Client"
+        Me.butcl2cc.UseVisualStyleBackColor = True
+        '
+        'butcl2ccls
+        '
+        Me.butcl2ccls.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butcl2ccls.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butcl2ccls.Location = New System.Drawing.Point(296, 0)
+        Me.butcl2ccls.Margin = New System.Windows.Forms.Padding(0)
+        Me.butcl2ccls.Name = "butcl2ccls"
+        Me.butcl2ccls.Size = New System.Drawing.Size(75, 34)
+        Me.butcl2ccls.TabIndex = 3
+        Me.butcl2ccls.Text = "Clear Contacts"
+        Me.butcl2ccls.UseVisualStyleBackColor = True
+        '
+        'butcl2editc
+        '
+        Me.butcl2editc.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butcl2editc.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butcl2editc.Location = New System.Drawing.Point(222, 0)
+        Me.butcl2editc.Margin = New System.Windows.Forms.Padding(0)
+        Me.butcl2editc.Name = "butcl2editc"
+        Me.butcl2editc.Size = New System.Drawing.Size(74, 34)
+        Me.butcl2editc.TabIndex = 2
+        Me.butcl2editc.Text = "Edit Contact"
+        Me.butcl2editc.UseVisualStyleBackColor = True
+        '
+        'butcl2rem
+        '
+        Me.butcl2rem.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butcl2rem.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butcl2rem.Location = New System.Drawing.Point(74, 0)
+        Me.butcl2rem.Margin = New System.Windows.Forms.Padding(0)
+        Me.butcl2rem.Name = "butcl2rem"
+        Me.butcl2rem.Size = New System.Drawing.Size(74, 34)
+        Me.butcl2rem.TabIndex = 1
+        Me.butcl2rem.Text = "Remove Contact"
+        Me.butcl2rem.UseVisualStyleBackColor = True
+        '
+        'butcl2add
+        '
+        Me.butcl2add.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butcl2add.Location = New System.Drawing.Point(0, 0)
+        Me.butcl2add.Margin = New System.Windows.Forms.Padding(0)
+        Me.butcl2add.Name = "butcl2add"
+        Me.butcl2add.Size = New System.Drawing.Size(74, 34)
+        Me.butcl2add.TabIndex = 0
+        Me.butcl2add.Text = "Add Contact"
+        Me.butcl2add.UseVisualStyleBackColor = True
+        '
+        'GroupBox4
+        '
+        Me.GroupBox4.Controls.Add(Me.TableLayoutPanel6)
+        Me.GroupBox4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.GroupBox4.Location = New System.Drawing.Point(0, 0)
+        Me.GroupBox4.Name = "GroupBox4"
+        Me.GroupBox4.Padding = New System.Windows.Forms.Padding(1)
+        Me.GroupBox4.Size = New System.Drawing.Size(782, 188)
+        Me.GroupBox4.TabIndex = 0
+        Me.GroupBox4.TabStop = False
+        Me.GroupBox4.Text = "Stream Control"
+        '
+        'TableLayoutPanel6
+        '
+        Me.TableLayoutPanel6.ColumnCount = 1
+        Me.TableLayoutPanel6.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel6.Controls.Add(Me.ListViewsc, 0, 0)
+        Me.TableLayoutPanel6.Controls.Add(Me.TableLayoutPanel9, 0, 1)
+        Me.TableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel6.Location = New System.Drawing.Point(1, 14)
+        Me.TableLayoutPanel6.Margin = New System.Windows.Forms.Padding(1)
+        Me.TableLayoutPanel6.Name = "TableLayoutPanel6"
+        Me.TableLayoutPanel6.RowCount = 2
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.0!))
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel6.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.TableLayoutPanel6.Size = New System.Drawing.Size(780, 173)
+        Me.TableLayoutPanel6.TabIndex = 1
         '
         'ListViewsc
         '
@@ -643,20 +571,126 @@ Partial Class MainProgram
         Me.ColumnHeader9.Text = "Client Port"
         Me.ColumnHeader9.Width = 90
         '
-        'ColumnHeader10
-        '
-        Me.ColumnHeader10.Text = "Client Buffer (Sec)"
-        Me.ColumnHeader10.Width = 120
-        '
         'ColumnHeader11
         '
         Me.ColumnHeader11.Text = "Status"
         Me.ColumnHeader11.Width = 90
         '
+        'ColumnHeader10
+        '
+        Me.ColumnHeader10.Text = "Client Buffer (Sec)"
+        Me.ColumnHeader10.Width = 120
+        '
         'ColumnHeader12
         '
         Me.ColumnHeader12.Text = "Volume"
         Me.ColumnHeader12.Width = 90
+        '
+        'TableLayoutPanel9
+        '
+        Me.TableLayoutPanel9.ColumnCount = 5
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel9.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.TableLayoutPanel9.Controls.Add(Me.Label2, 2, 0)
+        Me.TableLayoutPanel9.Controls.Add(Me.butscunmutes, 1, 0)
+        Me.TableLayoutPanel9.Controls.Add(Me.butscmutes, 0, 0)
+        Me.TableLayoutPanel9.Controls.Add(Me.TrackBarvol, 3, 0)
+        Me.TableLayoutPanel9.Controls.Add(Me.NumericUpDownvol, 4, 0)
+        Me.TableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TableLayoutPanel9.Location = New System.Drawing.Point(1, 139)
+        Me.TableLayoutPanel9.Margin = New System.Windows.Forms.Padding(1)
+        Me.TableLayoutPanel9.Name = "TableLayoutPanel9"
+        Me.TableLayoutPanel9.RowCount = 1
+        Me.TableLayoutPanel9.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
+        Me.TableLayoutPanel9.Size = New System.Drawing.Size(778, 33)
+        Me.TableLayoutPanel9.TabIndex = 1
+        '
+        'Label2
+        '
+        Me.Label2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Label2.Location = New System.Drawing.Point(313, 0)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(149, 33)
+        Me.Label2.TabIndex = 4
+        Me.Label2.Text = "Volume:"
+        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'butscunmutes
+        '
+        Me.butscunmutes.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butscunmutes.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.butscunmutes.Location = New System.Drawing.Point(155, 0)
+        Me.butscunmutes.Margin = New System.Windows.Forms.Padding(0)
+        Me.butscunmutes.Name = "butscunmutes"
+        Me.butscunmutes.Size = New System.Drawing.Size(155, 33)
+        Me.butscunmutes.TabIndex = 1
+        Me.butscunmutes.Text = "Un-Mute Stream"
+        Me.butscunmutes.UseVisualStyleBackColor = True
+        '
+        'butscmutes
+        '
+        Me.butscmutes.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.butscmutes.Location = New System.Drawing.Point(0, 0)
+        Me.butscmutes.Margin = New System.Windows.Forms.Padding(0)
+        Me.butscmutes.Name = "butscmutes"
+        Me.butscmutes.Size = New System.Drawing.Size(155, 33)
+        Me.butscmutes.TabIndex = 0
+        Me.butscmutes.Text = "Mute Stream"
+        Me.butscmutes.UseVisualStyleBackColor = True
+        '
+        'TrackBarvol
+        '
+        Me.TrackBarvol.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.TrackBarvol.Location = New System.Drawing.Point(468, 3)
+        Me.TrackBarvol.Maximum = 100
+        Me.TrackBarvol.Name = "TrackBarvol"
+        Me.TrackBarvol.Size = New System.Drawing.Size(149, 27)
+        Me.TrackBarvol.TabIndex = 5
+        Me.TrackBarvol.TickFrequency = 10
+        Me.TrackBarvol.Value = 100
+        '
+        'NumericUpDownvol
+        '
+        Me.NumericUpDownvol.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.NumericUpDownvol.Location = New System.Drawing.Point(623, 6)
+        Me.NumericUpDownvol.Name = "NumericUpDownvol"
+        Me.NumericUpDownvol.Size = New System.Drawing.Size(152, 20)
+        Me.NumericUpDownvol.TabIndex = 6
+        Me.NumericUpDownvol.Value = New Decimal(New Integer() {100, 0, 0, 0})
+        '
+        'ColumnHeader13
+        '
+        Me.ColumnHeader13.Text = "Contact Name"
+        Me.ColumnHeader13.Width = 90
+        '
+        'ColumnHeader5
+        '
+        Me.ColumnHeader5.Text = "Contact Address"
+        Me.ColumnHeader5.Width = 120
+        '
+        'ColumnHeader6
+        '
+        Me.ColumnHeader6.Text = "Contact Port"
+        Me.ColumnHeader6.Width = 90
+        '
+        'ColumnHeader7
+        '
+        Me.ColumnHeader7.Text = "Contact Type"
+        Me.ColumnHeader7.Width = 90
+        '
+        'ListViewcl2
+        '
+        Me.ListViewcl2.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader13, Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader7})
+        Me.ListViewcl2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListViewcl2.Location = New System.Drawing.Point(3, 39)
+        Me.ListViewcl2.Name = "ListViewcl2"
+        Me.ListViewcl2.Size = New System.Drawing.Size(367, 141)
+        Me.ListViewcl2.TabIndex = 2
+        Me.ListViewcl2.UseCompatibleStateImageBehavior = False
+        Me.ListViewcl2.View = System.Windows.Forms.View.Details
         '
         'MainProgram
         '
@@ -681,13 +715,13 @@ Partial Class MainProgram
         CType(Me.SplitContainerLR, System.ComponentModel.ISupportInitialize).EndInit()
         Me.SplitContainerLR.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
-        Me.GroupBox3.ResumeLayout(False)
-        Me.GroupBox4.ResumeLayout(False)
         Me.TableLayoutPanel4.ResumeLayout(False)
-        Me.TableLayoutPanel5.ResumeLayout(False)
-        Me.TableLayoutPanel6.ResumeLayout(False)
         Me.TableLayoutPanel7.ResumeLayout(False)
+        Me.GroupBox3.ResumeLayout(False)
+        Me.TableLayoutPanel5.ResumeLayout(False)
         Me.TableLayoutPanel8.ResumeLayout(False)
+        Me.GroupBox4.ResumeLayout(False)
+        Me.TableLayoutPanel6.ResumeLayout(False)
         Me.TableLayoutPanel9.ResumeLayout(False)
         Me.TableLayoutPanel9.PerformLayout()
         CType(Me.TrackBarvol, System.ComponentModel.ISupportInitialize).EndInit()
@@ -734,14 +768,17 @@ Partial Class MainProgram
     Friend WithEvents ColumnHeader2 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ListViewcl2 As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ListViewsc As System.Windows.Forms.ListView
     Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader11 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader10 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader12 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents butcl2cc As System.Windows.Forms.Button
+    Friend WithEvents butclviewc As System.Windows.Forms.Button
+    Friend WithEvents ListViewcl2 As System.Windows.Forms.ListView
+    Friend WithEvents ColumnHeader13 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
 End Class
