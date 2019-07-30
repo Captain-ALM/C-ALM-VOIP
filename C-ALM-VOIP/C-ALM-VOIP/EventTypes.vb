@@ -7,4 +7,5 @@ Friend Class ETs
     Public Shared Scroll As New EventType("Scroll")
     Public Shared CheckedChanged As New EventType("CheckedChanged")
     Public Shared TextChanged As New EventType("TextChanged")
+    Public Shared Leave As New EventType("Leave")
 End Class

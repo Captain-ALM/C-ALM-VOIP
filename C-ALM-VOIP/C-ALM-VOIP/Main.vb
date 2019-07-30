@@ -16,7 +16,6 @@ Module Main
     Public programPath As String = programAssembly.Location
     Public execdir As String = Path.GetDirectoryName(programPath)
     Public worker As WorkerPump = Nothing
-    Private wa As Boolean = True
 
     Public Sub main()
         Try
@@ -52,16 +51,21 @@ Module Main
         Catch ex As IOException
         End Try
 
-        worker = New WorkerPump() With {.ManageControlEnablement = False}
+        worker = New WorkerPump() With {.ManageControlEnablement = True}
         AddHandler worker.OnPumpException, AddressOf ope
         worker.addFormInstance(New AboutBx(worker))
         worker.addFormInstance(New MainProgram(worker))
         worker.addFormInstance(New Configure(worker))
+        worker.addParser(New PConfigure())
     End Sub
 
     Public Sub runtime()
         worker.startPump()
-        worker.showForm(Of MainProgram)()
+        worker.showForm(Of Configure)()
+        While worker.PumpBusy
+            Thread.Sleep(125)
+        End While
+        worker.showForm(Of Configure)()
         While worker.PumpBusy
             Thread.Sleep(125)
         End While

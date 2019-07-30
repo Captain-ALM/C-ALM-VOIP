@@ -1,4 +1,5 @@
 ﻿Imports captainalm.workerpumper
+Imports System.Net
 
 Public Class Configure
     Implements IWorkerPumpReceiver
@@ -19,10 +20,6 @@ Public Class Configure
         Else
             ue = False
         End If
-    End Sub
-
-    Private Sub Configure_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        If ue Then wp.addEvent(New WorkerEvent(Me, ETs.Load, e))
     End Sub
 
     Private Sub Configure_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
@@ -78,119 +75,137 @@ Public Class Configure
         End Set
     End Property
 
-    Private Sub cmbxsniipv4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxsniipv4.SelectedIndexChanged
+    Private Sub cmbxsniipv4_Leave(sender As Object, e As EventArgs) Handles cmbxsniipv4.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxsniipv4, l, ETs.SelectedIndexChanged, e))
+            wp.addEvent(New WorkerEvent(cmbxsniipv4, l, ETs.Leave, New EventArgsDataContainer(cmbxsniipv4.SelectedIndex)))
         End If
     End Sub
 
-    Private Sub nudspudpipv4_ValueChanged(sender As Object, e As EventArgs) Handles nudspudpipv4.ValueChanged
+    Private Sub nudspudpipv4_Leave(sender As Object, e As EventArgs) Handles nudspudpipv4.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudspudpipv4, l, ETs.ValueChanged, e))
+            wp.addEvent(New WorkerEvent(nudspudpipv4, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv4.Value)))
         End If
     End Sub
 
-    Private Sub nudsptcpipv4_ValueChanged(sender As Object, e As EventArgs) Handles nudsptcpipv4.ValueChanged
+    Private Sub nudsptcpipv4_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv4.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudsptcpipv4, l, ETs.ValueChanged, e))
+            wp.addEvent(New WorkerEvent(nudsptcpipv4, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv4.Value)))
         End If
     End Sub
 
-    Private Sub cmbxsniipv6_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxsniipv6.SelectedIndexChanged
+    Private Sub cmbxsniipv6_Leave(sender As Object, e As EventArgs) Handles cmbxsniipv6.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxsniipv6, l, ETs.SelectedIndexChanged, e))
+            wp.addEvent(New WorkerEvent(cmbxsniipv6, l, ETs.Leave, New EventArgsDataContainer(cmbxsniipv6.SelectedIndex)))
         End If
     End Sub
 
-    Private Sub nudspudpipv6_ValueChanged(sender As Object, e As EventArgs) Handles nudspudpipv6.ValueChanged
+    Private Sub nudspudpipv6_Leave(sender As Object, e As EventArgs) Handles nudspudpipv6.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudspudpipv6, l, ETs.ValueChanged, e))
+            wp.addEvent(New WorkerEvent(nudspudpipv6, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv6.Value)))
         End If
     End Sub
 
-    Private Sub nudsptcpipv6_ValueChanged(sender As Object, e As EventArgs) Handles nudsptcpipv6.ValueChanged
+    Private Sub nudsptcpipv6_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv6.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudsptcpipv6, l, ETs.ValueChanged, e))
+            wp.addEvent(New WorkerEvent(nudsptcpipv6, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv6.Value)))
         End If
     End Sub
 
-    Private Sub nudtcpbl_ValueChanged(sender As Object, e As EventArgs) Handles nudtcpbl.ValueChanged
+    Private Sub nudtcpbl_Leave(sender As Object, e As EventArgs) Handles nudtcpbl.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudtcpbl, l, ETs.ValueChanged, e))
+            wp.addEvent(New WorkerEvent(nudtcpbl, l, ETs.Leave, New EventArgsDataContainer(nudtcpbl.Value)))
         End If
     End Sub
 
-    Private Sub chkbxena_CheckedChanged(sender As Object, e As EventArgs) Handles chkbxena.CheckedChanged
+    Private Sub chkbxena_Leave(sender As Object, e As EventArgs) Handles chkbxena.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(chkbxena, l, ETs.CheckedChanged, e))
+            wp.addEvent(New WorkerEvent(chkbxena, l, ETs.Leave, New EventArgsDataContainer(chkbxena.Checked)))
         End If
     End Sub
 
-    Private Sub txtbxudpextaddIPv4_TextChanged(sender As Object, e As EventArgs) Handles txtbxudpextaddIPv4.TextChanged
+    Private Sub txtbxudpextaddIPv4_Leave(sender As Object, e As EventArgs) Handles txtbxudpextaddIPv4.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxudpextaddIPv4, l, ETs.TextChanged, e))
+            wp.addEvent(New WorkerEvent(txtbxudpextaddIPv4, l, ETs.Leave, New EventArgsDataContainer(txtbxudpextaddIPv4.Text)))
         End If
     End Sub
 
-    Private Sub nududpextpIPv4_ValueChanged(sender As Object, e As EventArgs) Handles nududpextpIPv4.ValueChanged
+    Private Sub nududpextpIPv4_Leave(sender As Object, e As EventArgs) Handles nududpextpIPv4.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(nududpextpIPv4, l, ETs.ValueChanged, e))
+            wp.addEvent(New WorkerEvent(nududpextpIPv4, l, ETs.Leave, New EventArgsDataContainer(nududpextpIPv4.Value)))
         End If
     End Sub
 
-    Private Sub txtbxudpextaddIPv6_TextChanged(sender As Object, e As EventArgs) Handles txtbxudpextaddIPv6.TextChanged
+    Private Sub txtbxudpextaddIPv6_Leave(sender As Object, e As EventArgs) Handles txtbxudpextaddIPv6.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxudpextaddIPv6, l, ETs.TextChanged, e))
+            wp.addEvent(New WorkerEvent(txtbxudpextaddIPv6, l, ETs.Leave, New EventArgsDataContainer(txtbxudpextaddIPv6.Text)))
         End If
     End Sub
 
-    Private Sub nududpextpIPv6_ValueChanged(sender As Object, e As EventArgs) Handles nududpextpIPv6.ValueChanged
+    Private Sub nududpextpIPv6_Leave(sender As Object, e As EventArgs) Handles nududpextpIPv6.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(nududpextpIPv6, l, ETs.ValueChanged, e))
+            wp.addEvent(New WorkerEvent(nududpextpIPv6, l, ETs.Leave, New EventArgsDataContainer(nududpextpIPv6.Value)))
         End If
     End Sub
 
     Private Sub butOK_Click(sender As Object, e As EventArgs) Handles butOK.Click
+        butOK.Select()
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(butOK, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butOK, l, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
         Me.DialogResult = Windows.Forms.DialogResult.OK
         Me.Close()
     End Sub
 
     Private Sub butCANCEL_Click(sender As Object, e As EventArgs) Handles butCANCEL.Click
+        butCANCEL.Select()
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(butCANCEL, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butCANCEL, l, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
         Me.Close()
+    End Sub
+
+    Private Sub cmbxsid_Leave(sender As Object, e As EventArgs) Handles cmbxsid.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(cmbxsid, l, ETs.Leave, New EventArgsDataContainer(cmbxsid.SelectedIndex)))
+        End If
+    End Sub
+
+    Private Sub chkbxrdtcpc_Leave(sender As Object, e As EventArgs) Handles chkbxrdtcpc.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(chkbxrdtcpc, l, ETs.Leave, New EventArgsDataContainer(chkbxrdtcpc.Checked)))
+        End If
     End Sub
 End Class

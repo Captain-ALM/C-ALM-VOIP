@@ -6,7 +6,7 @@
     Private rl As String = ""
     Private Const crlf As String = ChrW(13) & ChrW(10)
 
-    Public Sub New(canContinue As Boolean, canReport As Boolean, canTerminate As Boolean, exc As Exception, Optional reportLink As String = "https://github.com/Captain-ALM/Flashcard-Maker/issues/new", Optional reportLinkAppensioner As IAppensioner = Nothing)
+    Public Sub New(canContinue As Boolean, canReport As Boolean, canTerminate As Boolean, exc As Exception, Optional reportLink As String = "https://github.com/Captain-ALM/C-ALM-VOIP/issues/new", Optional reportLinkAppensioner As IAppensioner = Nothing)
         InitializeComponent()
         cc = canContinue
         cr = canReport

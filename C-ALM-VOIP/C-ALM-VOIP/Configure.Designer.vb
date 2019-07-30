@@ -47,6 +47,9 @@ Partial Class Configure
         Me.Label10 = New System.Windows.Forms.Label()
         Me.butOK = New System.Windows.Forms.Button()
         Me.butCANCEL = New System.Windows.Forms.Button()
+        Me.cmbxsid = New System.Windows.Forms.ComboBox()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.chkbxrdtcpc = New System.Windows.Forms.CheckBox()
         CType(Me.nudspudpipv4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nudsptcpipv4, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nudspudpipv6, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -183,9 +186,10 @@ Partial Class Configure
         'chkbxena
         '
         Me.chkbxena.AutoSize = True
+        Me.chkbxena.Font = New System.Drawing.Font("Consolas", 6.0!, System.Drawing.FontStyle.Bold)
         Me.chkbxena.Location = New System.Drawing.Point(405, 135)
         Me.chkbxena.Name = "chkbxena"
-        Me.chkbxena.Size = New System.Drawing.Size(182, 17)
+        Me.chkbxena.Size = New System.Drawing.Size(152, 14)
         Me.chkbxena.TabIndex = 15
         Me.chkbxena.Text = "Enable Nagle's Algorithm for TCP"
         Me.chkbxena.UseVisualStyleBackColor = True
@@ -263,7 +267,7 @@ Partial Class Configure
         'butOK
         '
         Me.butOK.DialogResult = System.Windows.Forms.DialogResult.OK
-        Me.butOK.Location = New System.Drawing.Point(405, 226)
+        Me.butOK.Location = New System.Drawing.Point(405, 276)
         Me.butOK.Name = "butOK"
         Me.butOK.Size = New System.Drawing.Size(71, 23)
         Me.butOK.TabIndex = 24
@@ -273,12 +277,41 @@ Partial Class Configure
         'butCANCEL
         '
         Me.butCANCEL.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.butCANCEL.Location = New System.Drawing.Point(498, 226)
+        Me.butCANCEL.Location = New System.Drawing.Point(498, 276)
         Me.butCANCEL.Name = "butCANCEL"
         Me.butCANCEL.Size = New System.Drawing.Size(71, 23)
         Me.butCANCEL.TabIndex = 25
         Me.butCANCEL.Text = "&Cancel"
         Me.butCANCEL.UseVisualStyleBackColor = True
+        '
+        'cmbxsid
+        '
+        Me.cmbxsid.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cmbxsid.FormattingEnabled = True
+        Me.cmbxsid.Location = New System.Drawing.Point(180, 232)
+        Me.cmbxsid.Name = "cmbxsid"
+        Me.cmbxsid.Size = New System.Drawing.Size(210, 21)
+        Me.cmbxsid.TabIndex = 27
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(15, 232)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(104, 13)
+        Me.Label11.TabIndex = 26
+        Me.Label11.Text = "Select Input Device:"
+        '
+        'chkbxrdtcpc
+        '
+        Me.chkbxrdtcpc.AutoSize = True
+        Me.chkbxrdtcpc.Font = New System.Drawing.Font("Consolas", 6.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.chkbxrdtcpc.Location = New System.Drawing.Point(405, 234)
+        Me.chkbxrdtcpc.Name = "chkbxrdtcpc"
+        Me.chkbxrdtcpc.Size = New System.Drawing.Size(148, 14)
+        Me.chkbxrdtcpc.TabIndex = 28
+        Me.chkbxrdtcpc.Text = "Remove Disconnected TCP Clients"
+        Me.chkbxrdtcpc.UseVisualStyleBackColor = True
         '
         'Configure
         '
@@ -286,7 +319,10 @@ Partial Class Configure
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.butCANCEL
-        Me.ClientSize = New System.Drawing.Size(584, 261)
+        Me.ClientSize = New System.Drawing.Size(584, 311)
+        Me.Controls.Add(Me.chkbxrdtcpc)
+        Me.Controls.Add(Me.cmbxsid)
+        Me.Controls.Add(Me.Label11)
         Me.Controls.Add(Me.butCANCEL)
         Me.Controls.Add(Me.butOK)
         Me.Controls.Add(Me.Label9)
@@ -313,9 +349,9 @@ Partial Class Configure
         Me.Controls.Add(Me.Label1)
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(600, 300)
+        Me.MaximumSize = New System.Drawing.Size(600, 350)
         Me.MinimizeBox = False
-        Me.MinimumSize = New System.Drawing.Size(600, 300)
+        Me.MinimumSize = New System.Drawing.Size(600, 350)
         Me.Name = "Configure"
         Me.ShowIcon = False
         Me.ShowInTaskbar = False
@@ -356,4 +392,7 @@ Partial Class Configure
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents butOK As System.Windows.Forms.Button
     Friend WithEvents butCANCEL As System.Windows.Forms.Button
+    Friend WithEvents cmbxsid As System.Windows.Forms.ComboBox
+    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents chkbxrdtcpc As System.Windows.Forms.CheckBox
 End Class
