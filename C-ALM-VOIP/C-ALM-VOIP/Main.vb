@@ -16,6 +16,8 @@ Module Main
     Public programPath As String = programAssembly.Location
     Public execdir As String = Path.GetDirectoryName(programPath)
     Public worker As WorkerPump = Nothing
+    Public forms As New List(Of Form)
+    Public parsers As New List(Of IEventParser)
 
     Public Sub main()
         Try
@@ -53,19 +55,21 @@ Module Main
 
         worker = New WorkerPump() With {.ManageControlEnablement = True}
         AddHandler worker.OnPumpException, AddressOf ope
-        worker.addFormInstance(New AboutBx(worker))
-        worker.addFormInstance(New MainProgram(worker))
-        worker.addFormInstance(New Configure(worker))
-        worker.addParser(New PConfigure())
+        forms.Add(New AboutBx(worker))
+        worker.addFormInstance(Of AboutBx)(forms(0))
+        forms.Add(New MainProgram(worker))
+        worker.addFormInstance(Of MainProgram)(forms(1))
+        forms.Add(New Configure(worker))
+        worker.addFormInstance(Of Configure)(forms(2))
+        parsers.Add(New PConfigure())
+        For Each c As IEventParser In parsers
+            worker.addParser(c)
+        Next
     End Sub
 
     Public Sub runtime()
         worker.startPump()
-        worker.showForm(Of Configure)()
-        While worker.PumpBusy
-            Thread.Sleep(125)
-        End While
-        worker.showForm(Of Configure)()
+        worker.showForm(Of MainProgram)()
         While worker.PumpBusy
             Thread.Sleep(125)
         End While

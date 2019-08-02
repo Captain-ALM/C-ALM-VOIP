@@ -8,7 +8,7 @@ Public Class PConfigure
     Private wp As WorkerPump = Nothing
     Private _input_device As Integer = -1
     Private _selected_interfaceIPv4 As IPAddress = IPAddress.None
-    Private _selected_interfaceIPv6 As IPAddress = IPAddress.IPv6None
+    Private _selected_interfaceIPv6 As IPAddress = Nothing
     Private _port_UDP_IPv4 As Integer = 1
     Private _port_UDP_IPv6 As Integer = 1
     Private _port_TCP_IPv4 As Integer = 1
@@ -46,12 +46,13 @@ Public Class PConfigure
                 frm.Invoke(Sub() frm.butOK.Select())
                 Dim lstifan As New List(Of Tuple(Of String, IPAddress))
                 lstifan.Add(New Tuple(Of String, IPAddress)("<None>", IPAddress.None))
-                lstifan.Add(New Tuple(Of String, IPAddress)("<None>", IPAddress.IPv6None))
+                lstifan.Add(New Tuple(Of String, IPAddress)("<None>", Nothing))
                 lstifan.AddRange(Utilities.GetIPInterfacesAndNames())
                 lstifan.Add(New Tuple(Of String, IPAddress)("<All>", IPAddress.Any))
                 lstifan.Add(New Tuple(Of String, IPAddress)("<All>", IPAddress.IPv6Any))
                 frm.Invoke(Sub() frm.cmbxsniipv4.Items.Clear())
                 For Each c As Tuple(Of String, IPAddress) In lstifan
+                    If c.Item2 Is Nothing Then Continue For
                     If c.Item2.AddressFamily = Sockets.AddressFamily.InterNetwork Then
                         _IPv4Interfaces.Add(c)
                         frm.Invoke(Sub() frm.cmbxsniipv4.Items.Add(c.Item1 & " - " & c.Item2.ToString()))
@@ -62,6 +63,11 @@ Public Class PConfigure
                 _IPv6Interfaces.Clear()
                 frm.Invoke(Sub() frm.cmbxsniipv6.Items.Clear())
                 For Each c As Tuple(Of String, IPAddress) In lstifan
+                    If c.Item2 Is Nothing Then
+                        _IPv6Interfaces.Add(c)
+                        frm.Invoke(Sub() frm.cmbxsniipv6.Items.Add(c.Item1 & " - Invalid"))
+                        Continue For
+                    End If
                     If c.Item2.AddressFamily = Sockets.AddressFamily.InterNetworkV6 Then
                         _IPv6Interfaces.Add(c)
                         frm.Invoke(Sub() frm.cmbxsniipv6.Items.Add(c.Item1 & " - " & c.Item2.ToString()))
@@ -90,6 +96,28 @@ Public Class PConfigure
                                frm.chkbxena.Checked = _TCP_delay
                                frm.txtbxudpextaddIPv4.Text = _external_UDP_Address_IPv4
                                frm.txtbxudpextaddIPv6.Text = _external_UDP_Address_IPv6
+                               frm.chkbxrdtcpc.Checked = _TCP_remove_disconnected_clients
+                               If InListening Then
+                                   frm.cmbxsniipv4.Enabled = False
+                                   frm.nudsptcpipv4.Enabled = False
+                                   frm.nudspudpipv4.Enabled = False
+                                   frm.cmbxsniipv6.Enabled = False
+                                   frm.nudsptcpipv6.Enabled = False
+                                   frm.nudspudpipv6.Enabled = False
+                                   frm.cmbxsid.Enabled = False
+                                   frm.nudtcpbl.Enabled = False
+                                   frm.chkbxena.Enabled = False
+                               Else
+                                   frm.cmbxsniipv4.Enabled = True
+                                   frm.nudsptcpipv4.Enabled = True
+                                   frm.nudspudpipv4.Enabled = True
+                                   frm.cmbxsniipv6.Enabled = True
+                                   frm.nudsptcpipv6.Enabled = True
+                                   frm.nudspudpipv6.Enabled = True
+                                   frm.cmbxsid.Enabled = True
+                                   frm.nudtcpbl.Enabled = True
+                                   frm.chkbxena.Enabled = True
+                               End If
                                frm.butOK.Select()
                            End Sub)
             End If
@@ -150,8 +178,14 @@ Public Class PConfigure
     Private Function indexOfIP(ip As IPAddress, lst As List(Of Tuple(Of String, IPAddress)))
         For i As Integer = 0 To lst.Count - 1 Step 1
             Dim c As Tuple(Of String, IPAddress) = lst(i)
-            If c.Item2.Equals(ip) And ip.Equals(c.Item2) Then
-                Return i
+            If c.Item2 Is Nothing Or ip Is Nothing Then
+                If c.Item2 Is Nothing And ip Is Nothing Then
+                    Return i
+                End If
+            Else
+                If c.Item2.Equals(ip) And ip.Equals(c.Item2) Then
+                    Return i
+                End If
             End If
         Next
         Return 0
