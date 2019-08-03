@@ -27,6 +27,8 @@ Public Module [Global]
     Public micVOIP As VOIPSender = Nothing
     Public spkVOIP As VOIPReceiver = Nothing
     Public nomReconReg As New Dictionary(Of Tuple(Of String, Integer), String)
+    Public caddrbs As AddressableBase = Nothing
+    Public ceditm As EditorMode = EditorMode.None
 
     Public Function resolve(addr As String, fam As AddressFamily) As IPAddress
         Dim ipadd As IPAddress() = New IPAddress() {}
@@ -43,3 +45,11 @@ Public Module [Global]
         Return Nothing
     End Function
 End Module
+
+Public Enum EditorMode As Integer
+    None = 0
+    CreateContact = 1
+    CreateClient = 2
+    EditContact = 3
+    EditClient = 4
+End Enum
