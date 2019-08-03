@@ -89,12 +89,14 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AddressableBase.vb" />
+    <Compile Include="Client.vb" />
     <Compile Include="Configure.Designer.vb">
       <DependentUpon>Configure.vb</DependentUpon>
     </Compile>
     <Compile Include="Configure.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Contact.vb" />
     <Compile Include="EventArgsDataContainer.vb" />
     <Compile Include="EventTypes.vb" />
     <Compile Include="Global.vb" />
@@ -127,6 +129,7 @@
     <Compile Include="UnhandledExceptionViewer.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="VOIPSender.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AboutBx.resx">

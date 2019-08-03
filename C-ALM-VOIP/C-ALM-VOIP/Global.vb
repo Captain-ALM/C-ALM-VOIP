@@ -1,4 +1,6 @@
 ﻿Imports System.Net
+Imports captainalm.CALMNetMarshal
+Imports System.Net.Sockets
 
 Public Module [Global]
     Public description As String
@@ -18,4 +20,26 @@ Public Module [Global]
     Public input_device As Integer = -1
     Public TCP_remove_disconnected_clients As Boolean = False
     Public InListening As Boolean = False
+    Public tcpmarshalIPv4 As NetMarshalTCP = Nothing
+    Public tcpmarshalIPv6 As NetMarshalTCP = Nothing
+    Public udpmarshalIPv4 As NetMarshalUDP = Nothing
+    Public udpmarshalIPv6 As NetMarshalUDP = Nothing
+    Public micVOIP As VOIPSender = Nothing
+    Public spkVOIP As VOIPReceiver = Nothing
+    Public nomReconReg As New Dictionary(Of Tuple(Of String, Integer), String)
+
+    Public Function resolve(addr As String, fam As AddressFamily) As IPAddress
+        Dim ipadd As IPAddress() = New IPAddress() {}
+        Try
+            ipadd = Dns.GetHostAddresses(addr)
+        Catch ex As Sockets.SocketException
+            Return Nothing
+        Catch ex As ArgumentException
+            Return Nothing
+        End Try
+        For Each ia As IPAddress In ipadd
+            If ia.AddressFamily = fam Then Return ia
+        Next
+        Return Nothing
+    End Function
 End Module

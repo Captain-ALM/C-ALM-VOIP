@@ -50,6 +50,11 @@ Partial Class MainProgram
         Me.ColumnHeader4 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel5 = New System.Windows.Forms.TableLayoutPanel()
+        Me.ListViewcl2 = New System.Windows.Forms.ListView()
+        Me.ColumnHeader13 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TableLayoutPanel8 = New System.Windows.Forms.TableLayoutPanel()
         Me.butcl2cc = New System.Windows.Forms.Button()
         Me.butcl2ccls = New System.Windows.Forms.Button()
@@ -59,10 +64,6 @@ Partial Class MainProgram
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.ListViewsc = New System.Windows.Forms.ListView()
-        Me.ColumnHeader8 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader9 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader11 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader10 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader12 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -70,11 +71,9 @@ Partial Class MainProgram
         Me.butscmutes = New System.Windows.Forms.Button()
         Me.TrackBarvol = New System.Windows.Forms.TrackBar()
         Me.NumericUpDownvol = New System.Windows.Forms.NumericUpDown()
-        Me.ColumnHeader13 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader5 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader6 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader7 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ListViewcl2 = New System.Windows.Forms.ListView()
+        Me.ColumnHeader14 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader15 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader16 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -382,7 +381,7 @@ Partial Class MainProgram
         '
         'ListViewcl
         '
-        Me.ListViewcl.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader4})
+        Me.ListViewcl.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader14, Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader4})
         Me.ListViewcl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListViewcl.Location = New System.Drawing.Point(3, 39)
         Me.ListViewcl.Name = "ListViewcl"
@@ -439,6 +438,37 @@ Partial Class MainProgram
         Me.TableLayoutPanel5.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80.0!))
         Me.TableLayoutPanel5.Size = New System.Drawing.Size(373, 183)
         Me.TableLayoutPanel5.TabIndex = 1
+        '
+        'ListViewcl2
+        '
+        Me.ListViewcl2.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader13, Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader7})
+        Me.ListViewcl2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.ListViewcl2.Location = New System.Drawing.Point(3, 39)
+        Me.ListViewcl2.Name = "ListViewcl2"
+        Me.ListViewcl2.Size = New System.Drawing.Size(367, 141)
+        Me.ListViewcl2.TabIndex = 2
+        Me.ListViewcl2.UseCompatibleStateImageBehavior = False
+        Me.ListViewcl2.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader13
+        '
+        Me.ColumnHeader13.Text = "Contact Name"
+        Me.ColumnHeader13.Width = 90
+        '
+        'ColumnHeader5
+        '
+        Me.ColumnHeader5.Text = "Contact Address"
+        Me.ColumnHeader5.Width = 120
+        '
+        'ColumnHeader6
+        '
+        Me.ColumnHeader6.Text = "Contact Port"
+        Me.ColumnHeader6.Width = 90
+        '
+        'ColumnHeader7
+        '
+        Me.ColumnHeader7.Text = "Contact Type"
+        Me.ColumnHeader7.Width = 90
         '
         'TableLayoutPanel8
         '
@@ -552,7 +582,7 @@ Partial Class MainProgram
         '
         'ListViewsc
         '
-        Me.ListViewsc.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader8, Me.ColumnHeader9, Me.ColumnHeader11, Me.ColumnHeader10, Me.ColumnHeader12})
+        Me.ListViewsc.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader15, Me.ColumnHeader16, Me.ColumnHeader12})
         Me.ListViewsc.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListViewsc.Location = New System.Drawing.Point(3, 3)
         Me.ListViewsc.Name = "ListViewsc"
@@ -560,26 +590,6 @@ Partial Class MainProgram
         Me.ListViewsc.TabIndex = 3
         Me.ListViewsc.UseCompatibleStateImageBehavior = False
         Me.ListViewsc.View = System.Windows.Forms.View.Details
-        '
-        'ColumnHeader8
-        '
-        Me.ColumnHeader8.Text = "Client IP Address"
-        Me.ColumnHeader8.Width = 120
-        '
-        'ColumnHeader9
-        '
-        Me.ColumnHeader9.Text = "Client Port"
-        Me.ColumnHeader9.Width = 90
-        '
-        'ColumnHeader11
-        '
-        Me.ColumnHeader11.Text = "Status"
-        Me.ColumnHeader11.Width = 90
-        '
-        'ColumnHeader10
-        '
-        Me.ColumnHeader10.Text = "Client Buffer (Sec)"
-        Me.ColumnHeader10.Width = 120
         '
         'ColumnHeader12
         '
@@ -661,36 +671,20 @@ Partial Class MainProgram
         Me.NumericUpDownvol.TabIndex = 6
         Me.NumericUpDownvol.Value = New Decimal(New Integer() {100, 0, 0, 0})
         '
-        'ColumnHeader13
+        'ColumnHeader14
         '
-        Me.ColumnHeader13.Text = "Contact Name"
-        Me.ColumnHeader13.Width = 90
+        Me.ColumnHeader14.Text = "Client Name"
+        Me.ColumnHeader14.Width = 90
         '
-        'ColumnHeader5
+        'ColumnHeader15
         '
-        Me.ColumnHeader5.Text = "Contact Address"
-        Me.ColumnHeader5.Width = 120
+        Me.ColumnHeader15.Text = "Client Name"
+        Me.ColumnHeader15.Width = 90
         '
-        'ColumnHeader6
+        'ColumnHeader16
         '
-        Me.ColumnHeader6.Text = "Contact Port"
-        Me.ColumnHeader6.Width = 90
-        '
-        'ColumnHeader7
-        '
-        Me.ColumnHeader7.Text = "Contact Type"
-        Me.ColumnHeader7.Width = 90
-        '
-        'ListViewcl2
-        '
-        Me.ListViewcl2.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader13, Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader7})
-        Me.ListViewcl2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.ListViewcl2.Location = New System.Drawing.Point(3, 39)
-        Me.ListViewcl2.Name = "ListViewcl2"
-        Me.ListViewcl2.Size = New System.Drawing.Size(367, 141)
-        Me.ListViewcl2.TabIndex = 2
-        Me.ListViewcl2.UseCompatibleStateImageBehavior = False
-        Me.ListViewcl2.View = System.Windows.Forms.View.Details
+        Me.ColumnHeader16.Text = "Is Muted:"
+        Me.ColumnHeader16.Width = 90
         '
         'MainProgram
         '
@@ -769,10 +763,6 @@ Partial Class MainProgram
     Friend WithEvents ColumnHeader3 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader4 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ListViewsc As System.Windows.Forms.ListView
-    Friend WithEvents ColumnHeader8 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader9 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader11 As System.Windows.Forms.ColumnHeader
-    Friend WithEvents ColumnHeader10 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader12 As System.Windows.Forms.ColumnHeader
     Friend WithEvents butcl2cc As System.Windows.Forms.Button
     Friend WithEvents butclviewc As System.Windows.Forms.Button
@@ -781,4 +771,7 @@ Partial Class MainProgram
     Friend WithEvents ColumnHeader5 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader6 As System.Windows.Forms.ColumnHeader
     Friend WithEvents ColumnHeader7 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader14 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader15 As System.Windows.Forms.ColumnHeader
+    Friend WithEvents ColumnHeader16 As System.Windows.Forms.ColumnHeader
 End Class

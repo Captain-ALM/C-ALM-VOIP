@@ -8,10 +8,6 @@ Public NotInheritable Class MainProgram
     Private formClosedDone As Boolean = False
     Private wp As WorkerPump = Nothing
     Private ue As Boolean = False
-    Private tcpmarshalIPv4 As NetMarshalTCP = Nothing
-    Private tcpmarshalIPv6 As NetMarshalTCP = Nothing
-    Private udpmarshalIPv4 As NetMarshalUDP = Nothing
-    Private udpmarshalIPv6 As NetMarshalUDP = Nothing
     'Should not construct externally.
     Sub New(Optional ByRef workerp As WorkerPump = Nothing)
         ' This call is required by the designer.
@@ -220,7 +216,7 @@ Public NotInheritable Class MainProgram
         End If
     End Sub
 
-    Private Sub TrackBarvol_Scroll(sender As Object, e As EventArgs) Handles TrackBarvol.Scroll
+    Private Sub TrackBarvol_Leave(sender As Object, e As EventArgs) Handles TrackBarvol.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -228,7 +224,7 @@ Public NotInheritable Class MainProgram
         End If
     End Sub
 
-    Private Sub NumericUpDownvol_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDownvol.ValueChanged
+    Private Sub NumericUpDownvol_Leave(sender As Object, e As EventArgs) Handles NumericUpDownvol.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
