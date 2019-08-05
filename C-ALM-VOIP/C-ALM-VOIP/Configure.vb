@@ -60,6 +60,12 @@ Public Class Configure
         Me.DialogResult = Windows.Forms.DialogResult.None
         formClosingDone = False
         formClosedDone = False
+        nudsptcpipv4.BackColor = Color.White
+        nudspudpipv4.BackColor = Color.White
+        nudsptcpipv6.BackColor = Color.White
+        nudspudpipv6.BackColor = Color.White
+        butOK.Enabled = True
+        butCANCEL.Enabled = True
         If ue Then wp.addEvent(Me, ETs.Shown, e)
     End Sub
 
@@ -89,6 +95,7 @@ Public Class Configure
             l.Add(Me)
             wp.addEvent(New WorkerEvent(nudspudpipv4, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv4.Value)))
         End If
+        updat()
     End Sub
 
     Private Sub nudsptcpipv4_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv4.Leave
@@ -97,6 +104,7 @@ Public Class Configure
             l.Add(Me)
             wp.addEvent(New WorkerEvent(nudsptcpipv4, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv4.Value)))
         End If
+        updat()
     End Sub
 
     Private Sub cmbxsniipv6_Leave(sender As Object, e As EventArgs) Handles cmbxsniipv6.Leave
@@ -113,6 +121,7 @@ Public Class Configure
             l.Add(Me)
             wp.addEvent(New WorkerEvent(nudspudpipv6, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv6.Value)))
         End If
+        updat()
     End Sub
 
     Private Sub nudsptcpipv6_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv6.Leave
@@ -120,6 +129,30 @@ Public Class Configure
             Dim l As New List(Of Object)
             l.Add(Me)
             wp.addEvent(New WorkerEvent(nudsptcpipv6, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv6.Value)))
+        End If
+        updat()
+    End Sub
+
+    Protected Sub updat()
+        If nudspudpipv4.Value = nudsptcpipv4.Value Or nudspudpipv4.Value = nudsptcpipv6.Value Or nudspudpipv4.Value = nudspudpipv6.Value Then
+            nudspudpipv4.BackColor = Color.Orange
+        Else
+            nudspudpipv4.BackColor = Color.White
+        End If
+        If nudspudpipv6.Value = nudsptcpipv4.Value Or nudspudpipv6.Value = nudsptcpipv6.Value Or nudspudpipv6.Value = nudspudpipv4.Value Then
+            nudspudpipv6.BackColor = Color.Orange
+        Else
+            nudspudpipv6.BackColor = Color.White
+        End If
+        If nudsptcpipv4.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudsptcpipv6.Value Or nudsptcpipv4.Value = nudspudpipv6.Value Then
+            nudsptcpipv4.BackColor = Color.Orange
+        Else
+            nudsptcpipv4.BackColor = Color.White
+        End If
+        If nudsptcpipv6.Value = nudspudpipv4.Value Or nudsptcpipv6.Value = nudsptcpipv4.Value Or nudsptcpipv6.Value = nudspudpipv6.Value Then
+            nudsptcpipv6.BackColor = Color.Orange
+        Else
+            nudsptcpipv6.BackColor = Color.White
         End If
     End Sub
 
@@ -172,17 +205,18 @@ Public Class Configure
     End Sub
 
     Private Sub butOK_Click(sender As Object, e As EventArgs) Handles butOK.Click
+        If nudspudpipv4.Value = nudsptcpipv4.Value Or nudspudpipv4.Value = nudsptcpipv6.Value Or nudspudpipv4.Value = nudspudpipv6.Value Or nudspudpipv6.Value = nudsptcpipv4.Value Or nudspudpipv6.Value = nudsptcpipv6.Value Or nudspudpipv6.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudsptcpipv6.Value Or nudsptcpipv4.Value = nudspudpipv6.Value Or nudsptcpipv6.Value = nudspudpipv4.Value Or nudsptcpipv6.Value = nudsptcpipv4.Value Or nudsptcpipv6.Value = nudspudpipv6.Value Then Exit Sub
+        butOK.Enabled = False
         butOK.Select()
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
             wp.addEvent(New WorkerEvent(butOK, l, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
-        Me.DialogResult = Windows.Forms.DialogResult.OK
-        Me.Close()
     End Sub
 
     Private Sub butCANCEL_Click(sender As Object, e As EventArgs) Handles butCANCEL.Click
+        butCANCEL.Enabled = False
         butCANCEL.Select()
         If ue Then
             Dim l As New List(Of Object)

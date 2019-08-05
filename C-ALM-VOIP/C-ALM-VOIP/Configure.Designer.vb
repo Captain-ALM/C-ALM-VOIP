@@ -95,7 +95,7 @@ Partial Class Configure
         Me.cmbxsniipv4.Location = New System.Drawing.Point(180, 71)
         Me.cmbxsniipv4.Name = "cmbxsniipv4"
         Me.cmbxsniipv4.Size = New System.Drawing.Size(210, 21)
-        Me.cmbxsniipv4.TabIndex = 5
+        Me.cmbxsniipv4.TabIndex = 0
         '
         'cmbxsniipv6
         '
@@ -104,7 +104,7 @@ Partial Class Configure
         Me.cmbxsniipv6.Location = New System.Drawing.Point(180, 103)
         Me.cmbxsniipv6.Name = "cmbxsniipv6"
         Me.cmbxsniipv6.Size = New System.Drawing.Size(210, 21)
-        Me.cmbxsniipv6.TabIndex = 6
+        Me.cmbxsniipv6.TabIndex = 3
         '
         'Label4
         '
@@ -131,7 +131,7 @@ Partial Class Configure
         Me.nudspudpipv4.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudspudpipv4.Name = "nudspudpipv4"
         Me.nudspudpipv4.Size = New System.Drawing.Size(71, 20)
-        Me.nudspudpipv4.TabIndex = 9
+        Me.nudspudpipv4.TabIndex = 1
         Me.nudspudpipv4.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'nudsptcpipv4
@@ -141,7 +141,7 @@ Partial Class Configure
         Me.nudsptcpipv4.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudsptcpipv4.Name = "nudsptcpipv4"
         Me.nudsptcpipv4.Size = New System.Drawing.Size(71, 20)
-        Me.nudsptcpipv4.TabIndex = 10
+        Me.nudsptcpipv4.TabIndex = 2
         Me.nudsptcpipv4.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'nudspudpipv6
@@ -151,7 +151,7 @@ Partial Class Configure
         Me.nudspudpipv6.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudspudpipv6.Name = "nudspudpipv6"
         Me.nudspudpipv6.Size = New System.Drawing.Size(71, 20)
-        Me.nudspudpipv6.TabIndex = 11
+        Me.nudspudpipv6.TabIndex = 4
         Me.nudspudpipv6.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'nudsptcpipv6
@@ -161,7 +161,7 @@ Partial Class Configure
         Me.nudsptcpipv6.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudsptcpipv6.Name = "nudsptcpipv6"
         Me.nudsptcpipv6.Size = New System.Drawing.Size(71, 20)
-        Me.nudsptcpipv6.TabIndex = 12
+        Me.nudsptcpipv6.TabIndex = 5
         Me.nudsptcpipv6.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label6
@@ -180,7 +180,7 @@ Partial Class Configure
         Me.nudtcpbl.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudtcpbl.Name = "nudtcpbl"
         Me.nudtcpbl.Size = New System.Drawing.Size(210, 20)
-        Me.nudtcpbl.TabIndex = 14
+        Me.nudtcpbl.TabIndex = 6
         Me.nudtcpbl.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'chkbxena
@@ -190,7 +190,7 @@ Partial Class Configure
         Me.chkbxena.Location = New System.Drawing.Point(405, 135)
         Me.chkbxena.Name = "chkbxena"
         Me.chkbxena.Size = New System.Drawing.Size(152, 14)
-        Me.chkbxena.TabIndex = 15
+        Me.chkbxena.TabIndex = 7
         Me.chkbxena.Text = "Enable Nagle's Algorithm for TCP"
         Me.chkbxena.UseVisualStyleBackColor = True
         '
@@ -208,7 +208,7 @@ Partial Class Configure
         Me.txtbxudpextaddIPv4.Location = New System.Drawing.Point(180, 162)
         Me.txtbxudpextaddIPv4.Name = "txtbxudpextaddIPv4"
         Me.txtbxudpextaddIPv4.Size = New System.Drawing.Size(210, 20)
-        Me.txtbxudpextaddIPv4.TabIndex = 17
+        Me.txtbxudpextaddIPv4.TabIndex = 8
         '
         'nududpextpIPv4
         '
@@ -217,7 +217,7 @@ Partial Class Configure
         Me.nududpextpIPv4.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nududpextpIPv4.Name = "nududpextpIPv4"
         Me.nududpextpIPv4.Size = New System.Drawing.Size(71, 20)
-        Me.nududpextpIPv4.TabIndex = 18
+        Me.nududpextpIPv4.TabIndex = 9
         Me.nududpextpIPv4.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label8
@@ -245,7 +245,7 @@ Partial Class Configure
         Me.nududpextpIPv6.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nududpextpIPv6.Name = "nududpextpIPv6"
         Me.nududpextpIPv6.Size = New System.Drawing.Size(71, 20)
-        Me.nududpextpIPv6.TabIndex = 22
+        Me.nududpextpIPv6.TabIndex = 11
         Me.nududpextpIPv6.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'txtbxudpextaddIPv6
@@ -253,7 +253,7 @@ Partial Class Configure
         Me.txtbxudpextaddIPv6.Location = New System.Drawing.Point(180, 193)
         Me.txtbxudpextaddIPv6.Name = "txtbxudpextaddIPv6"
         Me.txtbxudpextaddIPv6.Size = New System.Drawing.Size(210, 20)
-        Me.txtbxudpextaddIPv6.TabIndex = 21
+        Me.txtbxudpextaddIPv6.TabIndex = 10
         '
         'Label10
         '
@@ -266,21 +266,19 @@ Partial Class Configure
         '
         'butOK
         '
-        Me.butOK.DialogResult = System.Windows.Forms.DialogResult.OK
         Me.butOK.Location = New System.Drawing.Point(405, 276)
         Me.butOK.Name = "butOK"
         Me.butOK.Size = New System.Drawing.Size(71, 23)
-        Me.butOK.TabIndex = 24
+        Me.butOK.TabIndex = 14
         Me.butOK.Text = "&Ok"
         Me.butOK.UseVisualStyleBackColor = True
         '
         'butCANCEL
         '
-        Me.butCANCEL.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.butCANCEL.Location = New System.Drawing.Point(498, 276)
         Me.butCANCEL.Name = "butCANCEL"
         Me.butCANCEL.Size = New System.Drawing.Size(71, 23)
-        Me.butCANCEL.TabIndex = 25
+        Me.butCANCEL.TabIndex = 15
         Me.butCANCEL.Text = "&Cancel"
         Me.butCANCEL.UseVisualStyleBackColor = True
         '
@@ -291,7 +289,7 @@ Partial Class Configure
         Me.cmbxsid.Location = New System.Drawing.Point(180, 232)
         Me.cmbxsid.Name = "cmbxsid"
         Me.cmbxsid.Size = New System.Drawing.Size(210, 21)
-        Me.cmbxsid.TabIndex = 27
+        Me.cmbxsid.TabIndex = 12
         '
         'Label11
         '
@@ -309,7 +307,7 @@ Partial Class Configure
         Me.chkbxrdtcpc.Location = New System.Drawing.Point(405, 234)
         Me.chkbxrdtcpc.Name = "chkbxrdtcpc"
         Me.chkbxrdtcpc.Size = New System.Drawing.Size(148, 14)
-        Me.chkbxrdtcpc.TabIndex = 28
+        Me.chkbxrdtcpc.TabIndex = 13
         Me.chkbxrdtcpc.Text = "Remove Disconnected TCP Clients"
         Me.chkbxrdtcpc.UseVisualStyleBackColor = True
         '

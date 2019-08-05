@@ -121,7 +121,7 @@ Partial Class AboutBx
         Me.OKButton.Location = New System.Drawing.Point(318, 232)
         Me.OKButton.Name = "OKButton"
         Me.OKButton.Size = New System.Drawing.Size(75, 23)
-        Me.OKButton.TabIndex = 0
+        Me.OKButton.TabIndex = 1
         Me.OKButton.Text = "&OK"
         '
         'TableLayoutPanel1
@@ -138,7 +138,7 @@ Partial Class AboutBx
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 123.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(390, 123)
-        Me.TableLayoutPanel1.TabIndex = 1
+        Me.TableLayoutPanel1.TabIndex = 0
         '
         'TextBox1
         '

@@ -60,7 +60,7 @@ Partial Class Editor
         Me.TableLayoutPanel1.RowCount = 1
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(146, 29)
-        Me.TableLayoutPanel1.TabIndex = 0
+        Me.TableLayoutPanel1.TabIndex = 8
         '
         'OK_Button
         '
@@ -106,7 +106,7 @@ Partial Class Editor
         Me.txtbxname.Location = New System.Drawing.Point(105, 61)
         Me.txtbxname.Name = "txtbxname"
         Me.txtbxname.Size = New System.Drawing.Size(264, 20)
-        Me.txtbxname.TabIndex = 5
+        Me.txtbxname.TabIndex = 0
         '
         'Label3
         '
@@ -121,11 +121,11 @@ Partial Class Editor
         '
         Me.cmbxtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbxtype.FormattingEnabled = True
-        Me.cmbxtype.Items.AddRange(New Object() {"UDP", "TCP"})
+        Me.cmbxtype.Items.AddRange(New Object() {"TCP", "UDP"})
         Me.cmbxtype.Location = New System.Drawing.Point(105, 94)
         Me.cmbxtype.Name = "cmbxtype"
         Me.cmbxtype.Size = New System.Drawing.Size(96, 21)
-        Me.cmbxtype.TabIndex = 7
+        Me.cmbxtype.TabIndex = 1
         '
         'cmbxipv
         '
@@ -135,7 +135,7 @@ Partial Class Editor
         Me.cmbxipv.Location = New System.Drawing.Point(271, 94)
         Me.cmbxipv.Name = "cmbxipv"
         Me.cmbxipv.Size = New System.Drawing.Size(98, 21)
-        Me.cmbxipv.TabIndex = 9
+        Me.cmbxipv.TabIndex = 2
         '
         'Label4
         '
@@ -160,7 +160,7 @@ Partial Class Editor
         Me.txtbxaddr.Location = New System.Drawing.Point(105, 130)
         Me.txtbxaddr.Name = "txtbxaddr"
         Me.txtbxaddr.Size = New System.Drawing.Size(264, 20)
-        Me.txtbxaddr.TabIndex = 10
+        Me.txtbxaddr.TabIndex = 3
         '
         'Label6
         '
@@ -178,7 +178,7 @@ Partial Class Editor
         Me.nudport.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudport.Name = "nudport"
         Me.nudport.Size = New System.Drawing.Size(264, 20)
-        Me.nudport.TabIndex = 11
+        Me.nudport.TabIndex = 4
         Me.nudport.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label7
@@ -195,7 +195,7 @@ Partial Class Editor
         Me.txtbxmyaddr.Location = New System.Drawing.Point(105, 197)
         Me.txtbxmyaddr.Name = "txtbxmyaddr"
         Me.txtbxmyaddr.Size = New System.Drawing.Size(264, 20)
-        Me.txtbxmyaddr.TabIndex = 10
+        Me.txtbxmyaddr.TabIndex = 5
         '
         'Label8
         '
@@ -213,7 +213,7 @@ Partial Class Editor
         Me.nudmyport.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudmyport.Name = "nudmyport"
         Me.nudmyport.Size = New System.Drawing.Size(264, 20)
-        Me.nudmyport.TabIndex = 11
+        Me.nudmyport.TabIndex = 6
         Me.nudmyport.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label9

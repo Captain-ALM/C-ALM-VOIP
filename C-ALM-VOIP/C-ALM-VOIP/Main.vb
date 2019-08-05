@@ -69,7 +69,15 @@ Module Main
 
     Public Sub runtime()
         worker.startPump()
-        worker.showForm(Of MainProgram)()
+        'worker.showForm(Of MainProgram)()
+        'While worker.PumpBusy
+        '    Thread.Sleep(125)
+        'End While
+        worker.showForm(Of Editor)()
+        While worker.PumpBusy
+            Thread.Sleep(125)
+        End While
+        worker.showForm(Of Editor)()
         While worker.PumpBusy
             Thread.Sleep(125)
         End While

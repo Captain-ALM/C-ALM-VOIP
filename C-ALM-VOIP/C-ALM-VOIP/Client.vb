@@ -31,6 +31,10 @@ Public Class Client
         Return New Contact(Me)
     End Function
 
+    Public Overridable Sub forceReceive(msg As IPacket)
+        Me.msgrec(msg)
+    End Sub
+
     Protected Overridable Sub msgrec(msg As IPacket)
         If isForMe(msg) And Not _m Then
             If msg.dataType = GetType(Byte()) Then
@@ -78,7 +82,7 @@ Public Class Client
         Dim _1ip As IPAddress = Nothing
         Try
             _1ip = IPAddress.Parse(addr1)
-        Catch ex As InvalidCastException
+        Catch ex As FormatException
             _1ip = Nothing
         Catch ex As ArgumentNullException
             _1ip = Nothing
@@ -86,7 +90,7 @@ Public Class Client
         Dim _2ip As IPAddress = Nothing
         Try
             _2ip = IPAddress.Parse(addr2)
-        Catch ex As InvalidCastException
+        Catch ex As FormatException
             _2ip = Nothing
         Catch ex As ArgumentNullException
             _2ip = Nothing

@@ -141,6 +141,10 @@ Public Class PConfigure
                     TCP_delay = _TCP_delay
                     input_device = _input_device
                     TCP_remove_disconnected_clients = _TCP_remove_disconnected_clients
+                    frm.Invoke(Sub()
+                                   frm.DialogResult = DialogResult.OK
+                                   frm.Close()
+                               End Sub)
                 ElseIf ev.EventSource.sourceObj Is frm.nudsptcpipv4 And ev.EventType = ETs.Leave Then
                     _port_TCP_IPv4 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudspudpipv4 And ev.EventType = ETs.Leave Then

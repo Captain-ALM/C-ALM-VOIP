@@ -44,6 +44,7 @@ Partial Class MainProgram
         Me.butclrem = New System.Windows.Forms.Button()
         Me.butcladd = New System.Windows.Forms.Button()
         Me.ListViewcl = New System.Windows.Forms.ListView()
+        Me.ColumnHeader14 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader1 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader2 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader3 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
@@ -64,6 +65,8 @@ Partial Class MainProgram
         Me.GroupBox4 = New System.Windows.Forms.GroupBox()
         Me.TableLayoutPanel6 = New System.Windows.Forms.TableLayoutPanel()
         Me.ListViewsc = New System.Windows.Forms.ListView()
+        Me.ColumnHeader15 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
+        Me.ColumnHeader16 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.ColumnHeader12 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TableLayoutPanel9 = New System.Windows.Forms.TableLayoutPanel()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -71,9 +74,6 @@ Partial Class MainProgram
         Me.butscmutes = New System.Windows.Forms.Button()
         Me.TrackBarvol = New System.Windows.Forms.TrackBar()
         Me.NumericUpDownvol = New System.Windows.Forms.NumericUpDown()
-        Me.ColumnHeader14 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader15 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
-        Me.ColumnHeader16 = CType(New System.Windows.Forms.ColumnHeader(), System.Windows.Forms.ColumnHeader)
         Me.TableLayoutPanel1.SuspendLayout()
         Me.TableLayoutPanel2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -195,7 +195,7 @@ Partial Class MainProgram
         Me.butrset.Location = New System.Drawing.Point(393, 3)
         Me.butrset.Name = "butrset"
         Me.butrset.Size = New System.Drawing.Size(384, 42)
-        Me.butrset.TabIndex = 0
+        Me.butrset.TabIndex = 1
         Me.butrset.Text = "Reset VOIP"
         Me.butrset.UseVisualStyleBackColor = True
         '
@@ -205,7 +205,7 @@ Partial Class MainProgram
         Me.butstp.Location = New System.Drawing.Point(393, 51)
         Me.butstp.Name = "butstp"
         Me.butstp.Size = New System.Drawing.Size(384, 42)
-        Me.butstp.TabIndex = 1
+        Me.butstp.TabIndex = 2
         Me.butstp.Text = "Stop VOIP"
         Me.butstp.UseVisualStyleBackColor = True
         '
@@ -215,7 +215,7 @@ Partial Class MainProgram
         Me.butrconf.Location = New System.Drawing.Point(3, 3)
         Me.butrconf.Name = "butrconf"
         Me.butrconf.Size = New System.Drawing.Size(384, 42)
-        Me.butrconf.TabIndex = 2
+        Me.butrconf.TabIndex = 0
         Me.butrconf.Text = "Configure VOIP"
         Me.butrconf.UseVisualStyleBackColor = True
         '
@@ -328,7 +328,7 @@ Partial Class MainProgram
         Me.butclviewc.Margin = New System.Windows.Forms.Padding(0)
         Me.butclviewc.Name = "butclviewc"
         Me.butclviewc.Size = New System.Drawing.Size(79, 34)
-        Me.butclviewc.TabIndex = 4
+        Me.butclviewc.TabIndex = 3
         Me.butclviewc.Text = "View Client"
         Me.butclviewc.UseVisualStyleBackColor = True
         '
@@ -340,7 +340,7 @@ Partial Class MainProgram
         Me.butclccls.Margin = New System.Windows.Forms.Padding(0)
         Me.butclccls.Name = "butclccls"
         Me.butclccls.Size = New System.Drawing.Size(83, 34)
-        Me.butclccls.TabIndex = 3
+        Me.butclccls.TabIndex = 4
         Me.butclccls.Text = "Clear Clients"
         Me.butclccls.UseVisualStyleBackColor = True
         '
@@ -389,6 +389,11 @@ Partial Class MainProgram
         Me.ListViewcl.TabIndex = 1
         Me.ListViewcl.UseCompatibleStateImageBehavior = False
         Me.ListViewcl.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader14
+        '
+        Me.ColumnHeader14.Text = "Client Name"
+        Me.ColumnHeader14.Width = 90
         '
         'ColumnHeader1
         '
@@ -446,7 +451,7 @@ Partial Class MainProgram
         Me.ListViewcl2.Location = New System.Drawing.Point(3, 39)
         Me.ListViewcl2.Name = "ListViewcl2"
         Me.ListViewcl2.Size = New System.Drawing.Size(367, 141)
-        Me.ListViewcl2.TabIndex = 2
+        Me.ListViewcl2.TabIndex = 1
         Me.ListViewcl2.UseCompatibleStateImageBehavior = False
         Me.ListViewcl2.View = System.Windows.Forms.View.Details
         '
@@ -500,7 +505,7 @@ Partial Class MainProgram
         Me.butcl2cc.Margin = New System.Windows.Forms.Padding(0)
         Me.butcl2cc.Name = "butcl2cc"
         Me.butcl2cc.Size = New System.Drawing.Size(74, 34)
-        Me.butcl2cc.TabIndex = 4
+        Me.butcl2cc.TabIndex = 2
         Me.butcl2cc.Text = "Create Client"
         Me.butcl2cc.UseVisualStyleBackColor = True
         '
@@ -512,7 +517,7 @@ Partial Class MainProgram
         Me.butcl2ccls.Margin = New System.Windows.Forms.Padding(0)
         Me.butcl2ccls.Name = "butcl2ccls"
         Me.butcl2ccls.Size = New System.Drawing.Size(75, 34)
-        Me.butcl2ccls.TabIndex = 3
+        Me.butcl2ccls.TabIndex = 4
         Me.butcl2ccls.Text = "Clear Contacts"
         Me.butcl2ccls.UseVisualStyleBackColor = True
         '
@@ -524,7 +529,7 @@ Partial Class MainProgram
         Me.butcl2editc.Margin = New System.Windows.Forms.Padding(0)
         Me.butcl2editc.Name = "butcl2editc"
         Me.butcl2editc.Size = New System.Drawing.Size(74, 34)
-        Me.butcl2editc.TabIndex = 2
+        Me.butcl2editc.TabIndex = 3
         Me.butcl2editc.Text = "Edit Contact"
         Me.butcl2editc.UseVisualStyleBackColor = True
         '
@@ -587,9 +592,19 @@ Partial Class MainProgram
         Me.ListViewsc.Location = New System.Drawing.Point(3, 3)
         Me.ListViewsc.Name = "ListViewsc"
         Me.ListViewsc.Size = New System.Drawing.Size(774, 132)
-        Me.ListViewsc.TabIndex = 3
+        Me.ListViewsc.TabIndex = 0
         Me.ListViewsc.UseCompatibleStateImageBehavior = False
         Me.ListViewsc.View = System.Windows.Forms.View.Details
+        '
+        'ColumnHeader15
+        '
+        Me.ColumnHeader15.Text = "Client Name"
+        Me.ColumnHeader15.Width = 90
+        '
+        'ColumnHeader16
+        '
+        Me.ColumnHeader16.Text = "Is Muted:"
+        Me.ColumnHeader16.Width = 90
         '
         'ColumnHeader12
         '
@@ -624,7 +639,7 @@ Partial Class MainProgram
         Me.Label2.Location = New System.Drawing.Point(313, 0)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(149, 33)
-        Me.Label2.TabIndex = 4
+        Me.Label2.TabIndex = 2
         Me.Label2.Text = "Volume:"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
@@ -658,7 +673,7 @@ Partial Class MainProgram
         Me.TrackBarvol.Maximum = 100
         Me.TrackBarvol.Name = "TrackBarvol"
         Me.TrackBarvol.Size = New System.Drawing.Size(149, 27)
-        Me.TrackBarvol.TabIndex = 5
+        Me.TrackBarvol.TabIndex = 3
         Me.TrackBarvol.TickFrequency = 10
         Me.TrackBarvol.Value = 100
         '
@@ -668,23 +683,8 @@ Partial Class MainProgram
         Me.NumericUpDownvol.Location = New System.Drawing.Point(623, 6)
         Me.NumericUpDownvol.Name = "NumericUpDownvol"
         Me.NumericUpDownvol.Size = New System.Drawing.Size(152, 20)
-        Me.NumericUpDownvol.TabIndex = 6
+        Me.NumericUpDownvol.TabIndex = 4
         Me.NumericUpDownvol.Value = New Decimal(New Integer() {100, 0, 0, 0})
-        '
-        'ColumnHeader14
-        '
-        Me.ColumnHeader14.Text = "Client Name"
-        Me.ColumnHeader14.Width = 90
-        '
-        'ColumnHeader15
-        '
-        Me.ColumnHeader15.Text = "Client Name"
-        Me.ColumnHeader15.Width = 90
-        '
-        'ColumnHeader16
-        '
-        Me.ColumnHeader16.Text = "Is Muted:"
-        Me.ColumnHeader16.Width = 90
         '
         'MainProgram
         '
