@@ -130,6 +130,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="PConfigure.vb" />
+    <Compile Include="PEditor.vb" />
+    <Compile Include="PMainProgram.vb" />
     <Compile Include="UnhandledExceptionViewer.designer.vb">
       <DependentUpon>UnhandledExceptionViewer.vb</DependentUpon>
     </Compile>

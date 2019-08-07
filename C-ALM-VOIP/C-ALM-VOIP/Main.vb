@@ -64,6 +64,8 @@ Module Main
         forms.Add(New Editor(worker))
         worker.addFormInstance(Of Editor)(forms(3))
         parsers.Add(New PConfigure())
+        parsers.Add(New PEditor())
+        parsers.Add(New PMainProgram())
         For Each c As IEventParser In parsers
             worker.addParser(c)
         Next
@@ -71,15 +73,7 @@ Module Main
 
     Public Sub runtime()
         worker.startPump()
-        'worker.showForm(Of MainProgram)()
-        'While worker.PumpBusy
-        '    Thread.Sleep(125)
-        'End While
-        worker.showForm(Of Editor)()
-        While worker.PumpBusy
-            Thread.Sleep(125)
-        End While
-        worker.showForm(Of Editor)()
+        worker.showForm(Of MainProgram)()
         While worker.PumpBusy
             Thread.Sleep(125)
         End While

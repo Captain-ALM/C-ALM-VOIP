@@ -150,4 +150,10 @@ Public Class Client
             _vsp.Volume = value
         End Set
     End Property
+
+    Public Overridable ReadOnly Property hasStream As Boolean
+        Get
+            Return (Not _wp Is Nothing) And (Not _vsp Is Nothing)
+        End Get
+    End Property
 End Class

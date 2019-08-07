@@ -92,6 +92,7 @@ Public NotInheritable Class MainProgram
             Dim l As New List(Of Object)
             l.Add(Me)
             wp.addEvent(New WorkerEvent(butrconf, l, ETs.Click, e))
+            wp.showForm(Of Configure)(0, Me)
         End If
     End Sub
 
@@ -180,7 +181,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(ListViewcl, l, ETs.SelectedIndexChanged, e))
+            wp.addEvent(New WorkerEvent(ListViewcl, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(ListViewcl.SelectedIndices)))
         End If
     End Sub
 
@@ -188,7 +189,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(ListViewcl2, l, ETs.SelectedIndexChanged, e))
+            wp.addEvent(New WorkerEvent(ListViewcl2, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(ListViewcl2.SelectedIndices)))
         End If
     End Sub
 
@@ -196,7 +197,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(ListViewsc, l, ETs.SelectedIndexChanged, e))
+            wp.addEvent(New WorkerEvent(ListViewsc, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(ListViewsc.SelectedIndices)))
         End If
     End Sub
 
@@ -220,7 +221,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(TrackBarvol, l, ETs.Scroll, e))
+            wp.addEvent(New WorkerEvent(TrackBarvol, l, ETs.Scroll, New EventArgsDataContainer(TrackBarvol.Value)))
         End If
     End Sub
 
@@ -228,7 +229,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(NumericUpDownvol, l, ETs.ValueChanged, e))
+            wp.addEvent(New WorkerEvent(NumericUpDownvol, l, ETs.ValueChanged, New EventArgsDataContainer(NumericUpDownvol.Value)))
         End If
     End Sub
 

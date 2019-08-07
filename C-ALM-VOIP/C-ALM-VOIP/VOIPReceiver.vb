@@ -6,6 +6,7 @@ Public Class VOIPReceiver
 
     Protected spk As WaveOut = Nothing
     Protected msp As MixingSampleProvider = Nothing
+    Protected slockprov As New Object()
     Public Sub New()
         spk = New WaveOut()
         msp = New MixingSampleProvider(New WaveFormat(8000, 16, 1))
@@ -14,10 +15,14 @@ Public Class VOIPReceiver
         spk.Play()
     End Sub
     Public Sub addProvider(prov As IWaveProvider)
-        msp.AddMixerInput(prov)
+        SyncLock slockprov
+            msp.AddMixerInput(prov)
+        End SyncLock
     End Sub
     Public Sub removeProvider(prov As IWaveProvider)
-        msp.RemoveMixerInput(prov)
+        SyncLock slockprov
+            msp.RemoveMixerInput(prov)
+        End SyncLock
     End Sub
 
 #Region "IDisposable Support"
@@ -27,6 +32,9 @@ Public Class VOIPReceiver
     Protected Overridable Sub Dispose(disposing As Boolean)
         If Not Me.disposedValue Then
             If disposing Then
+                SyncLock slockprov
+                    msp.RemoveAllMixerInputs()
+                End SyncLock
                 spk.Dispose()
                 spk = Nothing
                 msp = Nothing
