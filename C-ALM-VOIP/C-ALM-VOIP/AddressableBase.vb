@@ -6,6 +6,7 @@
     Protected _myport As Integer = 0
     Protected _type As AddressableType = AddressableType.None
     Protected _passmode As MessagePassMode = messagePassMode.Disable
+    Protected _targver As IPVersion = IPVersion.None
 
     Public Sub New(other As AddressableBase)
         _name = other._name
@@ -15,13 +16,15 @@
         _myport = other._myport
         _type = other._type
         _passmode = other._passmode
+        _targver = other._targver
     End Sub
 
-    Public Sub New(targAddress As String, targPort As Integer, aType As AddressableType, mpMode As MessagePassMode)
+    Public Sub New(targAddress As String, targPort As Integer, aType As AddressableType, mpMode As MessagePassMode, targVer As IPVersion)
         _targaddress = targAddress
         _targport = targPort
         _type = aType
         _passmode = mpMode
+        _targver = targVer
     End Sub
 
     Public Overridable Property name As String
@@ -78,6 +81,15 @@
         End Set
     End Property
 
+    Public Overridable Property targetIPVersion As IPVersion
+        Get
+            Return _targver
+        End Get
+        Protected Set(value As IPVersion)
+            _targver = value
+        End Set
+    End Property
+
     Public Overridable Property messagePassMode As MessagePassMode
         Get
             Return _passmode
@@ -101,4 +113,10 @@ Public Enum MessagePassMode As Integer
     Receive = 1
     Send = 2
     Bidirectional = 3
+End Enum
+
+Public Enum IPVersion As Integer
+    None = 0
+    IPv4 = 1
+    IPv6 = 2
 End Enum

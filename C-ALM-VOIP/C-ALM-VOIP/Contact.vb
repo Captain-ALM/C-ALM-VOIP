@@ -5,8 +5,8 @@
         MyBase.New(other)
     End Sub
 
-    Public Sub New(targAddress As String, targPort As Integer, aType As AddressableType, mpMode As MessagePassMode)
-        MyBase.New(targAddress, targPort, aType, mpMode)
+    Public Sub New(targAddress As String, targPort As Integer, aType As AddressableType, mpMode As MessagePassMode, targVer As IPVersion)
+        MyBase.New(targAddress, targPort, aType, mpMode, targVer)
     End Sub
 
     Public Overloads Property targetAddress As String
@@ -42,6 +42,15 @@
         End Get
         Set(value As MessagePassMode)
             MyBase.messagePassMode = value
+        End Set
+    End Property
+
+    Public Overloads Property targetIPVersion As IPVersion
+        Get
+            Return MyBase.targetIPVersion
+        End Get
+        Set(value As IPVersion)
+            MyBase.targetIPVersion = value
         End Set
     End Property
 

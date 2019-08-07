@@ -171,6 +171,7 @@ Public Class Editor
     End Sub
 
     Protected Function updat() As Boolean
+        If ceditm = EditorMode.EditClient Then Return True
         Dim striphold As String = txtbxaddr.Text
         Dim iphold As IPAddress = Nothing
         Dim ver As Integer = -1

@@ -61,6 +61,8 @@ Module Main
         worker.addFormInstance(Of MainProgram)(forms(1))
         forms.Add(New Configure(worker))
         worker.addFormInstance(Of Configure)(forms(2))
+        forms.Add(New Editor(worker))
+        worker.addFormInstance(Of Editor)(forms(3))
         parsers.Add(New PConfigure())
         For Each c As IEventParser In parsers
             worker.addParser(c)

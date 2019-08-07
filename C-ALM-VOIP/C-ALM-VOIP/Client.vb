@@ -36,6 +36,7 @@ Public Class Client
     End Sub
 
     Protected Overridable Sub msgrec(msg As IPacket)
+        If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
         If isForMe(msg) And Not _m Then
             If msg.dataType = GetType(Byte()) Then
                 _wp.AddSamples(CType(msg.data, Byte()), 0, CType(msg.data, Byte()).Length)
@@ -53,6 +54,7 @@ Public Class Client
     End Function
 
     Protected Overridable Sub msgsnd(bts As Byte())
+        If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Receive Then Exit Sub
         Dim ap As AudioPacket = Nothing
         If _type = AddressableType.TCP Then
             ap = New AudioPacket() With {.bytes = bts, .receiverIP = CType(_cl.internalSocket, INetConfig).remoteIPAddress, .receiverPort = CType(_cl.internalSocket, INetConfig).remotePort, .senderIP = CType(_cl.internalSocket, INetConfig).localIPAddress, .senderPort = CType(_cl.internalSocket, INetConfig).localPort}

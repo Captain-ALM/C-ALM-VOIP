@@ -48,8 +48,7 @@ End Module
 
 Public Enum EditorMode As Integer
     None = 0
-    CreateContact = 1
-    CreateClient = 2
-    EditContact = 3
-    EditClient = 4
+    Create = 1
+    EditContact = 2
+    EditClient = 3
 End Enum
