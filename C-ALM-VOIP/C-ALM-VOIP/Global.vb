@@ -26,9 +26,10 @@ Public Module [Global]
     Public udpmarshalIPv6 As NetMarshalUDP = Nothing
     Public micVOIP As VOIPSender = Nothing
     Public spkVOIP As VOIPReceiver = Nothing
-    Public nomReconReg As New Dictionary(Of Tuple(Of String, Integer), String)
+    Public nomReconReg As New SyncLockedList(Of Tuple(Of String, Integer, String))
     Public caddrbs As AddressableBase = Nothing
     Public ceditm As EditorMode = EditorMode.None
+    Public clients As New SyncLockedList(Of Client)
 
     Public Function resolve(addr As String, fam As AddressFamily) As IPAddress
         Dim ipadd As IPAddress() = New IPAddress() {}

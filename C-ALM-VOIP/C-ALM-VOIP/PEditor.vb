@@ -15,10 +15,8 @@ Public Class PEditor
                     frm.Invoke(Sub()
                                    frm.Text = "Create:"
                                    frm.Label1.Text = "Create:"
-                                   frm.nudmyport.Value = _caddrbs.myPort
                                    frm.nudport.Value = _caddrbs.targetPort
                                    frm.txtbxaddr.Text = _caddrbs.targetAddress
-                                   frm.txtbxmyaddr.Text = _caddrbs.myAddress
                                    frm.txtbxname.Text = _caddrbs.name
                                    frm.cmbxipv.SelectedIndex = _caddrbs.targetIPVersion - 1
                                    frm.cmbxstrmode.SelectedIndex = _caddrbs.messagePassMode - 2
@@ -35,9 +33,13 @@ Public Class PEditor
                                    frm.nudmyport.ReadOnly = False
                                    frm.nudmyport.Controls(0).Enabled = True
                                    If _caddrbs.type = AddressableType.TCP Then
+                                       frm.txtbxmyaddr.Text = ""
+                                       frm.nudmyport.Value = 1
                                        frm.txtbxmyaddr.Enabled = False
                                        frm.nudmyport.Enabled = False
                                    ElseIf _caddrbs.type = AddressableType.UDP Then
+                                       frm.txtbxmyaddr.Text = _caddrbs.myAddress
+                                       frm.nudmyport.Value = _caddrbs.myPort
                                        frm.txtbxmyaddr.Enabled = True
                                        frm.nudmyport.Enabled = True
                                    End If
@@ -46,10 +48,8 @@ Public Class PEditor
                     frm.Invoke(Sub()
                                    frm.Text = "View:"
                                    frm.Label1.Text = "View:"
-                                   frm.nudmyport.Value = _caddrbs.myPort
                                    frm.nudport.Value = _caddrbs.targetPort
                                    frm.txtbxaddr.Text = _caddrbs.targetAddress
-                                   frm.txtbxmyaddr.Text = _caddrbs.myAddress
                                    frm.txtbxname.Text = _caddrbs.name
                                    frm.cmbxipv.SelectedIndex = _caddrbs.targetIPVersion - 1
                                    frm.cmbxstrmode.SelectedIndex = _caddrbs.messagePassMode - 2
@@ -66,9 +66,13 @@ Public Class PEditor
                                    frm.nudmyport.ReadOnly = True
                                    frm.nudmyport.Controls(0).Enabled = False
                                    If _caddrbs.type = AddressableType.TCP Then
+                                       frm.txtbxmyaddr.Text = ""
+                                       frm.nudmyport.Value = 1
                                        frm.txtbxmyaddr.Enabled = False
                                        frm.nudmyport.Enabled = False
                                    ElseIf _caddrbs.type = AddressableType.UDP Then
+                                       frm.txtbxmyaddr.Text = _caddrbs.myAddress
+                                       frm.nudmyport.Value = _caddrbs.myPort
                                        frm.txtbxmyaddr.Enabled = True
                                        frm.nudmyport.Enabled = True
                                    End If
@@ -77,10 +81,8 @@ Public Class PEditor
                     frm.Invoke(Sub()
                                    frm.Text = "Edit:"
                                    frm.Label1.Text = "Edit:"
-                                   frm.nudmyport.Value = _caddrbs.myPort
                                    frm.nudport.Value = _caddrbs.targetPort
                                    frm.txtbxaddr.Text = _caddrbs.targetAddress
-                                   frm.txtbxmyaddr.Text = _caddrbs.myAddress
                                    frm.txtbxname.Text = _caddrbs.name
                                    frm.cmbxipv.SelectedIndex = _caddrbs.targetIPVersion - 1
                                    frm.cmbxstrmode.SelectedIndex = _caddrbs.messagePassMode - 2
@@ -97,9 +99,13 @@ Public Class PEditor
                                    frm.nudmyport.ReadOnly = False
                                    frm.nudmyport.Controls(0).Enabled = True
                                    If _caddrbs.type = AddressableType.TCP Then
+                                       frm.txtbxmyaddr.Text = ""
+                                       frm.nudmyport.Value = 1
                                        frm.txtbxmyaddr.Enabled = False
                                        frm.nudmyport.Enabled = False
                                    ElseIf _caddrbs.type = AddressableType.UDP Then
+                                       frm.txtbxmyaddr.Text = _caddrbs.myAddress
+                                       frm.nudmyport.Value = _caddrbs.myPort
                                        frm.txtbxmyaddr.Enabled = True
                                        frm.nudmyport.Enabled = True
                                    End If

@@ -412,7 +412,7 @@ Partial Class MainProgram
         '
         'ColumnHeader4
         '
-        Me.ColumnHeader4.Text = "Client Connected"
+        Me.ColumnHeader4.Text = "Client Ready"
         Me.ColumnHeader4.Width = 120
         '
         'GroupBox3

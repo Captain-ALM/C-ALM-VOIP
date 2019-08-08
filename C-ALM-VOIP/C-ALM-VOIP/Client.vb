@@ -23,11 +23,6 @@ Public Class Client
     End Sub
 
     Public Overrides Function duplicateToNew() As AddressableBase
-        If _type = AddressableType.TCP Then
-            Return New Contact(Me) With {.targetAddress = "", .targetPort = 0, .myAddress = "", .myPort = 0}
-        ElseIf _type = AddressableType.UDP Then
-            Return New Contact(Me)
-        End If
         Return New Contact(Me)
     End Function
 
@@ -74,7 +69,8 @@ Public Class Client
         RemoveHandler _cl.MessageReceived, AddressOf msgrec
         RemoveHandler micVOIP.dataAvailable, AddressOf msgsnd
         spkVOIP.removeProvider(_vsp)
-        _cl.close()
+        If _type = AddressableType.TCP Then _
+            _cl.close()
         _cl = Nothing
         _vsp = Nothing
         _wp = Nothing
@@ -154,6 +150,12 @@ Public Class Client
     Public Overridable ReadOnly Property hasStream As Boolean
         Get
             Return (Not _wp Is Nothing) And (Not _vsp Is Nothing)
+        End Get
+    End Property
+
+    Public Overridable ReadOnly Property marshal As NetMarshalBase
+        Get
+            Return _cl
         End Get
     End Property
 End Class
