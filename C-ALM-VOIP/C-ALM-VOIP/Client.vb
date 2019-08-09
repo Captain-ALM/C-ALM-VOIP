@@ -7,19 +7,16 @@ Imports NAudio.Wave.SampleProviders
 Public Class Client
     Inherits AddressableBase
 
-    Protected _vsp As VolumeSampleProvider = Nothing
-    Protected _wp As BufferedWaveProvider = Nothing
+    Protected _str As Streamer = Nothing
     Protected _cl As NetMarshalBase = Nothing
     Protected _m As Boolean = False
 
     Public Sub New(other As Contact, client As NetMarshalBase)
         MyBase.New(other)
-        _wp = New BufferedWaveProvider(New WaveFormat(8000, 16, 1))
-        _vsp = New VolumeSampleProvider(_wp)
-        spkVOIP.addProvider(_vsp)
+        _str = spkVOIP.createStreamer(other.name)
         _cl = client
         AddHandler _cl.MessageReceived, AddressOf msgrec
-        AddHandler micVOIP.dataAvailable, AddressOf msgsnd
+        AddHandler micVOIP.streamer.dataExgest, AddressOf msgsnd
     End Sub
 
     Public Overrides Function duplicateToNew() As AddressableBase
@@ -34,7 +31,7 @@ Public Class Client
         If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
         If isForMe(msg) And Not _m Then
             If msg.dataType = GetType(Byte()) Then
-                _wp.AddSamples(CType(msg.data, Byte()), 0, CType(msg.data, Byte()).Length)
+                _str.ingestData(msg.data, False)
             End If
         End If
     End Sub
@@ -67,13 +64,13 @@ Public Class Client
 
     Public Overridable Sub [stop]()
         RemoveHandler _cl.MessageReceived, AddressOf msgrec
-        RemoveHandler micVOIP.dataAvailable, AddressOf msgsnd
-        spkVOIP.removeProvider(_vsp)
+        RemoveHandler micVOIP.streamer.dataExgest, AddressOf msgsnd
+        spkVOIP.removeProvider(_str.volumeprovider)
         If _type = AddressableType.TCP Then _
             _cl.close()
+        _str.close()
+        _str = Nothing
         _cl = Nothing
-        _vsp = Nothing
-        _wp = Nothing
     End Sub
 
     Protected Overridable Function isResolveEqual(addr1 As String, addr2 As String) As Boolean
@@ -131,25 +128,25 @@ Public Class Client
 
     Public Overridable Property muted As Boolean
         Get
-            Return _m
+            Return _str.muted
         End Get
         Set(value As Boolean)
-            _m = value
+            _str.muted = value
         End Set
     End Property
 
     Public Overridable Property volume As Single
         Get
-            Return _vsp.Volume
+            Return _str.volume
         End Get
         Set(value As Single)
-            _vsp.Volume = value
+            _str.volume = value
         End Set
     End Property
 
-    Public Overridable ReadOnly Property hasStream As Boolean
+    Public Overridable ReadOnly Property stream As Streamer
         Get
-            Return (Not _wp Is Nothing) And (Not _vsp Is Nothing)
+            Return _str
         End Get
     End Property
 

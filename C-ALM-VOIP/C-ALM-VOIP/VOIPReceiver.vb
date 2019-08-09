@@ -7,6 +7,7 @@ Public Class VOIPReceiver
     Protected spk As WaveOut = Nothing
     Protected msp As MixingSampleProvider = Nothing
     Protected slockprov As New Object()
+    Protected slockcs As New Object()
     Public Sub New()
         spk = New WaveOut()
         msp = New MixingSampleProvider(New WaveFormat(8000, 16, 1))
@@ -24,6 +25,14 @@ Public Class VOIPReceiver
             msp.RemoveMixerInput(prov)
         End SyncLock
     End Sub
+    Public Function createStreamer(name As String) As Streamer
+        Dim toret As Streamer = Nothing
+        SyncLock slockcs
+            toret = New Streamer(name, True)
+            addProvider(toret.volumeprovider)
+        End SyncLock
+        Return toret
+    End Function
 
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls

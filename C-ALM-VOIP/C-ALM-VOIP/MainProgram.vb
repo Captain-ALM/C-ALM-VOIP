@@ -67,7 +67,9 @@ Public NotInheritable Class MainProgram
         formClosedDone = False
         If ue Then wp.addEvent(Me, ETs.Shown, e)
         InListening = False
+        Me.Enabled = False
         wp.showForm(Of Configure)(0, Me)
+        Me.Enabled = True
         engage()
     End Sub
 

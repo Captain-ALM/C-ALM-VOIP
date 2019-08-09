@@ -1,23 +1,31 @@
-﻿
-Imports NAudio.Wave
+﻿Imports NAudio.Wave
 
 Public NotInheritable Class VOIPSender
     Implements IDisposable
 
     Protected mic As WaveIn = Nothing
+    Protected strm As Streamer = Nothing
     Public Event dataAvailable(bts As Byte())
     Public Sub New()
         mic = New WaveIn()
         mic.BufferMilliseconds = 50
         mic.DeviceNumber = input_device
+        strm = New Streamer("", False)
         mic.WaveFormat = New WaveFormat(8000, 16, 1)
         AddHandler mic.DataAvailable, AddressOf dataReceived
         mic.StartRecording()
     End Sub
 
     Private Sub dataReceived(sender As Object, e As WaveInEventArgs)
+        strm.ingestData(DeepCopyHelper.deepCopy(Of Byte())(e.Buffer), True)
         RaiseEvent dataAvailable(DeepCopyHelper.deepCopy(Of Byte())(e.Buffer))
     End Sub
+
+    Public ReadOnly Property streamer As Streamer
+        Get
+            Return strm
+        End Get
+    End Property
 
 #Region "IDisposable Support"
     Private disposedValue As Boolean ' To detect redundant calls
@@ -27,6 +35,8 @@ Public NotInheritable Class VOIPSender
         If Not Me.disposedValue Then
             If disposing Then
                 RemoveHandler mic.DataAvailable, AddressOf dataReceived
+                strm.close()
+                strm = Nothing
                 mic.StopRecording()
                 mic.Dispose()
                 mic = Nothing
