@@ -10,10 +10,12 @@ Public Class Client
     Protected _str As Streamer = Nothing
     Protected _cl As NetMarshalBase = Nothing
     Protected _m As Boolean = False
+    Protected _lts As New Tuple(Of Integer, Integer, Integer)(0, 0, 0)
 
     Public Sub New(other As Contact, client As NetMarshalBase)
         MyBase.New(other)
-        _str = spkVOIP.createStreamer(other.name)
+        If other.messagePassMode = voip.MessagePassMode.Bidirectional Or other.messagePassMode = voip.MessagePassMode.Receive Then _
+            _str = spkVOIP.createStreamer(other.name)
         _cl = client
         AddHandler _cl.MessageReceived, AddressOf msgrec
         AddHandler micVOIP.streamer.dataExgest, AddressOf msgsnd
@@ -30,8 +32,9 @@ Public Class Client
     Protected Overridable Sub msgrec(msg As IPacket)
         If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
         If isForMe(msg) And Not _m Then
-            If msg.dataType = GetType(Byte()) Then
-                _str.ingestData(msg.data, False)
+            If msg.dataType = GetType(Tuple(Of Byte(), Integer, Integer, Integer)) And isNewerTimeStamp(msg.data) Then
+                If Not _str Is Nothing Then _
+                    _str.ingestData(msg.data, False)
             End If
         End If
     End Sub
@@ -65,11 +68,14 @@ Public Class Client
     Public Overridable Sub [stop]()
         RemoveHandler _cl.MessageReceived, AddressOf msgrec
         RemoveHandler micVOIP.streamer.dataExgest, AddressOf msgsnd
-        spkVOIP.removeProvider(_str.volumeprovider)
+        If Not _str Is Nothing Then _
+            spkVOIP.removeProvider(_str.volumeprovider)
         If _type = AddressableType.TCP Then _
             _cl.close()
-        _str.close()
-        _str = Nothing
+        If Not _str Is Nothing Then
+            _str.close()
+            _str = Nothing
+        End If
         _cl = Nothing
     End Sub
 
@@ -126,24 +132,6 @@ Public Class Client
         Return False
     End Function
 
-    Public Overridable Property muted As Boolean
-        Get
-            Return _str.muted
-        End Get
-        Set(value As Boolean)
-            _str.muted = value
-        End Set
-    End Property
-
-    Public Overridable Property volume As Single
-        Get
-            Return _str.volume
-        End Get
-        Set(value As Single)
-            _str.volume = value
-        End Set
-    End Property
-
     Public Overridable ReadOnly Property stream As Streamer
         Get
             Return _str
@@ -155,4 +143,31 @@ Public Class Client
             Return _cl
         End Get
     End Property
+
+    Protected Overridable Function generateTimestamp() As Tuple(Of Integer, Integer, Integer)
+        Dim toret As New Tuple(Of Integer, Integer, Integer)(DateTime.Now.Year, DateTime.Now.DayOfYear, DateTime.Now.Hour * DateTime.Now.Minute * DateTime.Now.Second * DateTime.Now.Millisecond)
+        Return toret
+    End Function
+
+    Protected Overridable Function isNewerTimeStamp(tstchk As Tuple(Of Byte(), Integer, Integer, Integer)) As Boolean
+        If tstchk.Item2 > _lts.Item1 Then
+            Return True
+        ElseIf tstchk.Item2 < _lts.Item1 Then
+            Return False
+        Else
+            If tstchk.Item3 > _lts.Item2 Then
+                Return True
+            ElseIf tstchk.Item3 < _lts.Item2 Then
+                Return False
+            Else
+                If tstchk.Item4 > _lts.Item3 Then
+                    Return True
+                ElseIf tstchk.Item4 < _lts.Item3 Then
+                    Return False
+                Else
+                    Return False
+                End If
+            End If
+        End If
+    End Function
 End Class

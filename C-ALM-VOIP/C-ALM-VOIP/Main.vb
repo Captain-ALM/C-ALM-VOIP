@@ -69,6 +69,9 @@ Module Main
         For Each c As IEventParser In parsers
             worker.addParser(c)
         Next
+
+        micVOIP = New VOIPSender()
+        spkVOIP = New VOIPReceiver()
     End Sub
 
     Public Sub runtime()

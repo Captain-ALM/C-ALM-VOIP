@@ -20,10 +20,6 @@ Public NotInheritable Class AboutBx
         End If
     End Sub
 
-    Private Sub AboutBx_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        If ue Then wp.addEvent(New WorkerEvent(Me, EventTypes.Load, e))
-    End Sub
-
     Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OKButton.Click
         Me.Close()
         If ue Then

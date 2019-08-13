@@ -10,17 +10,17 @@ Public Class PEditor
         If canCastObject(Of Editor)(ev.EventSource.sourceObj) Then
             Dim frm As Editor = castObject(Of Editor)(ev.EventSource.sourceObj)
             If ev.EventType = ETs.Shown Then
-                _caddrbs = caddrbs
+                _caddrbs = caddrbs.duplicateToNew()
                 If ceditm = EditorMode.Create Then
                     frm.Invoke(Sub()
                                    frm.Text = "Create:"
                                    frm.Label1.Text = "Create:"
-                                   frm.nudport.Value = _caddrbs.targetPort
-                                   frm.txtbxaddr.Text = _caddrbs.targetAddress
-                                   frm.txtbxname.Text = _caddrbs.name
-                                   frm.cmbxipv.SelectedIndex = _caddrbs.targetIPVersion - 1
-                                   frm.cmbxstrmode.SelectedIndex = _caddrbs.messagePassMode - 2
-                                   frm.cmbxtype.SelectedIndex = _caddrbs.type - 1
+                                   frm.nudport.Value = 1
+                                   frm.txtbxaddr.Text = ""
+                                   frm.txtbxname.Text = ""
+                                   frm.cmbxipv.SelectedIndex = 0
+                                   frm.cmbxstrmode.SelectedIndex = 0
+                                   frm.cmbxtype.SelectedIndex = 0
                                    frm.cmbxipv.Enabled = True
                                    frm.cmbxstrmode.Enabled = True
                                    frm.cmbxtype.Enabled = True
@@ -38,8 +38,8 @@ Public Class PEditor
                                        frm.txtbxmyaddr.Enabled = False
                                        frm.nudmyport.Enabled = False
                                    ElseIf _caddrbs.type = AddressableType.UDP Then
-                                       frm.txtbxmyaddr.Text = _caddrbs.myAddress
-                                       frm.nudmyport.Value = _caddrbs.myPort
+                                       frm.txtbxmyaddr.Text = ""
+                                       frm.nudmyport.Value = 1
                                        frm.txtbxmyaddr.Enabled = True
                                        frm.nudmyport.Enabled = True
                                    End If
@@ -118,7 +118,29 @@ Public Class PEditor
                 Dim frm As Editor = castObject(Of Editor)(ra(0))
                 Dim args As EventArgsDataContainer = castObject(Of EventArgsDataContainer)(ev.EventData)
                 If ev.EventSource.sourceObj Is frm.OK_Button And ev.EventType = ETs.Click Then
-                    caddrbs = _caddrbs
+                    If ceditm = EditorMode.Create Then
+                        CType(caddrbs, Contact).messagePassMode = _caddrbs.messagePassMode
+                        caddrbs.myAddress = _caddrbs.myAddress
+                        caddrbs.myPort = _caddrbs.myPort
+                        caddrbs.name = _caddrbs.name
+                        CType(caddrbs, Contact).targetAddress = _caddrbs.targetAddress
+                        CType(caddrbs, Contact).targetIPVersion = _caddrbs.targetIPVersion
+                        CType(caddrbs, Contact).targetPort = _caddrbs.targetPort
+                        CType(caddrbs, Contact).type = _caddrbs.type
+                    ElseIf ceditm = EditorMode.EditClient Then
+                        caddrbs.myAddress = _caddrbs.myAddress
+                        caddrbs.myPort = _caddrbs.myPort
+                        caddrbs.name = _caddrbs.name
+                    ElseIf ceditm = EditorMode.EditContact Then
+                        CType(caddrbs, Contact).messagePassMode = _caddrbs.messagePassMode
+                        caddrbs.myAddress = _caddrbs.myAddress
+                        caddrbs.myPort = _caddrbs.myPort
+                        caddrbs.name = _caddrbs.name
+                        CType(caddrbs, Contact).targetAddress = _caddrbs.targetAddress
+                        CType(caddrbs, Contact).targetIPVersion = _caddrbs.targetIPVersion
+                        CType(caddrbs, Contact).targetPort = _caddrbs.targetPort
+                        CType(caddrbs, Contact).type = _caddrbs.type
+                    End If
                     frm.Invoke(Sub()
                                    frm.DialogResult = DialogResult.OK
                                    frm.Close()

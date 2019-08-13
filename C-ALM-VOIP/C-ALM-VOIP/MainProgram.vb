@@ -23,10 +23,6 @@ Public NotInheritable Class MainProgram
         End If
     End Sub
 
-    Private Sub MainProgram_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        If ue Then wp.addEvent(New WorkerEvent(Me, ETs.Load, e))
-    End Sub
-
     Private Sub MainProgram_FormClosed(sender As Object, e As FormClosedEventArgs) Handles MyBase.FormClosed
         If Not formClosedDone Then
             whenClosed()
@@ -65,11 +61,9 @@ Public NotInheritable Class MainProgram
         Me.DialogResult = Windows.Forms.DialogResult.None
         formClosingDone = False
         formClosedDone = False
-        If ue Then wp.addEvent(Me, ETs.Shown, e)
         InListening = False
-        Me.Enabled = False
         wp.showForm(Of Configure)(0, Me)
-        Me.Enabled = True
+        If ue Then wp.addEvent(Me, ETs.Shown, e)
         engage()
     End Sub
 
@@ -280,12 +274,23 @@ Public NotInheritable Class MainProgram
             udpmarshalIPv6.start()
             InListening = True
         End If
+        addStrm(micVOIP.streamer)
+        If InListening Then
+            lblstatus.Text = "Listening."
+        Else
+            lblstatus.Text = "Not Listening."
+        End If
     End Sub
 
     Private Sub disengage()
+        remStrm(micVOIP.streamer)
         For Each c As Client In clients
+            If Not c.stream Is Nothing Then _
+                remStrm(c.stream)
             c.stop()
+            remCl(c)
         Next
+        streams.Clear()
         clients.Clear()
         If Not tcpmarshalIPv4 Is Nothing Then
             RemoveHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
@@ -330,14 +335,9 @@ Public NotInheritable Class MainProgram
             Dim cl As Client = retRegCl(msg.senderIP, msg.senderPort)
             If cl Is Nothing Then
                 cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork).ToString(), msg.senderPort, AddressableType.UDP, MessagePassMode.Bidirectional, IPVersion.IPv4), udpmarshalIPv4) With {.myAddress = external_UDP_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
-                clients.Add(cl)
-                Dim lvc As New ListViewItem(cl.name)
-                lvc.SubItems.Add(cl.targetAddress)
-                lvc.SubItems.Add(cl.targetPort)
-                lvc.SubItems.Add("UDP")
-                lvc.SubItems.Add("Ready")
-                ListViewcl.Items.Add(lvc)
+                addCl(cl)
                 cl.forceReceive(msg)
+                addStrm(cl.stream)
             End If
         End If
     End Sub
@@ -349,14 +349,9 @@ Public NotInheritable Class MainProgram
             Dim cl As Client = retRegCl(msg.senderIP, msg.senderPort)
             If cl Is Nothing Then
                 cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6).ToString(), msg.senderPort, AddressableType.UDP, MessagePassMode.Bidirectional, IPVersion.IPv6), udpmarshalIPv6) With {.myAddress = external_UDP_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
-                clients.Add(cl)
-                Dim lvc As New ListViewItem(cl.name)
-                lvc.SubItems.Add(cl.targetAddress)
-                lvc.SubItems.Add(cl.targetPort)
-                lvc.SubItems.Add("UDP")
-                lvc.SubItems.Add("Ready")
-                ListViewcl.Items.Add(lvc)
+                addCl(cl)
                 cl.forceReceive(msg)
+                addStrm(cl.stream)
             End If
         End If
     End Sub
@@ -384,13 +379,8 @@ Public NotInheritable Class MainProgram
                     End If
                     cl = New Client(New Contact(lip, lport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv4), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                 End If
-                clients.Add(cl)
-                Dim lvc As New ListViewItem(cl.name)
-                lvc.SubItems.Add(cl.myAddress)
-                lvc.SubItems.Add(cl.myPort)
-                lvc.SubItems.Add("TCP")
-                lvc.SubItems.Add(clm.ready)
-                ListViewcl.Items.Add(lvc)
+                addCl(cl)
+                addStrm(cl.stream)
             End If
         End If
     End Sub
@@ -418,13 +408,8 @@ Public NotInheritable Class MainProgram
                     End If
                     cl = New Client(New Contact(lip, lport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv6), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                 End If
-                clients.Add(cl)
-                Dim lvc As New ListViewItem(cl.name)
-                lvc.SubItems.Add(cl.myAddress)
-                lvc.SubItems.Add(cl.myPort)
-                lvc.SubItems.Add("TCP")
-                lvc.SubItems.Add(clm.ready)
-                ListViewcl.Items.Add(lvc)
+                addCl(cl)
+                addStrm(cl.stream)
             End If
         End If
     End Sub
@@ -438,17 +423,11 @@ Public NotInheritable Class MainProgram
                 Dim ind As Integer = clients.IndexOf(cl)
                 If ListViewcl.SelectedIndices.Contains(ind) Then _
                     ListViewcl.SelectedIndices.Remove(ind)
-                ListViewcl.Items.RemoveAt(ind)
-                clients.RemoveAt(ind)
+                Dim strm As Streamer = cl.stream
+                If Not strm Is Nothing Then _
+                    remStrm(strm)
+                remCl(cl)
             End If
-        End If
-    End Sub
-
-    Private Sub visUpdat()
-        If InListening Then
-            lblstatus.Text = "Listening."
-        Else
-            lblstatus.Text = "Not Listening."
         End If
     End Sub
 
@@ -470,7 +449,7 @@ Public NotInheritable Class MainProgram
         Return toret
     End Function
 
-    Private Function getName(ip As String, port As Integer) As String
+    Public Function getName(ip As String, port As Integer) As String
         Dim toret As String = ""
         For Each c As Tuple(Of String, Integer, String) In nomReconReg
             If c.Item1 = ip And c.Item2 = port Then
@@ -481,7 +460,7 @@ Public NotInheritable Class MainProgram
         Return toret
     End Function
 
-    Private Sub remName(ip As String, port As Integer)
+    Public Sub remName(ip As String, port As Integer)
         For i As Integer = 0 To nomReconReg.Count - 1 Step 1
             Dim c As Tuple(Of String, Integer, String) = nomReconReg(i)
             If c.Item1 = ip And c.Item2 = port Then
@@ -489,5 +468,214 @@ Public NotInheritable Class MainProgram
                 Exit For
             End If
         Next
+    End Sub
+
+    Private slockstrm As New Object()
+
+    Public Sub addStrm(strm As Streamer)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() addStrm(strm))
+        Else
+            SyncLock slockstrm
+                streams.Add(strm)
+                Dim lvi As New ListViewItem(strm.name)
+                lvi.SubItems.Add(strm.muted)
+                lvi.SubItems.Add(strm.volume)
+                ListViewsc.Items.Add(lvi)
+            End SyncLock
+        End If
+    End Sub
+
+    Public Function indxStrm(strm As Streamer) As Integer
+        Dim toret As Integer = -1
+        SyncLock slockstrm
+            toret = streams.IndexOf(strm)
+        End SyncLock
+        Return toret
+    End Function
+
+    Public Function indxStrm(indx As Integer) As Streamer
+        Dim toret As Streamer = Nothing
+        SyncLock slockstrm
+            If indx > -1 And indx < streams.Count Then _
+                toret = streams(indx)
+        End SyncLock
+        Return toret
+    End Function
+
+    Public Sub upStrm(strm As Streamer)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() upStrm(strm))
+        Else
+            SyncLock slockstrm
+                Dim indx As Integer = indxStrm(strm)
+                Dim lvi As New ListViewItem(strm.name)
+                lvi.SubItems.Add(strm.muted)
+                lvi.SubItems.Add(strm.volume)
+                ListViewsc.Items(indx) = lvi
+            End SyncLock
+        End If
+    End Sub
+
+    Public Sub remStrm(strm As Streamer)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() remStrm(strm))
+        Else
+            SyncLock slockstrm
+                Dim indx As Integer = indxStrm(strm)
+                ListViewsc.Items.RemoveAt(indx)
+                streams.RemoveAt(indx)
+            End SyncLock
+        End If
+    End Sub
+
+    Private slockCl As New Object()
+
+    Public Sub addCl(Cl As Client)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() addCl(Cl))
+        Else
+            SyncLock slockCl
+                Clients.Add(Cl)
+                Dim lvi As New ListViewItem(Cl.name)
+                If Cl.type = AddressableType.TCP Then
+                    lvi.SubItems.Add(Cl.myAddress)
+                    lvi.SubItems.Add(Cl.myPort)
+                    lvi.SubItems.Add("TCP")
+                    lvi.SubItems.Add(Cl.connected)
+                ElseIf Cl.type = AddressableType.UDP Then
+                    lvi.SubItems.Add(Cl.targetAddress)
+                    lvi.SubItems.Add(Cl.targetPort)
+                    lvi.SubItems.Add("UDP")
+                    lvi.SubItems.Add("True")
+                End If
+                ListViewcl.Items.Add(lvi)
+            End SyncLock
+        End If
+    End Sub
+
+    Public Function indxCl(Cl As Client) As Integer
+        Dim toret As Integer = -1
+        SyncLock slockCl
+            toret = Clients.IndexOf(Cl)
+        End SyncLock
+        Return toret
+    End Function
+
+    Public Function indxCl(indx As Integer) As Client
+        Dim toret As Client = Nothing
+        SyncLock slockCl
+            If indx > -1 And indx < Clients.Count Then _
+                toret = Clients(indx)
+        End SyncLock
+        Return toret
+    End Function
+
+    Public Sub upCl(Cl As Client)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() upCl(Cl))
+        Else
+            SyncLock slockCl
+                Dim indx As Integer = indxCl(Cl)
+                Dim lvi As New ListViewItem(Cl.name)
+                If Cl.type = AddressableType.TCP Then
+                    lvi.SubItems.Add(Cl.myAddress)
+                    lvi.SubItems.Add(Cl.myPort)
+                    lvi.SubItems.Add("TCP")
+                    lvi.SubItems.Add(Cl.connected)
+                ElseIf Cl.type = AddressableType.UDP Then
+                    lvi.SubItems.Add(Cl.targetAddress)
+                    lvi.SubItems.Add(Cl.targetPort)
+                    lvi.SubItems.Add("UDP")
+                    lvi.SubItems.Add("True")
+                End If
+                ListViewcl.Items(indx) = lvi
+            End SyncLock
+        End If
+    End Sub
+
+    Public Sub remCl(Cl As Client)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() remCl(Cl))
+        Else
+            SyncLock slockCl
+                Dim indx As Integer = indxCl(Cl)
+                ListViewcl.Items.RemoveAt(indx)
+                Clients.RemoveAt(indx)
+            End SyncLock
+        End If
+    End Sub
+
+    Private slockCon As New Object()
+
+    Public Sub addCon(Con As Contact)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() addCon(Con))
+        Else
+            SyncLock slockCon
+                contacts.Add(Con)
+                Dim lvi As New ListViewItem(Con.name)
+                If Con.type = AddressableType.TCP Then
+                    lvi.SubItems.Add(Con.myAddress)
+                    lvi.SubItems.Add(Con.myPort)
+                    lvi.SubItems.Add("TCP")
+                ElseIf Con.type = AddressableType.UDP Then
+                    lvi.SubItems.Add(Con.targetAddress)
+                    lvi.SubItems.Add(Con.targetPort)
+                    lvi.SubItems.Add("UDP")
+                End If
+                ListViewcl2.Items.Add(lvi)
+            End SyncLock
+        End If
+    End Sub
+
+    Public Function indxCon(Con As Contact) As Integer
+        Dim toret As Integer = -1
+        SyncLock slockCon
+            toret = contacts.IndexOf(Con)
+        End SyncLock
+        Return toret
+    End Function
+
+    Public Function indxCon(indx As Integer) As Contact
+        Dim toret As Contact = Nothing
+        SyncLock slockCon
+            If indx > -1 And indx < contacts.Count Then _
+                toret = contacts(indx)
+        End SyncLock
+        Return toret
+    End Function
+
+    Public Sub upCon(Con As Contact)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() upCon(Con))
+        Else
+            SyncLock slockCon
+                Dim indx As Integer = indxCon(Con)
+                Dim lvi As New ListViewItem(Con.name)
+                If Con.type = AddressableType.TCP Then
+                    lvi.SubItems.Add(Con.myAddress)
+                    lvi.SubItems.Add(Con.myPort)
+                    lvi.SubItems.Add("TCP")
+                ElseIf Con.type = AddressableType.UDP Then
+                    lvi.SubItems.Add(Con.targetAddress)
+                    lvi.SubItems.Add(Con.targetPort)
+                    lvi.SubItems.Add("UDP")
+                End If
+                ListViewcl2.Items(indx) = lvi
+            End SyncLock
+        End If
+    End Sub
+
+    Public Sub remCon(Con As Contact)
+        If Me.InvokeRequired Then
+            Me.Invoke(Sub() remCon(Con))
+        Else
+            SyncLock slockCon
+                Dim indx As Integer = indxCon(Con)
+                ListViewcl2.Items.RemoveAt(indx)
+                contacts.RemoveAt(indx)
+            End SyncLock
+        End If
     End Sub
 End Class

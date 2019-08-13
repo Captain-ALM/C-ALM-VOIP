@@ -10,7 +10,7 @@ Public Class VOIPReceiver
     Protected slockcs As New Object()
     Public Sub New()
         spk = New WaveOut()
-        msp = New MixingSampleProvider(New WaveFormat(8000, 16, 1))
+        msp = New MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(8000, 1))
         msp.ReadFully = True
         spk.Init(msp)
         spk.Play()

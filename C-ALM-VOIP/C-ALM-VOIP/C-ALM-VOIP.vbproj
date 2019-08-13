@@ -132,6 +132,7 @@
     <Compile Include="PConfigure.vb" />
     <Compile Include="PEditor.vb" />
     <Compile Include="PMainProgram.vb" />
+    <Compile Include="Streamer.vb" />
     <Compile Include="SyncLockedList.vb" />
     <Compile Include="UnhandledExceptionViewer.designer.vb">
       <DependentUpon>UnhandledExceptionViewer.vb</DependentUpon>

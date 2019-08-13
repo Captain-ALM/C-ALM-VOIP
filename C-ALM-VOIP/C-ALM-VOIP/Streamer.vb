@@ -7,6 +7,7 @@ Public Class Streamer
     Protected _datalen As Integer = 0
     Protected _m As Boolean = False
     Protected _name As String = ""
+    Protected _up As Boolean = False
     Public Event dataExgest(data As Byte())
     Public Event dataExgestWithVolume(data As Single())
 
@@ -16,6 +17,7 @@ Public Class Streamer
             _vsp = New VolumeSampleProvider(_wp)
         End If
         _name = name
+        _up = True
     End Sub
 
     Public Sub ingestData(data As Byte(), exportViaEvent As Boolean)
@@ -38,6 +40,7 @@ Public Class Streamer
         _vsp = Nothing
         _wp.ClearBuffer()
         _wp = Nothing
+        _up = False
     End Sub
 
     Public Overridable Property muted As Boolean
@@ -51,9 +54,11 @@ Public Class Streamer
 
     Public Overridable Property volume As Single
         Get
+            If _vsp Is Nothing Then Return 1.0F
             Return _vsp.Volume
         End Get
         Set(value As Single)
+            If _vsp Is Nothing Then Exit Property
             _vsp.Volume = value
         End Set
     End Property
@@ -77,6 +82,12 @@ Public Class Streamer
         Set(value As String)
             _name = value
         End Set
+    End Property
+
+    Public Overridable ReadOnly Property isStreaming As Boolean
+        Get
+            Return _up
+        End Get
     End Property
 End Class
 

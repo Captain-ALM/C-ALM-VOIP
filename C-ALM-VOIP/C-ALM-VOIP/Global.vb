@@ -30,6 +30,8 @@ Public Module [Global]
     Public caddrbs As AddressableBase = Nothing
     Public ceditm As EditorMode = EditorMode.None
     Public clients As New SyncLockedList(Of Client)
+    Public contacts As New SyncLockedList(Of Contact)
+    Public streams As New SyncLockedList(Of Streamer)
 
     Public Function resolve(addr As String, fam As AddressFamily) As IPAddress
         Dim ipadd As IPAddress() = New IPAddress() {}

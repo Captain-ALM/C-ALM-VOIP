@@ -1,7 +1,7 @@
 ﻿Imports captainalm.workerpumper
 Imports System.Net
 
-Public Class Configure
+Public NotInheritable Class Configure
     Implements IWorkerPumpReceiver
 
     Private formClosingDone As Boolean = False
@@ -66,6 +66,7 @@ Public Class Configure
         nudspudpipv6.BackColor = Color.White
         butOK.Enabled = True
         butCANCEL.Enabled = True
+        updat()
         If ue Then wp.addEvent(Me, ETs.Shown, e)
     End Sub
 

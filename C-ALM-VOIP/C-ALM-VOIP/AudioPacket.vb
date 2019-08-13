@@ -9,19 +9,26 @@ Public Structure AudioPacket
     Private receiverIP_ As String
     Private receiverPort_ As Integer
     Public bytes As Byte()
+    Public year As Integer
+    Public day As Integer
+    Public millisecond As Integer
 
     Public Property data As Object Implements IPacket.data
         Get
-            Return bytes
+            Return New Tuple(Of Byte(), Integer, Integer, Integer)(bytes, year, day, millisecond)
         End Get
         Set(value As Object)
-            bytes = value
+            Dim val As Tuple(Of Byte(), Integer, Integer, Integer) = value
+            bytes = val.Item1
+            year = val.Item2
+            day = val.Item3
+            millisecond = val.Item4
         End Set
     End Property
 
     Public ReadOnly Property dataType As Type Implements IPacket.dataType
         Get
-            Return GetType(Byte())
+            Return GetType(Tuple(Of Byte(), Integer, Integer, Integer))
         End Get
     End Property
 
@@ -39,6 +46,9 @@ Public Structure AudioPacket
             Me.senderIP_ = msg.senderIP_
             Me.senderPort_ = msg.senderPort_
             Me.bytes = msg.bytes
+            Me.year = msg.year
+            Me.day = msg.day
+            Me.millisecond = msg.millisecond
             msg = Nothing
         End Set
     End Property
