@@ -155,14 +155,14 @@ Public NotInheritable Class MainProgram
                     If caddrbs.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
                         CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
                         If caddrbs.myAddress = "" Then caddrbs.myAddress = external_UDP_Address_IPv4
-                        If caddrbs.myPort = "" Then caddrbs.myPort = external_UDP_Port_IPv4
+                        If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv4
                         Dim cl As New Client(caddrbs, udpmarshalIPv4)
                         addCl(cl)
                         addStrm(cl.stream)
                     ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
                         CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
                         If caddrbs.myAddress = "" Then caddrbs.myAddress = external_UDP_Address_IPv6
-                        If caddrbs.myPort = "" Then caddrbs.myPort = external_UDP_Port_IPv6
+                        If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv6
                         Dim cl As New Client(caddrbs, udpmarshalIPv6)
                         addCl(cl)
                         addStrm(cl.stream)
@@ -415,14 +415,14 @@ Public NotInheritable Class MainProgram
                     If cl.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
                         CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
                         If cl.myAddress = "" Then cl.myAddress = external_UDP_Address_IPv4
-                        If cl.myPort = "" Then cl.myPort = external_UDP_Port_IPv4
+                        If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv4
                         Dim cl2 As New Client(cl, udpmarshalIPv4)
                         addCl(cl2)
                         addStrm(cl2.stream)
                     ElseIf cl.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
                         CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
                         If cl.myAddress = "" Then cl.myAddress = external_UDP_Address_IPv6
-                        If cl.myPort = "" Then cl.myPort = external_UDP_Port_IPv6
+                        If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv6
                         Dim cl2 As New Client(cl, udpmarshalIPv6)
                         addCl(cl2)
                         addStrm(cl2.stream)

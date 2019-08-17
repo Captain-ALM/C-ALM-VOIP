@@ -15,12 +15,12 @@ Public Class VOIPReceiver
         spk.Init(msp)
         spk.Play()
     End Sub
-    Public Sub addProvider(prov As IWaveProvider)
+    Public Sub addProvider(prov As ISampleProvider)
         SyncLock slockprov
             msp.AddMixerInput(prov)
         End SyncLock
     End Sub
-    Public Sub removeProvider(prov As IWaveProvider)
+    Public Sub removeProvider(prov As ISampleProvider)
         SyncLock slockprov
             msp.RemoveMixerInput(prov)
         End SyncLock

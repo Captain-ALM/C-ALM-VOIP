@@ -42,7 +42,7 @@ Public Class PEditor
                         CType(caddrbs, Contact).targetPort = _caddrbs.targetPort
                         CType(caddrbs, Contact).type = _caddrbs.type
                     End If
-                    caddrbs = Nothing
+                    _caddrbs = Nothing
                     editsuccess = True
                     editfin = True
                 ElseIf ev.EventSource.sourceObj Is frm.Cancel_Button And ev.EventType = ETs.Leave Then

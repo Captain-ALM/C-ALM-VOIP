@@ -4,6 +4,7 @@ Imports NAudio.Wave.SampleProviders
 Public Class Streamer
     Protected _vsp As VolumeSampleProvider = Nothing
     Protected _wp As BufferedWaveProvider = Nothing
+    Protected _wsp As Pcm16BitToSampleProvider = Nothing
     Protected _datalen As Integer = 0
     Protected _m As Boolean = False
     Protected _name As String = ""
@@ -13,8 +14,9 @@ Public Class Streamer
 
     Public Sub New(name As String, havevolume As Boolean)
         _wp = New BufferedWaveProvider(New WaveFormat(8000, 16, 1))
+        _wsp = New Pcm16BitToSampleProvider(_wp)
         If havevolume Then
-            _vsp = New VolumeSampleProvider(_wp)
+            _vsp = New VolumeSampleProvider(_wsp)
         End If
         _name = name
         _up = True
@@ -38,6 +40,7 @@ Public Class Streamer
 
     Public Sub [close]()
         _vsp = Nothing
+        _wsp = Nothing
         _wp.ClearBuffer()
         _wp = Nothing
         _up = False
@@ -66,6 +69,12 @@ Public Class Streamer
     Public Overridable ReadOnly Property bufferedprovider As BufferedWaveProvider
         Get
             Return _wp
+        End Get
+    End Property
+
+    Public Overridable ReadOnly Property sampleprovider As Pcm16BitToSampleProvider
+        Get
+            Return _wsp
         End Get
     End Property
 
