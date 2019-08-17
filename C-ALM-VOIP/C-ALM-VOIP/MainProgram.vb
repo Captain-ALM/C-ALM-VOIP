@@ -436,6 +436,8 @@ Public NotInheritable Class MainProgram
     End Sub
 
     Private Sub engage()
+        micVOIP = New VOIPSender()
+        spkVOIP = New VOIPReceiver()
         If Not selected_interfaceIPv4.Equals(IPAddress.None) Then
             tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = 2500}
             udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4)
@@ -509,6 +511,10 @@ Public NotInheritable Class MainProgram
             udpmarshalIPv6 = Nothing
             InListening = False
         End If
+        micVOIP.Dispose()
+        micVOIP = Nothing
+        spkVOIP.Dispose()
+        spkVOIP = Nothing
     End Sub
 
     Private Sub msgRecIPv4(msg As IPacket)
