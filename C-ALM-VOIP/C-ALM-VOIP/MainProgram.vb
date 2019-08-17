@@ -813,13 +813,11 @@ Public NotInheritable Class MainProgram
             SyncLock slockCon
                 contacts.Add(Con)
                 Dim lvi As New ListViewItem(Con.name)
+                lvi.SubItems.Add(Con.targetAddress)
+                lvi.SubItems.Add(Con.targetPort)
                 If Con.type = AddressableType.TCP Then
-                    lvi.SubItems.Add(Con.myAddress)
-                    lvi.SubItems.Add(Con.myPort)
                     lvi.SubItems.Add("TCP")
                 ElseIf Con.type = AddressableType.UDP Then
-                    lvi.SubItems.Add(Con.targetAddress)
-                    lvi.SubItems.Add(Con.targetPort)
                     lvi.SubItems.Add("UDP")
                 End If
                 ListViewcl2.Items.Add(lvi)
@@ -852,13 +850,11 @@ Public NotInheritable Class MainProgram
                 Dim indx As Integer = indxCon(Con)
                 If indx > -1 Then
                     Dim lvi As New ListViewItem(Con.name)
+                    lvi.SubItems.Add(Con.targetAddress)
+                    lvi.SubItems.Add(Con.targetPort)
                     If Con.type = AddressableType.TCP Then
-                        lvi.SubItems.Add(Con.myAddress)
-                        lvi.SubItems.Add(Con.myPort)
                         lvi.SubItems.Add("TCP")
                     ElseIf Con.type = AddressableType.UDP Then
-                        lvi.SubItems.Add(Con.targetAddress)
-                        lvi.SubItems.Add(Con.targetPort)
                         lvi.SubItems.Add("UDP")
                     End If
                     ListViewcl2.Items(indx) = lvi

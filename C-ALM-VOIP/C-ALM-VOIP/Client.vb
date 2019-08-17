@@ -33,8 +33,9 @@ Public Class Client
         If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
         If isForMe(msg) And Not _m Then
             If msg.dataType = GetType(Tuple(Of Byte(), Integer, Integer, Integer)) And isNewerTimeStamp(msg.data) Then
+                _lts = New Tuple(Of Integer, Integer, Integer)(CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item2, CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item3, CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item4)
                 If Not _str Is Nothing Then _
-                    _str.ingestData(msg.data, False)
+                    _str.ingestData(CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item1, False)
             End If
         End If
     End Sub
@@ -56,6 +57,10 @@ Public Class Client
         ElseIf _type = AddressableType.UDP Then
             ap = New AudioPacket() With {.bytes = bts, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
         End If
+        Dim ts As Tuple(Of Integer, Integer, Integer) = generateTimestamp()
+        ap.year = ts.Item1
+        ap.day = ts.Item2
+        ap.millisecond = ts.Item3
         _cl.sendMessage(ap)
     End Sub
 
@@ -156,7 +161,7 @@ Public Class Client
     End Property
 
     Protected Overridable Function generateTimestamp() As Tuple(Of Integer, Integer, Integer)
-        Dim toret As New Tuple(Of Integer, Integer, Integer)(DateTime.Now.Year, DateTime.Now.DayOfYear, DateTime.Now.Hour * DateTime.Now.Minute * DateTime.Now.Second * DateTime.Now.Millisecond)
+        Dim toret As New Tuple(Of Integer, Integer, Integer)(DateTime.Now.Year, DateTime.Now.DayOfYear, (DateTime.Now.Hour * 3600000) + (DateTime.Now.Minute * 60000) + (DateTime.Now.Second * 1000) + DateTime.Now.Millisecond)
         Return toret
     End Function
 

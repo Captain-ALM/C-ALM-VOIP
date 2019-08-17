@@ -121,9 +121,8 @@ Public Class Editor
             nudport.Enabled = True
             nudport.ReadOnly = True
             nudport.Controls(0).Enabled = False
-            txtbxmyaddr.ReadOnly = True
-            nudmyport.ReadOnly = True
-            nudmyport.Controls(0).Enabled = False
+            txtbxmyaddr.Enabled = False
+            nudmyport.Enabled = False
             If caddrbs.type = AddressableType.TCP Then
                 txtbxmyaddr.Text = ""
                 nudmyport.Value = 1
