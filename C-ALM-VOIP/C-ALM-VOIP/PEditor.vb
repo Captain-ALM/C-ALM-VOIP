@@ -5,112 +5,13 @@ Public Class PEditor
     Private wp As WorkerPump = Nothing
     Private _caddrbs As AddressableBase = Nothing
 
-    Public Function Parse(ev As WorkerEvent) As Boolean Implements IEventParser.Parse
-        Dim toret As Boolean = True
+    Public Sub Parse(ev As WorkerEvent) Implements IEventParser.Parse
         If canCastObject(Of Editor)(ev.EventSource.sourceObj) Then
             Dim frm As Editor = castObject(Of Editor)(ev.EventSource.sourceObj)
             If ev.EventType = ETs.Shown Then
                 _caddrbs = caddrbs.duplicateToNew()
-                If ceditm = EditorMode.Create Then
-                    frm.Invoke(Sub()
-                                   frm.Text = "Create:"
-                                   frm.Label1.Text = "Create:"
-                                   frm.nudport.Value = 1
-                                   frm.txtbxaddr.Text = ""
-                                   frm.txtbxname.Text = ""
-                                   frm.cmbxipv.SelectedIndex = 0
-                                   frm.cmbxstrmode.SelectedIndex = 0
-                                   frm.cmbxtype.SelectedIndex = 0
-                                   frm.cmbxipv.Enabled = True
-                                   frm.cmbxstrmode.Enabled = True
-                                   frm.cmbxtype.Enabled = True
-                                   frm.txtbxaddr.Enabled = True
-                                   frm.txtbxaddr.ReadOnly = False
-                                   frm.nudport.Enabled = True
-                                   frm.nudport.ReadOnly = False
-                                   frm.nudport.Controls(0).Enabled = True
-                                   frm.txtbxmyaddr.ReadOnly = False
-                                   frm.nudmyport.ReadOnly = False
-                                   frm.nudmyport.Controls(0).Enabled = True
-                                   If _caddrbs.type = AddressableType.TCP Then
-                                       frm.txtbxmyaddr.Text = ""
-                                       frm.nudmyport.Value = 1
-                                       frm.txtbxmyaddr.Enabled = False
-                                       frm.nudmyport.Enabled = False
-                                   ElseIf _caddrbs.type = AddressableType.UDP Then
-                                       frm.txtbxmyaddr.Text = ""
-                                       frm.nudmyport.Value = 1
-                                       frm.txtbxmyaddr.Enabled = True
-                                       frm.nudmyport.Enabled = True
-                                   End If
-                               End Sub)
-                ElseIf ceditm = EditorMode.EditClient Then
-                    frm.Invoke(Sub()
-                                   frm.Text = "View:"
-                                   frm.Label1.Text = "View:"
-                                   frm.nudport.Value = _caddrbs.targetPort
-                                   frm.txtbxaddr.Text = _caddrbs.targetAddress
-                                   frm.txtbxname.Text = _caddrbs.name
-                                   frm.cmbxipv.SelectedIndex = _caddrbs.targetIPVersion - 1
-                                   frm.cmbxstrmode.SelectedIndex = _caddrbs.messagePassMode - 2
-                                   frm.cmbxtype.SelectedIndex = _caddrbs.type - 1
-                                   frm.cmbxipv.Enabled = False
-                                   frm.cmbxstrmode.Enabled = False 'Next version changing this on a client will hopefully be allowed.
-                                   frm.cmbxtype.Enabled = False
-                                   frm.txtbxaddr.Enabled = True
-                                   frm.txtbxaddr.ReadOnly = True
-                                   frm.nudport.Enabled = True
-                                   frm.nudport.ReadOnly = True
-                                   frm.nudport.Controls(0).Enabled = False
-                                   frm.txtbxmyaddr.ReadOnly = True
-                                   frm.nudmyport.ReadOnly = True
-                                   frm.nudmyport.Controls(0).Enabled = False
-                                   If _caddrbs.type = AddressableType.TCP Then
-                                       frm.txtbxmyaddr.Text = ""
-                                       frm.nudmyport.Value = 1
-                                       frm.txtbxmyaddr.Enabled = False
-                                       frm.nudmyport.Enabled = False
-                                   ElseIf _caddrbs.type = AddressableType.UDP Then
-                                       frm.txtbxmyaddr.Text = _caddrbs.myAddress
-                                       frm.nudmyport.Value = _caddrbs.myPort
-                                       frm.txtbxmyaddr.Enabled = True
-                                       frm.nudmyport.Enabled = True
-                                   End If
-                               End Sub)
-                ElseIf ceditm = EditorMode.EditContact Then
-                    frm.Invoke(Sub()
-                                   frm.Text = "Edit:"
-                                   frm.Label1.Text = "Edit:"
-                                   frm.nudport.Value = _caddrbs.targetPort
-                                   frm.txtbxaddr.Text = _caddrbs.targetAddress
-                                   frm.txtbxname.Text = _caddrbs.name
-                                   frm.cmbxipv.SelectedIndex = _caddrbs.targetIPVersion - 1
-                                   frm.cmbxstrmode.SelectedIndex = _caddrbs.messagePassMode - 2
-                                   frm.cmbxtype.SelectedIndex = _caddrbs.type - 1
-                                   frm.cmbxipv.Enabled = True
-                                   frm.cmbxstrmode.Enabled = True
-                                   frm.cmbxtype.Enabled = True
-                                   frm.txtbxaddr.Enabled = True
-                                   frm.txtbxaddr.ReadOnly = False
-                                   frm.nudport.Enabled = True
-                                   frm.nudport.ReadOnly = False
-                                   frm.nudport.Controls(0).Enabled = True
-                                   frm.txtbxmyaddr.ReadOnly = False
-                                   frm.nudmyport.ReadOnly = False
-                                   frm.nudmyport.Controls(0).Enabled = True
-                                   If _caddrbs.type = AddressableType.TCP Then
-                                       frm.txtbxmyaddr.Text = ""
-                                       frm.nudmyport.Value = 1
-                                       frm.txtbxmyaddr.Enabled = False
-                                       frm.nudmyport.Enabled = False
-                                   ElseIf _caddrbs.type = AddressableType.UDP Then
-                                       frm.txtbxmyaddr.Text = _caddrbs.myAddress
-                                       frm.nudmyport.Value = _caddrbs.myPort
-                                       frm.txtbxmyaddr.Enabled = True
-                                       frm.nudmyport.Enabled = True
-                                   End If
-                               End Sub)
-                End If
+                editsuccess = False
+                editfin = False
             End If
         ElseIf ev.EventSource.parentObjs IsNot Nothing AndAlso ev.EventSource.parentObjs.Count > 0 Then
             Dim ra As Object = reverseArray(Of Object)(ev.EventSource.parentObjs.ToArray())
@@ -141,10 +42,11 @@ Public Class PEditor
                         CType(caddrbs, Contact).targetPort = _caddrbs.targetPort
                         CType(caddrbs, Contact).type = _caddrbs.type
                     End If
-                    frm.Invoke(Sub()
-                                   frm.DialogResult = DialogResult.OK
-                                   frm.Close()
-                               End Sub)
+                    caddrbs = Nothing
+                    editsuccess = True
+                    editfin = True
+                ElseIf ev.EventSource.sourceObj Is frm.Cancel_Button And ev.EventType = ETs.Leave Then
+                    editfin = True
                 ElseIf ev.EventSource.sourceObj Is frm.nudport And ev.EventType = ETs.Leave Then
                     If ceditm <> EditorMode.EditClient Then
                         CType(_caddrbs, Contact).targetPort = args.held
@@ -162,13 +64,6 @@ Public Class PEditor
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxtype And ev.EventType = ETs.Leave Then
                     If ceditm <> EditorMode.EditClient Then
                         CType(_caddrbs, Contact).type = args.held + 1
-                        If _caddrbs.type = AddressableType.TCP Then
-                            frm.txtbxmyaddr.Enabled = False
-                            frm.nudmyport.Enabled = False
-                        ElseIf _caddrbs.type = AddressableType.UDP Then
-                            frm.txtbxmyaddr.Enabled = True
-                            frm.nudmyport.Enabled = True
-                        End If
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxstrmode And ev.EventType = ETs.Leave Then
                     If ceditm <> EditorMode.EditClient Then
@@ -181,8 +76,7 @@ Public Class PEditor
                 End If
             End If
         End If
-        Return toret
-    End Function
+    End Sub
 
     Private Function reverseArray(Of t)(arr As t()) As t()
         Dim os As New Stack(Of t)(arr)

@@ -1,5 +1,7 @@
 ﻿Imports captainalm.workerpumper
 Imports System.Net
+Imports captainalm.CALMNetLib
+Imports NAudio.Wave
 
 Public NotInheritable Class Configure
     Implements IWorkerPumpReceiver
@@ -31,7 +33,9 @@ Public NotInheritable Class Configure
     End Sub
 
     Public Sub whenClosed()
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
+        If DialogResult <> Windows.Forms.DialogResult.OK Then
+            configfin = True
+        End If
     End Sub
 
     Private Sub Configure_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -40,7 +44,7 @@ Public NotInheritable Class Configure
                 'If close button pressed
                 e.Cancel = True
                 Me.Hide()
-                If Me.DialogResult = Windows.Forms.DialogResult.None Then Me.DialogResult = Windows.Forms.DialogResult.OK
+                If Me.DialogResult = Windows.Forms.DialogResult.None Then Me.DialogResult = Windows.Forms.DialogResult.Cancel
             End If
             If ue Then wp.addEvent(New WorkerEvent(Me, ETs.Closing, e))
             Me.OnFormClosed(New FormClosedEventArgs(e.CloseReason))
@@ -67,7 +71,87 @@ Public NotInheritable Class Configure
         butOK.Enabled = True
         butCANCEL.Enabled = True
         updat()
+        configfin = True
         If ue Then wp.addEvent(Me, ETs.Shown, e)
+        While configfin
+            Threading.Thread.Sleep(125)
+        End While
+        'Begin Population
+        butOK.Select()
+        _IPv4Interfaces.Clear()
+        Dim lstifan As New List(Of Tuple(Of String, IPAddress))
+        lstifan.Add(New Tuple(Of String, IPAddress)("<None>", IPAddress.None))
+        lstifan.Add(New Tuple(Of String, IPAddress)("<None>", Nothing))
+        lstifan.AddRange(Utilities.GetIPInterfacesAndNames())
+        lstifan.Add(New Tuple(Of String, IPAddress)("<All>", IPAddress.Any))
+        lstifan.Add(New Tuple(Of String, IPAddress)("<All>", IPAddress.IPv6Any))
+        cmbxsniipv4.Items.Clear()
+        For Each c As Tuple(Of String, IPAddress) In lstifan
+            If c.Item2 Is Nothing Then Continue For
+            If c.Item2.AddressFamily = Sockets.AddressFamily.InterNetwork Then
+                _IPv4Interfaces.Add(c)
+                cmbxsniipv4.Items.Add(c.Item1 & " - " & c.Item2.ToString())
+            End If
+        Next
+        Dim ioi4 As Integer = indexOfIP(selected_interfaceIPv4, _IPv4Interfaces)
+        cmbxsniipv4.SelectedIndex = ioi4
+        _IPv6Interfaces.Clear()
+        cmbxsniipv6.Items.Clear()
+        For Each c As Tuple(Of String, IPAddress) In lstifan
+            If c.Item2 Is Nothing Then
+                _IPv6Interfaces.Add(c)
+                cmbxsniipv6.Items.Add(c.Item1 & " - Invalid")
+                Continue For
+            End If
+            If c.Item2.AddressFamily = Sockets.AddressFamily.InterNetworkV6 Then
+                _IPv6Interfaces.Add(c)
+                cmbxsniipv6.Items.Add(c.Item1 & " - " & c.Item2.ToString())
+            End If
+        Next
+        Dim ioi6 As Integer = indexOfIP(selected_interfaceIPv6, _IPv6Interfaces)
+        cmbxsniipv6.SelectedIndex = ioi6
+        cmbxsid.Items.Clear()
+        For Each c As WaveInCapabilities In waveInDevices()
+            cmbxsid.Items.Add(c.ProductName)
+        Next
+        If input_device > cmbxsid.Items.Count - 1 Then
+            input_device = -1
+        End If
+        cmbxsid.SelectedIndex = input_device
+        nudsptcpipv4.Value = port_TCP_IPv4
+        nudsptcpipv6.Value = port_TCP_IPv6
+        nudspudpipv4.Value = port_UDP_IPv4
+        nudspudpipv6.Value = port_UDP_IPv6
+        nudtcpbl.Value = TCP_backlog
+        nududpextpIPv4.Value = external_UDP_Port_IPv4
+        nududpextpIPv6.Value = external_UDP_Port_IPv6
+        chkbxena.Checked = TCP_delay
+        txtbxudpextaddIPv4.Text = external_UDP_Address_IPv4
+        txtbxudpextaddIPv6.Text = external_UDP_Address_IPv6
+        chkbxrdtcpc.Checked = TCP_remove_disconnected_clients
+        If InListening Then
+            cmbxsniipv4.Enabled = False
+            nudsptcpipv4.Enabled = False
+            nudspudpipv4.Enabled = False
+            cmbxsniipv6.Enabled = False
+            nudsptcpipv6.Enabled = False
+            nudspudpipv6.Enabled = False
+            cmbxsid.Enabled = False
+            nudtcpbl.Enabled = False
+            chkbxena.Enabled = False
+        Else
+            cmbxsniipv4.Enabled = True
+            nudsptcpipv4.Enabled = True
+            nudspudpipv4.Enabled = True
+            cmbxsniipv6.Enabled = True
+            nudsptcpipv6.Enabled = True
+            nudspudpipv6.Enabled = True
+            cmbxsid.Enabled = True
+            nudtcpbl.Enabled = True
+            chkbxena.Enabled = True
+        End If
+        butOK.Select()
+        'End Population
     End Sub
 
     Public Property WorkerPump As WorkerPump Implements IWorkerPumpReceiver.WorkerPump
@@ -134,28 +218,34 @@ Public NotInheritable Class Configure
         updat()
     End Sub
 
-    Protected Sub updat()
+    Protected Function updat() As Boolean
+        Dim toret As Boolean = True
         If nudspudpipv4.Value = nudsptcpipv4.Value Or nudspudpipv4.Value = nudsptcpipv6.Value Or nudspudpipv4.Value = nudspudpipv6.Value Then
             nudspudpipv4.BackColor = Color.Orange
+            toret = False
         Else
             nudspudpipv4.BackColor = Color.White
         End If
         If nudspudpipv6.Value = nudsptcpipv4.Value Or nudspudpipv6.Value = nudsptcpipv6.Value Or nudspudpipv6.Value = nudspudpipv4.Value Then
             nudspudpipv6.BackColor = Color.Orange
+            toret = False
         Else
             nudspudpipv6.BackColor = Color.White
         End If
         If nudsptcpipv4.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudsptcpipv6.Value Or nudsptcpipv4.Value = nudspudpipv6.Value Then
             nudsptcpipv4.BackColor = Color.Orange
+            toret = False
         Else
             nudsptcpipv4.BackColor = Color.White
         End If
         If nudsptcpipv6.Value = nudspudpipv4.Value Or nudsptcpipv6.Value = nudsptcpipv4.Value Or nudsptcpipv6.Value = nudspudpipv6.Value Then
             nudsptcpipv6.BackColor = Color.Orange
+            toret = False
         Else
             nudsptcpipv6.BackColor = Color.White
         End If
-    End Sub
+        Return toret
+    End Function
 
     Private Sub nudtcpbl_Leave(sender As Object, e As EventArgs) Handles nudtcpbl.Leave
         If ue Then
@@ -206,7 +296,7 @@ Public NotInheritable Class Configure
     End Sub
 
     Private Sub butOK_Click(sender As Object, e As EventArgs) Handles butOK.Click
-        If nudspudpipv4.Value = nudsptcpipv4.Value Or nudspudpipv4.Value = nudsptcpipv6.Value Or nudspudpipv4.Value = nudspudpipv6.Value Or nudspudpipv6.Value = nudsptcpipv4.Value Or nudspudpipv6.Value = nudsptcpipv6.Value Or nudspudpipv6.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudsptcpipv6.Value Or nudsptcpipv4.Value = nudspudpipv6.Value Or nudsptcpipv6.Value = nudspudpipv4.Value Or nudsptcpipv6.Value = nudsptcpipv4.Value Or nudsptcpipv6.Value = nudspudpipv6.Value Then Exit Sub
+        If Not updat() Then Exit Sub
         butOK.Enabled = False
         butOK.Select()
         If ue Then
@@ -214,11 +304,14 @@ Public NotInheritable Class Configure
             l.Add(Me)
             wp.addEvent(New WorkerEvent(butOK, l, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
+        Me.DialogResult = Windows.Forms.DialogResult.OK
+        Me.Close()
     End Sub
 
     Private Sub butCANCEL_Click(sender As Object, e As EventArgs) Handles butCANCEL.Click
         butCANCEL.Enabled = False
         butCANCEL.Select()
+        configfin = True
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -243,4 +336,28 @@ Public NotInheritable Class Configure
             wp.addEvent(New WorkerEvent(chkbxrdtcpc, l, ETs.Leave, New EventArgsDataContainer(chkbxrdtcpc.Checked)))
         End If
     End Sub
+
+    Private Function indexOfIP(ip As IPAddress, lst As IList(Of Tuple(Of String, IPAddress)))
+        For i As Integer = 0 To lst.Count - 1 Step 1
+            Dim c As Tuple(Of String, IPAddress) = lst(i)
+            If c.Item2 Is Nothing Or ip Is Nothing Then
+                If c.Item2 Is Nothing And ip Is Nothing Then
+                    Return i
+                End If
+            Else
+                If c.Item2.Equals(ip) And ip.Equals(c.Item2) Then
+                    Return i
+                End If
+            End If
+        Next
+        Return 0
+    End Function
+
+    Private Function waveInDevices() As WaveInCapabilities()
+        Dim wic As New List(Of WaveInCapabilities)
+        For i As Integer = 0 To WaveIn.DeviceCount - 1 Step 1
+            wic.Add(WaveIn.GetCapabilities(i))
+        Next
+        Return wic.ToArray()
+    End Function
 End Class

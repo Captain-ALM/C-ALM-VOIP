@@ -155,6 +155,7 @@ Partial Class AboutBx
         Me.TextBox1.Text = "License :" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "(At runtime, the labels' text will be replaced with the application'" & _
     "s assembly information." & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Customize the application's assembly information in the" & _
     " Application pane of Project Designer.)"
+        Me.TextBox1.WordWrap = False
         '
         'TextBoxDescription
         '
@@ -169,6 +170,7 @@ Partial Class AboutBx
         Me.TextBoxDescription.TabIndex = 1
         Me.TextBoxDescription.TabStop = False
         Me.TextBoxDescription.Text = resources.GetString("TextBoxDescription.Text")
+        Me.TextBoxDescription.WordWrap = False
         '
         'AboutBx
         '

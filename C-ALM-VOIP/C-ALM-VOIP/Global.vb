@@ -29,9 +29,14 @@ Public Module [Global]
     Public nomReconReg As New SyncLockedList(Of Tuple(Of String, Integer, String))
     Public caddrbs As AddressableBase = Nothing
     Public ceditm As EditorMode = EditorMode.None
+    Public editsuccess As Boolean = False
+    Public editfin As Boolean = True
     Public clients As New SyncLockedList(Of Client)
     Public contacts As New SyncLockedList(Of Contact)
     Public streams As New SyncLockedList(Of Streamer)
+    Public configfin As Boolean = True
+    Public _IPv4Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
+    Public _IPv6Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
 
     Public Function resolve(addr As String, fam As AddressFamily) As IPAddress
         Dim ipadd As IPAddress() = New IPAddress() {}

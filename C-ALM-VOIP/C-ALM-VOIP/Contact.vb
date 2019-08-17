@@ -1,4 +1,5 @@
-﻿Public Class Contact
+﻿<Serializable>
+Public Class Contact
     Inherits AddressableBase
 
     Public Sub New(other As AddressableBase)

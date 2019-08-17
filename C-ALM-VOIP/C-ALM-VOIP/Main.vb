@@ -53,7 +53,7 @@ Module Main
         Catch ex As IOException
         End Try
 
-        worker = New WorkerPump() With {.ManageControlEnablement = True}
+        worker = New WorkerPump()
         AddHandler worker.OnPumpException, AddressOf ope
         forms.Add(New AboutBx(worker))
         worker.addFormInstance(Of AboutBx)(forms(0))
@@ -65,7 +65,6 @@ Module Main
         worker.addFormInstance(Of Editor)(forms(3))
         parsers.Add(New PConfigure())
         parsers.Add(New PEditor())
-        parsers.Add(New PMainProgram())
         For Each c As IEventParser In parsers
             worker.addParser(c)
         Next

@@ -132,6 +132,17 @@ Public Class Client
         Return False
     End Function
 
+    Public Overrides Property name As String
+        Get
+            Return MyBase.name
+        End Get
+        Set(value As String)
+            MyBase.name = value
+            If Not _str Is Nothing Then _
+                _str.name = value
+        End Set
+    End Property
+
     Public Overridable ReadOnly Property stream As Streamer
         Get
             Return _str

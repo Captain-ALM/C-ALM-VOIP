@@ -1,4 +1,5 @@
-﻿Public MustInherit Class AddressableBase
+﻿<Serializable>
+Public MustInherit Class AddressableBase
     Protected _name As String = ""
     Protected _targaddress As String = ""
     Protected _targport As Integer = 0

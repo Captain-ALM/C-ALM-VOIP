@@ -32,7 +32,9 @@ Public Class Editor
     End Sub
 
     Public Sub whenClosed()
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
+        If DialogResult <> Windows.Forms.DialogResult.OK Then
+            editfin = True
+        End If
     End Sub
 
     Private Sub Editor_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
@@ -41,7 +43,7 @@ Public Class Editor
                 'If close button pressed
                 e.Cancel = True
                 Me.Hide()
-                If Me.DialogResult = Windows.Forms.DialogResult.None Then Me.DialogResult = Windows.Forms.DialogResult.OK
+                If Me.DialogResult = Windows.Forms.DialogResult.None Then Me.DialogResult = Windows.Forms.DialogResult.Cancel
             End If
             If ue Then wp.addEvent(New WorkerEvent(Me, ETs.Closing, e))
             Me.OnFormClosed(New FormClosedEventArgs(e.CloseReason))
@@ -64,7 +66,109 @@ Public Class Editor
         txtbxaddr.BackColor = Color.White
         OK_Button.Enabled = True
         Cancel_Button.Enabled = True
+        editfin = True
         If ue Then wp.addEvent(Me, ETs.Shown, e)
+        While editfin
+            Threading.Thread.Sleep(125)
+        End While
+        'Begin Population
+        OK_Button.Select()
+        If ceditm = EditorMode.Create Then
+            Text = "Create:"
+            Label1.Text = "Create:"
+            nudport.Value = caddrbs.targetPort
+            txtbxaddr.Text = caddrbs.targetAddress
+            txtbxname.Text = caddrbs.name
+            cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
+            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode - 1
+            cmbxtype.SelectedIndex = caddrbs.type - 1
+            cmbxipv.Enabled = True
+            cmbxstrmode.Enabled = True
+            cmbxtype.Enabled = True
+            txtbxaddr.Enabled = True
+            txtbxaddr.ReadOnly = False
+            nudport.Enabled = True
+            nudport.ReadOnly = False
+            nudport.Controls(0).Enabled = True
+            txtbxmyaddr.ReadOnly = False
+            nudmyport.ReadOnly = False
+            nudmyport.Controls(0).Enabled = True
+            If caddrbs.type = AddressableType.TCP Then
+                txtbxmyaddr.Text = ""
+                nudmyport.Value = 1
+                txtbxmyaddr.Enabled = False
+                nudmyport.Enabled = False
+            ElseIf caddrbs.type = AddressableType.UDP Then
+                txtbxmyaddr.Text = external_UDP_Address_IPv4
+                nudmyport.Value = external_UDP_Port_IPv4
+                txtbxmyaddr.Enabled = True
+                nudmyport.Enabled = True
+            End If
+        ElseIf ceditm = EditorMode.EditClient Then
+            Text = "View:"
+            Label1.Text = "View:"
+            nudport.Value = caddrbs.targetPort
+            txtbxaddr.Text = caddrbs.targetAddress
+            txtbxname.Text = caddrbs.name
+            cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
+            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode - 1
+            cmbxtype.SelectedIndex = caddrbs.type - 1
+            cmbxipv.Enabled = False
+            cmbxstrmode.Enabled = False 'Next version changing this on a client will hopefully be allowed.
+            cmbxtype.Enabled = False
+            txtbxaddr.Enabled = True
+            txtbxaddr.ReadOnly = True
+            nudport.Enabled = True
+            nudport.ReadOnly = True
+            nudport.Controls(0).Enabled = False
+            txtbxmyaddr.ReadOnly = True
+            nudmyport.ReadOnly = True
+            nudmyport.Controls(0).Enabled = False
+            If caddrbs.type = AddressableType.TCP Then
+                txtbxmyaddr.Text = ""
+                nudmyport.Value = 1
+                txtbxmyaddr.Enabled = False
+                nudmyport.Enabled = False
+            ElseIf caddrbs.type = AddressableType.UDP Then
+                txtbxmyaddr.Text = caddrbs.myAddress
+                nudmyport.Value = caddrbs.myPort
+                txtbxmyaddr.Enabled = True
+                nudmyport.Enabled = True
+            End If
+        ElseIf ceditm = EditorMode.EditContact Then
+            Text = "Edit:"
+            Label1.Text = "Edit:"
+            nudport.Value = caddrbs.targetPort
+            txtbxaddr.Text = caddrbs.targetAddress
+            txtbxname.Text = caddrbs.name
+            cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
+            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode - 1
+            cmbxtype.SelectedIndex = caddrbs.type - 1
+            cmbxipv.Enabled = True
+            cmbxstrmode.Enabled = True
+            cmbxtype.Enabled = True
+            txtbxaddr.Enabled = True
+            txtbxaddr.ReadOnly = False
+            nudport.Enabled = True
+            nudport.ReadOnly = False
+            nudport.Controls(0).Enabled = True
+            txtbxmyaddr.ReadOnly = False
+            nudmyport.ReadOnly = False
+            nudmyport.Controls(0).Enabled = True
+            If caddrbs.type = AddressableType.TCP Then
+                txtbxmyaddr.Text = ""
+                nudmyport.Value = 1
+                txtbxmyaddr.Enabled = False
+                nudmyport.Enabled = False
+            ElseIf caddrbs.type = AddressableType.UDP Then
+                txtbxmyaddr.Text = caddrbs.myAddress
+                nudmyport.Value = caddrbs.myPort
+                txtbxmyaddr.Enabled = True
+                nudmyport.Enabled = True
+            End If
+        End If
+        OK_Button.Select()
+        'End Population
     End Sub
 
     Public Property WorkerPump As WorkerPump Implements IWorkerPumpReceiver.WorkerPump
@@ -88,13 +192,14 @@ Public Class Editor
             l.Add(Me)
             wp.addEvent(New WorkerEvent(OK_Button, l, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
-        'Me.DialogResult = Windows.Forms.DialogResult.OK
-        'Me.Close()
+        Me.DialogResult = Windows.Forms.DialogResult.OK
+        Me.Close()
     End Sub
 
     Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
         Cancel_Button.Enabled = False
         Cancel_Button.Select()
+        editfin = True
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -223,4 +328,19 @@ Public Class Editor
             Return False
         End If
     End Function
+
+    Private Sub cmbxtype_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxtype.SelectedIndexChanged
+        If ue Then
+            If cmbxtype.SelectedIndex + 1 = AddressableType.TCP Then
+                txtbxmyaddr.Enabled = False
+                nudmyport.Enabled = False
+            ElseIf cmbxtype.SelectedIndex + 1 = AddressableType.UDP Then
+                txtbxmyaddr.Enabled = True
+                nudmyport.Enabled = True
+            End If
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(cmbxtype, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxtype.SelectedIndex)))
+        End If
+    End Sub
 End Class
