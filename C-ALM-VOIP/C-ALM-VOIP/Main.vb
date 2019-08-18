@@ -36,6 +36,8 @@ Module Main
 
     Public Sub init()
         Application.EnableVisualStyles()
+        Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException)
+        AddHandler Application.ThreadException, AddressOf oae
 
         Try
             If File.Exists(execdir & "\license.txt") Then
@@ -84,6 +86,7 @@ Module Main
         RemoveHandler worker.OnPumpException, AddressOf ope
         If Not worker.Disposing And Not worker.IsDisposed Then worker.Dispose()
         worker = Nothing
+        RemoveHandler Application.ThreadException, AddressOf oae
     End Sub
 
     Function convertStringToInteger(str As String) As Integer
@@ -102,6 +105,10 @@ Module Main
 
     Sub ope(ex As Exception)
         Dim r As DialogResult = New UnhandledExceptionBooter(New UnhandledExceptionViewer(True, True, False, ex)).showForm()
+    End Sub
+
+    Sub oae(sender As Object, ex As ThreadExceptionEventArgs)
+        Dim r As DialogResult = New UnhandledExceptionBooter(New UnhandledExceptionViewer(True, True, True, ex.Exception)).showForm()
     End Sub
 End Module
 

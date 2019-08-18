@@ -14,8 +14,8 @@ Public Class Client
 
     Public Sub New(other As Contact, client As NetMarshalBase)
         MyBase.New(other)
-        If other.messagePassMode = voip.MessagePassMode.Bidirectional Or other.messagePassMode = voip.MessagePassMode.Receive Then _
-            _str = spkVOIP.createStreamer(other.name)
+        'If other.messagePassMode = voip.MessagePassMode.Bidirectional Or other.messagePassMode = voip.MessagePassMode.Receive Then _
+        _str = spkVOIP.createStreamer(other.name)
         _cl = client
         AddHandler _cl.MessageReceived, AddressOf msgrec
         AddHandler micVOIP.streamer.dataExgest, AddressOf msgsnd
@@ -42,7 +42,7 @@ Public Class Client
 
     Protected Overridable Function isForMe(msg As IPacket) As Boolean
         If _type = AddressableType.TCP Then
-            Return msg.senderIP = CType(_cl.internalSocket, INetConfig).remoteIPAddress And msg.senderPort = CType(_cl.internalSocket, INetConfig).remotePort
+            Return msg.senderIP = _cl.duplicatedInternalSocketConfig.remoteIPAddress And msg.senderPort = _cl.duplicatedInternalSocketConfig.remotePort
         ElseIf _type = AddressableType.UDP Then
             Return isResolveEqual(msg.senderIP, _targaddress) And msg.senderPort = _targport
         End If
@@ -53,7 +53,7 @@ Public Class Client
         If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Receive Then Exit Sub
         Dim ap As AudioPacket = Nothing
         If _type = AddressableType.TCP Then
-            ap = New AudioPacket() With {.bytes = bts, .receiverIP = CType(_cl.internalSocket, INetConfig).remoteIPAddress, .receiverPort = CType(_cl.internalSocket, INetConfig).remotePort, .senderIP = CType(_cl.internalSocket, INetConfig).localIPAddress, .senderPort = CType(_cl.internalSocket, INetConfig).localPort}
+            ap = New AudioPacket() With {.bytes = bts, .receiverIP = _cl.duplicatedInternalSocketConfig.remoteIPAddress, .receiverPort = _cl.duplicatedInternalSocketConfig.remotePort, .senderIP = _cl.duplicatedInternalSocketConfig.localIPAddress, .senderPort = _cl.duplicatedInternalSocketConfig.localPort}
         ElseIf _type = AddressableType.UDP Then
             ap = New AudioPacket() With {.bytes = bts, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
         End If

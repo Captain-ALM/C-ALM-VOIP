@@ -127,7 +127,7 @@ Partial Class Configure
         'nudspudpipv4
         '
         Me.nudspudpipv4.Location = New System.Drawing.Point(405, 72)
-        Me.nudspudpipv4.Maximum = New Decimal(New Integer() {65536, 0, 0, 0})
+        Me.nudspudpipv4.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nudspudpipv4.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudspudpipv4.Name = "nudspudpipv4"
         Me.nudspudpipv4.Size = New System.Drawing.Size(71, 20)
@@ -137,7 +137,7 @@ Partial Class Configure
         'nudsptcpipv4
         '
         Me.nudsptcpipv4.Location = New System.Drawing.Point(498, 72)
-        Me.nudsptcpipv4.Maximum = New Decimal(New Integer() {65536, 0, 0, 0})
+        Me.nudsptcpipv4.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nudsptcpipv4.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudsptcpipv4.Name = "nudsptcpipv4"
         Me.nudsptcpipv4.Size = New System.Drawing.Size(71, 20)
@@ -147,7 +147,7 @@ Partial Class Configure
         'nudspudpipv6
         '
         Me.nudspudpipv6.Location = New System.Drawing.Point(405, 104)
-        Me.nudspudpipv6.Maximum = New Decimal(New Integer() {65536, 0, 0, 0})
+        Me.nudspudpipv6.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nudspudpipv6.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudspudpipv6.Name = "nudspudpipv6"
         Me.nudspudpipv6.Size = New System.Drawing.Size(71, 20)
@@ -157,7 +157,7 @@ Partial Class Configure
         'nudsptcpipv6
         '
         Me.nudsptcpipv6.Location = New System.Drawing.Point(498, 104)
-        Me.nudsptcpipv6.Maximum = New Decimal(New Integer() {65536, 0, 0, 0})
+        Me.nudsptcpipv6.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nudsptcpipv6.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudsptcpipv6.Name = "nudsptcpipv6"
         Me.nudsptcpipv6.Size = New System.Drawing.Size(71, 20)
@@ -213,7 +213,7 @@ Partial Class Configure
         'nududpextpIPv4
         '
         Me.nududpextpIPv4.Location = New System.Drawing.Point(498, 162)
-        Me.nududpextpIPv4.Maximum = New Decimal(New Integer() {65536, 0, 0, 0})
+        Me.nududpextpIPv4.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nududpextpIPv4.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nududpextpIPv4.Name = "nududpextpIPv4"
         Me.nududpextpIPv4.Size = New System.Drawing.Size(71, 20)
@@ -241,7 +241,7 @@ Partial Class Configure
         'nududpextpIPv6
         '
         Me.nududpextpIPv6.Location = New System.Drawing.Point(498, 193)
-        Me.nududpextpIPv6.Maximum = New Decimal(New Integer() {65536, 0, 0, 0})
+        Me.nududpextpIPv6.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nududpextpIPv6.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nududpextpIPv6.Name = "nududpextpIPv6"
         Me.nududpextpIPv6.Size = New System.Drawing.Size(71, 20)
@@ -275,6 +275,7 @@ Partial Class Configure
         '
         'butCANCEL
         '
+        Me.butCANCEL.DialogResult = System.Windows.Forms.DialogResult.Cancel
         Me.butCANCEL.Location = New System.Drawing.Point(498, 276)
         Me.butCANCEL.Name = "butCANCEL"
         Me.butCANCEL.Size = New System.Drawing.Size(71, 23)

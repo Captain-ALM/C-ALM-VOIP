@@ -174,7 +174,7 @@ Partial Class Editor
         'nudport
         '
         Me.nudport.Location = New System.Drawing.Point(105, 163)
-        Me.nudport.Maximum = New Decimal(New Integer() {65536, 0, 0, 0})
+        Me.nudport.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nudport.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudport.Name = "nudport"
         Me.nudport.Size = New System.Drawing.Size(264, 20)
@@ -209,7 +209,7 @@ Partial Class Editor
         'nudmyport
         '
         Me.nudmyport.Location = New System.Drawing.Point(105, 234)
-        Me.nudmyport.Maximum = New Decimal(New Integer() {65536, 0, 0, 0})
+        Me.nudmyport.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
         Me.nudmyport.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudmyport.Name = "nudmyport"
         Me.nudmyport.Size = New System.Drawing.Size(264, 20)

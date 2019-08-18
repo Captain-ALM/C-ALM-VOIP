@@ -5,6 +5,8 @@ Public NotInheritable Class VOIPSender
 
     Protected mic As WaveIn = Nothing
     Protected strm As Streamer = Nothing
+    Protected buff As New SyncLockedList(Of Byte)
+    Protected buffsiz As Integer = 800
     Public Event dataAvailable(bts As Byte())
     Public Sub New()
         mic = New WaveIn()
@@ -17,14 +19,32 @@ Public NotInheritable Class VOIPSender
     End Sub
 
     Private Sub dataReceived(sender As Object, e As WaveInEventArgs)
-        strm.ingestData(DeepCopyHelper.deepCopy(Of Byte())(e.Buffer), True)
-        RaiseEvent dataAvailable(DeepCopyHelper.deepCopy(Of Byte())(e.Buffer))
+        Dim bts As Byte() = DeepCopyHelper.deepCopy(Of Byte())(e.Buffer)
+        For Each b As Byte In bts
+            buff.Add(b)
+        Next
+        If buff.Count > buffsiz Then
+            Dim bts2(buff.Count - 1) As Byte
+            buff.CopyTo(bts2, 0)
+            buff.Clear()
+            strm.ingestData(bts2, True)
+            RaiseEvent dataAvailable(bts2)
+        End If
     End Sub
 
     Public ReadOnly Property streamer As Streamer
         Get
             Return strm
         End Get
+    End Property
+
+    Public Property samplebuffersize As Integer
+        Get
+            Return buffsiz / 2
+        End Get
+        Set(value As Integer)
+            buffsiz = value * 2
+        End Set
     End Property
 
 #Region "IDisposable Support"

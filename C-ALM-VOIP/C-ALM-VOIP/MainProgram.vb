@@ -93,10 +93,12 @@ Public NotInheritable Class MainProgram
 
     Private Sub butrconf_Click(sender As Object, e As EventArgs) Handles butrconf.Click
         If ue Then
-            wp.showForm(Of Configure)(0, Me)
-            While Not configfin
-                Threading.Thread.Sleep(125)
-            End While
+            If InListening Then
+                wp.showForm(Of Configure)(0, Me)
+                While Not configfin
+                    Threading.Thread.Sleep(125)
+                End While
+            End If
             Dim l As New List(Of Object)
             l.Add(Me)
             wp.addEvent(New WorkerEvent(butrconf, l, ETs.Click, e))
@@ -436,10 +438,10 @@ Public NotInheritable Class MainProgram
     End Sub
 
     Private Sub engage()
-        micVOIP = New VOIPSender()
+        micVOIP = New VOIPSender() With {.samplebuffersize = 2000}
         spkVOIP = New VOIPReceiver()
         If Not selected_interfaceIPv4.Equals(IPAddress.None) Then
-            tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = 2500}
+            tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = 0}
             udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4)
             AddHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
             AddHandler tcpmarshalIPv4.clientDisconnected, AddressOf discon
@@ -449,7 +451,7 @@ Public NotInheritable Class MainProgram
             InListening = True
         End If
         If Not selected_interfaceIPv6 Is Nothing Then
-            tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = 2500}
+            tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = 0}
             udpmarshalIPv6 = New NetMarshalUDP(selected_interfaceIPv6, port_UDP_IPv6)
             AddHandler tcpmarshalIPv6.clientConnected, AddressOf conIPv6
             AddHandler tcpmarshalIPv6.clientDisconnected, AddressOf discon
@@ -552,24 +554,26 @@ Public NotInheritable Class MainProgram
             Dim cl As Client = retRegCl(ip, port)
             If cl Is Nothing Then
                 Dim clm As NetMarshalTCPClient = tcpmarshalIPv4.client(ip, port)
-                Dim lip As String = CType(clm.internalSocket, NetTCPClient).listenerIPAddress
-                Dim lport As Integer = CType(clm.internalSocket, NetTCPClient).listenerPort
-                Dim rip As String = CType(clm.internalSocket, NetTCPClient).remoteIPAddress
-                Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
-                Dim llip As String = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localIPAddress
-                Dim llport As Integer = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localPort
-                Dim tnom As String = getName(lip, lport)
-                If tnom <> "" Then remName(lip, lport)
-                If lip = llip And lport = llport Then
-                    cl = New Client(New Contact(rip, rport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv4), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
-                Else
-                    If tnom = "" Then
-                        tnom = rip & ":" & rport
+                If Not clm.internalSocket Is Nothing AndAlso clm.ready Then
+                    Dim lip As String = CType(clm.internalSocket, NetTCPClient).listenerIPAddress
+                    Dim lport As Integer = CType(clm.internalSocket, NetTCPClient).listenerPort
+                    Dim rip As String = CType(clm.internalSocket, NetTCPClient).remoteIPAddress
+                    Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
+                    Dim llip As String = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localIPAddress
+                    Dim llport As Integer = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localPort
+                    Dim tnom As String = getName(lip, lport)
+                    If tnom <> "" Then remName(lip, lport)
+                    If lip = llip And lport = llport Then
+                        cl = New Client(New Contact(rip, rport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv4), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
+                    Else
+                        If tnom = "" Then
+                            tnom = rip & ":" & rport
+                        End If
+                        cl = New Client(New Contact(lip, lport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv4), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                     End If
-                    cl = New Client(New Contact(lip, lport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv4), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
+                    addCl(cl)
+                    addStrm(cl.stream)
                 End If
-                addCl(cl)
-                addStrm(cl.stream)
             End If
         End If
     End Sub
@@ -581,26 +585,28 @@ Public NotInheritable Class MainProgram
             Dim cl As Client = retRegCl(ip, port)
             If cl Is Nothing Then
                 Dim clm As NetMarshalTCPClient = tcpmarshalIPv6.client(ip, port)
-                Dim lip As String = CType(clm.internalSocket, NetTCPClient).listenerIPAddress
-                Dim lport As Integer = CType(clm.internalSocket, NetTCPClient).listenerPort
-                Dim rip As String = CType(clm.internalSocket, NetTCPClient).remoteIPAddress
-                Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
-                Dim llip As String = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localIPAddress
-                Dim llport As Integer = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localPort
-                Dim tnom As String = getName(lip, lport)
-                If tnom <> "" Then remName(lip, lport)
-                If lip = llip And lport = llport Then
-                    cl = New Client(New Contact(rip, rport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv6), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
-                Else
-                    If tnom = "" Then
-                        tnom = rip & ":" & rport
+                If Not clm.internalSocket Is Nothing AndAlso clm.ready Then
+                    Dim lip As String = CType(clm.internalSocket, NetTCPClient).listenerIPAddress
+                    Dim lport As Integer = CType(clm.internalSocket, NetTCPClient).listenerPort
+                    Dim rip As String = CType(clm.internalSocket, NetTCPClient).remoteIPAddress
+                    Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
+                    Dim llip As String = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localIPAddress
+                    Dim llport As Integer = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localPort
+                    Dim tnom As String = getName(lip, lport)
+                    If tnom <> "" Then remName(lip, lport)
+                    If lip = llip And lport = llport Then
+                        cl = New Client(New Contact(rip, rport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv6), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
+                    Else
+                        If tnom = "" Then
+                            tnom = rip & ":" & rport
+                        End If
+                        cl = New Client(New Contact(lip, lport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv6), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                     End If
-                    cl = New Client(New Contact(lip, lport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv6), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
+                    addCl(cl)
+                    addStrm(cl.stream)
                 End If
-                addCl(cl)
-                addStrm(cl.stream)
             End If
-        End If
+            End If
     End Sub
 
     Private Sub discon(ip As String, port As Integer)
@@ -630,7 +636,7 @@ Public NotInheritable Class MainProgram
                     Exit For
                 End If
             ElseIf c.type = AddressableType.TCP Then
-                If CType(c.marshal.internalSocket, INetConfig).remoteIPAddress = ip And CType(c.marshal.internalSocket, INetConfig).remotePort = port Then
+                If c.marshal.duplicatedInternalSocketConfig.remoteIPAddress = ip And c.marshal.duplicatedInternalSocketConfig.remotePort = port Then
                     toret = c
                     Exit For
                 End If
