@@ -1,5 +1,6 @@
 ﻿Imports captainalm.CALMNetMarshal
-Imports captainalm.CALMNetLib
+Imports captainalm.Serialize
+
 <Serializable>
 Public Structure AudioPacket
     Implements IPacket

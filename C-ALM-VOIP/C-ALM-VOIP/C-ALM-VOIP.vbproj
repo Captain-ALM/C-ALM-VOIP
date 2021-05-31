@@ -50,13 +50,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CALM-WorkerPump">
-      <HintPath>..\..\..\CALM-Worker-Pump\CALM-Worker-Pump\CALM-WorkerPump\bin\Release\CALM-WorkerPump.dll</HintPath>
+      <HintPath>..\LIBs\CALM-WorkerPump.dll</HintPath>
     </Reference>
     <Reference Include="calmclientandserver">
-      <HintPath>..\..\..\calmclientandserver\calmclientandserver\bin\Release\calmclientandserver.dll</HintPath>
+      <HintPath>..\LIBs\calmclientandserver.dll</HintPath>
     </Reference>
     <Reference Include="NAudio">
-      <HintPath>..\..\..\..\Public\NAUDIOREL\NAudio.dll</HintPath>
+      <HintPath>..\LIBs\NAudio.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -82,36 +82,36 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBx.designer.vb">
+    <Compile Include="Views\AboutBx.designer.vb">
       <DependentUpon>AboutBx.vb</DependentUpon>
     </Compile>
-    <Compile Include="AboutBx.vb">
+    <Compile Include="Views\AboutBx.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="AddressableBase.vb" />
-    <Compile Include="AudioPacket.vb" />
-    <Compile Include="Client.vb" />
-    <Compile Include="Configure.Designer.vb">
+    <Compile Include="AddrBook\AddressableBase.vb" />
+    <Compile Include="VOIPSys\AudioPacket.vb" />
+    <Compile Include="AddrBook\Client.vb" />
+    <Compile Include="Views\Configure.Designer.vb">
       <DependentUpon>Configure.vb</DependentUpon>
     </Compile>
-    <Compile Include="Configure.vb">
+    <Compile Include="Views\Configure.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Contact.vb" />
-    <Compile Include="Editor.Designer.vb">
+    <Compile Include="AddrBook\Contact.vb" />
+    <Compile Include="Views\Editor.Designer.vb">
       <DependentUpon>Editor.vb</DependentUpon>
     </Compile>
-    <Compile Include="Editor.vb">
+    <Compile Include="Views\Editor.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EventArgsDataContainer.vb" />
-    <Compile Include="EventTypes.vb" />
-    <Compile Include="Global.vb" />
+    <Compile Include="WokerPumpExt\EventArgsDataContainer.vb" />
+    <Compile Include="WokerPumpExt\EventTypes.vb" />
+    <Compile Include="Utils\Global.vb" />
     <Compile Include="Main.vb" />
-    <Compile Include="MainProgram.Designer.vb">
+    <Compile Include="Views\MainProgram.Designer.vb">
       <DependentUpon>MainProgram.vb</DependentUpon>
     </Compile>
-    <Compile Include="MainProgram.vb">
+    <Compile Include="Views\MainProgram.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -129,30 +129,30 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PConfigure.vb" />
-    <Compile Include="PEditor.vb" />
-    <Compile Include="Streamer.vb" />
-    <Compile Include="SyncLockedList.vb" />
-    <Compile Include="UnhandledExceptionViewer.designer.vb">
+    <Compile Include="Views\Parsers\PConfigure.vb" />
+    <Compile Include="Views\Parsers\PEditor.vb" />
+    <Compile Include="VOIPSys\Streamer.vb" />
+    <Compile Include="Utils\SyncLockedList.vb" />
+    <Compile Include="Views\UnhandledExceptionViewer.designer.vb">
       <DependentUpon>UnhandledExceptionViewer.vb</DependentUpon>
     </Compile>
-    <Compile Include="UnhandledExceptionViewer.vb">
+    <Compile Include="Views\UnhandledExceptionViewer.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="VOIPReceiver.vb" />
-    <Compile Include="VOIPSender.vb" />
+    <Compile Include="VOIPSys\VOIPReceiver.vb" />
+    <Compile Include="VOIPSys\VOIPSender.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AboutBx.resx">
+    <EmbeddedResource Include="Views\AboutBx.resx">
       <DependentUpon>AboutBx.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Configure.resx">
+    <EmbeddedResource Include="Views\Configure.resx">
       <DependentUpon>Configure.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Editor.resx">
+    <EmbeddedResource Include="Views\Editor.resx">
       <DependentUpon>Editor.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MainProgram.resx">
+    <EmbeddedResource Include="Views\MainProgram.resx">
       <DependentUpon>MainProgram.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
@@ -161,7 +161,7 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="UnhandledExceptionViewer.resx">
+    <EmbeddedResource Include="Views\UnhandledExceptionViewer.resx">
       <DependentUpon>UnhandledExceptionViewer.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
