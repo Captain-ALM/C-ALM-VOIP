@@ -1,6 +1,7 @@
 ﻿Imports System.Net
 Imports captainalm.CALMNetMarshal
 Imports System.Net.Sockets
+Imports captainalm.Serialize
 
 Public Module [Global]
     Public description As String
@@ -26,7 +27,7 @@ Public Module [Global]
     Public udpmarshalIPv6 As NetMarshalUDP = Nothing
     Public micVOIP As VOIPSender = Nothing
     Public spkVOIP As VOIPReceiver = Nothing
-    Public nomReconReg As New SyncLockedList(Of Tuple(Of String, Integer, String))
+    Public tcpResvSetReg As New SyncLockedList(Of Tuple(Of String, Integer, String, voip.MessagePassMode))
     Public caddrbs As AddressableBase = Nothing
     Public ceditm As EditorMode = EditorMode.None
     Public editsuccess As Boolean = False
@@ -37,6 +38,7 @@ Public Module [Global]
     Public configfin As Boolean = True
     Public _IPv4Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
     Public _IPv6Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
+    Public gserializer As ISerialize = New XSerializer()
 
     Public Function resolve(addr As String, fam As AddressFamily) As IPAddress
         Dim ipadd As IPAddress() = New IPAddress() {}

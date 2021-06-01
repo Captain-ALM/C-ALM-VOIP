@@ -2,6 +2,7 @@
 Imports captainalm.CALMNetMarshal
 Imports System.Net
 Imports captainalm.CALMNetLib
+Imports captainalm.Serialize
 
 Public NotInheritable Class MainProgram
     Implements IWorkerPumpReceiver
@@ -142,16 +143,16 @@ Public NotInheritable Class MainProgram
                 If caddrbs.type = AddressableType.TCP Then
                     If caddrbs.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
                         CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
-                        Dim tpl As New Tuple(Of String, Integer, String)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name)
-                        nomReconReg.Add(tpl)
+                        Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name, caddrbs.messagePassMode)
+                        tcpResvSetReg.Add(tpl)
                         Dim chk As Boolean = tcpmarshalIPv4.connect(caddrbs.targetAddress, caddrbs.targetPort)
-                        If Not chk Then nomReconReg.Remove(New Tuple(Of String, Integer, String)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name))
+                        If Not chk Then tcpResvSetReg.Remove(tpl)
                     ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 And Not tcpmarshalIPv6 Is Nothing Then
                         CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
-                        Dim tpl As New Tuple(Of String, Integer, String)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name)
-                        nomReconReg.Add(tpl)
+                        Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name, caddrbs.messagePassMode)
+                        tcpResvSetReg.Add(tpl)
                         Dim chk As Boolean = tcpmarshalIPv6.connect(caddrbs.targetAddress, caddrbs.targetPort)
-                        If Not chk Then nomReconReg.Remove(New Tuple(Of String, Integer, String)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name))
+                        If Not chk Then tcpResvSetReg.Remove(tpl)
                     End If
                 ElseIf caddrbs.type = AddressableType.UDP Then
                     If caddrbs.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
@@ -402,16 +403,16 @@ Public NotInheritable Class MainProgram
                 If cl.type = AddressableType.TCP Then
                     If cl.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
                         CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
-                        Dim tpl As New Tuple(Of String, Integer, String)(cl.targetAddress, cl.targetPort, cl.name)
-                        nomReconReg.Add(tpl)
+                        Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(cl.targetAddress, cl.targetPort, cl.name, cl.messagePassMode)
+                        tcpResvSetReg.Add(tpl)
                         Dim chk As Boolean = tcpmarshalIPv4.connect(cl.targetAddress, cl.targetPort)
-                        If Not chk Then nomReconReg.Remove(New Tuple(Of String, Integer, String)(cl.targetAddress, cl.targetPort, cl.name))
+                        If Not chk Then tcpResvSetReg.Remove(tpl)
                     ElseIf cl.targetIPVersion = IPVersion.IPv6 And Not tcpmarshalIPv6 Is Nothing Then
                         CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
-                        Dim tpl As New Tuple(Of String, Integer, String)(cl.targetAddress, cl.targetPort, cl.name)
-                        nomReconReg.Add(tpl)
+                        Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(cl.targetAddress, cl.targetPort, cl.name, cl.messagePassMode)
+                        tcpResvSetReg.Add(tpl)
                         Dim chk As Boolean = tcpmarshalIPv6.connect(cl.targetAddress, cl.targetPort)
-                        If Not chk Then nomReconReg.Remove(New Tuple(Of String, Integer, String)(cl.targetAddress, cl.targetPort, cl.name))
+                        If Not chk Then tcpResvSetReg.Remove(tpl)
                     End If
                 ElseIf cl.type = AddressableType.UDP Then
                     If cl.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
@@ -441,8 +442,8 @@ Public NotInheritable Class MainProgram
         micVOIP = New VOIPSender() With {.samplebuffersize = 2000}
         spkVOIP = New VOIPReceiver()
         If Not selected_interfaceIPv4.Equals(IPAddress.None) Then
-            tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = 0}
-            udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4)
+            tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = 0, .serializer = gserializer}
+            udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4) With {.serializer = gserializer}
             AddHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
             AddHandler tcpmarshalIPv4.clientDisconnected, AddressOf discon
             AddHandler udpmarshalIPv4.MessageReceived, AddressOf msgRecIPv4
@@ -451,8 +452,8 @@ Public NotInheritable Class MainProgram
             InListening = True
         End If
         If Not selected_interfaceIPv6 Is Nothing Then
-            tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = 0}
-            udpmarshalIPv6 = New NetMarshalUDP(selected_interfaceIPv6, port_UDP_IPv6)
+            tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = 0, .serializer = gserializer}
+            udpmarshalIPv6 = New NetMarshalUDP(selected_interfaceIPv6, port_UDP_IPv6) With {.serializer = gserializer}
             AddHandler tcpmarshalIPv6.clientConnected, AddressOf conIPv6
             AddHandler tcpmarshalIPv6.clientDisconnected, AddressOf discon
             AddHandler udpmarshalIPv6.MessageReceived, AddressOf msgRecIPv6
@@ -561,15 +562,16 @@ Public NotInheritable Class MainProgram
                     Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
                     Dim llip As String = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localIPAddress
                     Dim llport As Integer = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localPort
-                    Dim tnom As String = getName(lip, lport)
-                    If tnom <> "" Then remName(lip, lport)
+                    Dim tnom As String = getResvSetName(lip, lport)
+                    Dim mpm As voip.MessagePassMode = getResvSetPM(lip, lport)
+                    If tnom <> "" Then remResvSet(lip, lport)
                     If lip = llip And lport = llport Then
-                        cl = New Client(New Contact(rip, rport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv4), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
+                        cl = New Client(New Contact(rip, rport, AddressableType.TCP, mpm, IPVersion.IPv4), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
                     Else
                         If tnom = "" Then
                             tnom = rip & ":" & rport
                         End If
-                        cl = New Client(New Contact(lip, lport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv4), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
+                        cl = New Client(New Contact(lip, lport, AddressableType.TCP, mpm, IPVersion.IPv4), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                     End If
                     addCl(cl)
                     addStrm(cl.stream)
@@ -592,21 +594,22 @@ Public NotInheritable Class MainProgram
                     Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
                     Dim llip As String = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localIPAddress
                     Dim llport As Integer = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localPort
-                    Dim tnom As String = getName(lip, lport)
-                    If tnom <> "" Then remName(lip, lport)
+                    Dim tnom As String = getResvSetName(lip, lport)
+                    Dim mpm As voip.MessagePassMode = getResvSetPM(lip, lport)
+                    If tnom <> "" Then remResvSet(lip, lport)
                     If lip = llip And lport = llport Then
-                        cl = New Client(New Contact(rip, rport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv6), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
+                        cl = New Client(New Contact(rip, rport, AddressableType.TCP, mpm, IPVersion.IPv6), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
                     Else
                         If tnom = "" Then
                             tnom = rip & ":" & rport
                         End If
-                        cl = New Client(New Contact(lip, lport, AddressableType.TCP, MessagePassMode.Bidirectional, IPVersion.IPv6), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
+                        cl = New Client(New Contact(lip, lport, AddressableType.TCP, mpm, IPVersion.IPv6), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                     End If
                     addCl(cl)
                     addStrm(cl.stream)
                 End If
             End If
-            End If
+        End If
     End Sub
 
     Private Sub discon(ip As String, port As Integer)
@@ -645,9 +648,11 @@ Public NotInheritable Class MainProgram
         Return toret
     End Function
 
-    Public Function getName(ip As String, port As Integer) As String
+    'TCP Client Reserved Settings Management
+
+    Public Function getResvSetName(ip As String, port As Integer) As String
         Dim toret As String = ""
-        For Each c As Tuple(Of String, Integer, String) In nomReconReg
+        For Each c As Tuple(Of String, Integer, String, voip.MessagePassMode) In tcpResvSetReg
             If c.Item1 = ip And c.Item2 = port Then
                 toret = c.Item3
                 Exit For
@@ -656,15 +661,28 @@ Public NotInheritable Class MainProgram
         Return toret
     End Function
 
-    Public Sub remName(ip As String, port As Integer)
-        For i As Integer = 0 To nomReconReg.Count - 1 Step 1
-            Dim c As Tuple(Of String, Integer, String) = nomReconReg(i)
+    Public Function getResvSetPM(ip As String, port As Integer) As voip.MessagePassMode
+        Dim toret As voip.MessagePassMode = MessagePassMode.Bidirectional
+        For Each c As Tuple(Of String, Integer, String, voip.MessagePassMode) In tcpResvSetReg
             If c.Item1 = ip And c.Item2 = port Then
-                nomReconReg.RemoveAt(i)
+                toret = c.Item4
+                Exit For
+            End If
+        Next
+        Return toret
+    End Function
+
+    Public Sub remResvSet(ip As String, port As Integer)
+        For i As Integer = 0 To tcpResvSetReg.Count - 1 Step 1
+            Dim c As Tuple(Of String, Integer, String, voip.MessagePassMode) = tcpResvSetReg(i)
+            If c.Item1 = ip And c.Item2 = port Then
+                tcpResvSetReg.RemoveAt(i)
                 Exit For
             End If
         Next
     End Sub
+
+    'Stream Management
 
     Private slockstrm As New Object()
 
@@ -729,6 +747,8 @@ Public NotInheritable Class MainProgram
         End If
     End Sub
 
+    'Client Management
+
     Private slockCl As New Object()
 
     Public Sub addCl(Cl As Client)
@@ -736,7 +756,7 @@ Public NotInheritable Class MainProgram
             Me.Invoke(Sub() addCl(Cl))
         Else
             SyncLock slockCl
-                Clients.Add(Cl)
+                clients.Add(Cl)
                 Dim lvi As New ListViewItem(Cl.name)
                 If Cl.type = AddressableType.TCP Then
                     lvi.SubItems.Add(Cl.myAddress)
@@ -757,7 +777,7 @@ Public NotInheritable Class MainProgram
     Public Function indxCl(Cl As Client) As Integer
         Dim toret As Integer = -1
         SyncLock slockCl
-            toret = Clients.IndexOf(Cl)
+            toret = clients.IndexOf(Cl)
         End SyncLock
         Return toret
     End Function
@@ -765,8 +785,8 @@ Public NotInheritable Class MainProgram
     Public Function indxCl(indx As Integer) As Client
         Dim toret As Client = Nothing
         SyncLock slockCl
-            If indx > -1 And indx < Clients.Count Then _
-                toret = Clients(indx)
+            If indx > -1 And indx < clients.Count Then _
+                toret = clients(indx)
         End SyncLock
         Return toret
     End Function
@@ -809,6 +829,8 @@ Public NotInheritable Class MainProgram
             End SyncLock
         End If
     End Sub
+
+    'Contact Management
 
     Private slockCon As New Object()
 

@@ -1,5 +1,6 @@
 ﻿Imports captainalm.CALMNetMarshal
 Imports captainalm.Serialize
+Imports System.Xml.Serialization
 
 <Serializable>
 Public Structure AudioPacket
@@ -10,46 +11,44 @@ Public Structure AudioPacket
     Private receiverIP_ As String
     Private receiverPort_ As Integer
     Public bytes As Byte()
-    Public year As Integer
-    Public day As Integer
-    Public millisecond As Integer
-
+    Public timestamp As DateTime
+    <NonSerialized, XmlIgnore>
+    Public serializer As ISerialize
+    <XmlIgnore>
     Public Property data As Object Implements IPacket.data
         Get
-            Return New Tuple(Of Byte(), Integer, Integer, Integer)(bytes, year, day, millisecond)
+            Return New Tuple(Of Byte(), DateTime)(bytes, timestamp)
         End Get
         Set(value As Object)
-            Dim val As Tuple(Of Byte(), Integer, Integer, Integer) = value
+            Dim val As Tuple(Of Byte(), DateTime) = value
             bytes = val.Item1
-            year = val.Item2
-            day = val.Item3
-            millisecond = val.Item4
+            timestamp = val.Item2
         End Set
     End Property
 
     Public ReadOnly Property dataType As Type Implements IPacket.dataType
         Get
-            Return GetType(Tuple(Of Byte(), Integer, Integer, Integer))
+            Return GetType(Tuple(Of Byte(), DateTime))
         End Get
     End Property
 
     Public ReadOnly Property getData As Byte() Implements IPacket.getData
         Get
-            Return New Serializer().serializeObject(Of AudioPacket)(Me)
+            If serializer Is Nothing Then serializer = gserializer
+            Return serializer.serializeObject(Of AudioPacket)(Me)
         End Get
     End Property
 
     Public WriteOnly Property setData As Byte() Implements IPacket.setData
         Set(value As Byte())
-            Dim msg As AudioPacket = New Serializer().deSerializeObject(Of AudioPacket)(value)
+            If serializer Is Nothing Then serializer = gserializer
+            Dim msg As AudioPacket = serializer.deSerializeObject(Of AudioPacket)(value)
             Me.receiverIP_ = msg.receiverIP_
             Me.receiverPort_ = msg.receiverPort_
             Me.senderIP_ = msg.senderIP_
             Me.senderPort_ = msg.senderPort_
             Me.bytes = msg.bytes
-            Me.year = msg.year
-            Me.day = msg.day
-            Me.millisecond = msg.millisecond
+            Me.timestamp = msg.timestamp
             msg = Nothing
         End Set
     End Property

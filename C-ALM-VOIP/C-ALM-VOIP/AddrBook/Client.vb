@@ -9,12 +9,10 @@ Public Class Client
 
     Protected _str As Streamer = Nothing
     Protected _cl As NetMarshalBase = Nothing
-    Protected _m As Boolean = False
-    Protected _lts As New Tuple(Of Integer, Integer, Integer)(0, 0, 0)
+    Protected _lts As DateTime = DateTime.UtcNow
 
     Public Sub New(other As Contact, client As NetMarshalBase)
         MyBase.New(other)
-        'If other.messagePassMode = voip.MessagePassMode.Bidirectional Or other.messagePassMode = voip.MessagePassMode.Receive Then _
         _str = spkVOIP.createStreamer(other.name)
         _cl = client
         AddHandler _cl.MessageReceived, AddressOf msgrec
@@ -31,11 +29,11 @@ Public Class Client
 
     Protected Overridable Sub msgrec(msg As IPacket)
         If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
-        If isForMe(msg) And Not _m Then
-            If msg.dataType = GetType(Tuple(Of Byte(), Integer, Integer, Integer)) And isNewerTimeStamp(msg.data) Then
-                _lts = New Tuple(Of Integer, Integer, Integer)(CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item2, CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item3, CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item4)
+        If isForMe(msg) Then
+            If msg.dataType = GetType(Tuple(Of Byte(), DateTime)) And isNewerTimeStamp(msg.data) Then
+                _lts = CType(msg.data, Tuple(Of Byte(), DateTime)).Item2
                 If Not _str Is Nothing Then _
-                    _str.ingestData(CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item1, False)
+                    _str.ingestData(CType(msg.data, Tuple(Of Byte(), DateTime)).Item1, False)
             End If
         End If
     End Sub
@@ -57,10 +55,7 @@ Public Class Client
         ElseIf _type = AddressableType.UDP Then
             ap = New AudioPacket() With {.bytes = bts, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
         End If
-        Dim ts As Tuple(Of Integer, Integer, Integer) = generateTimestamp()
-        ap.year = ts.Item1
-        ap.day = ts.Item2
-        ap.millisecond = ts.Item3
+        ap.timestamp = DateTime.UtcNow
         _cl.sendMessage(ap)
     End Sub
 
@@ -160,30 +155,7 @@ Public Class Client
         End Get
     End Property
 
-    Protected Overridable Function generateTimestamp() As Tuple(Of Integer, Integer, Integer)
-        Dim toret As New Tuple(Of Integer, Integer, Integer)(DateTime.Now.Year, DateTime.Now.DayOfYear, (DateTime.Now.Hour * 3600000) + (DateTime.Now.Minute * 60000) + (DateTime.Now.Second * 1000) + DateTime.Now.Millisecond)
-        Return toret
-    End Function
-
-    Protected Overridable Function isNewerTimeStamp(tstchk As Tuple(Of Byte(), Integer, Integer, Integer)) As Boolean
-        If tstchk.Item2 > _lts.Item1 Then
-            Return True
-        ElseIf tstchk.Item2 < _lts.Item1 Then
-            Return False
-        Else
-            If tstchk.Item3 > _lts.Item2 Then
-                Return True
-            ElseIf tstchk.Item3 < _lts.Item2 Then
-                Return False
-            Else
-                If tstchk.Item4 > _lts.Item3 Then
-                    Return True
-                ElseIf tstchk.Item4 < _lts.Item3 Then
-                    Return False
-                Else
-                    Return False
-                End If
-            End If
-        End If
+    Protected Overridable Function isNewerTimeStamp(tstchk As Tuple(Of Byte(), DateTime)) As Boolean
+        Return tstchk.Item2 > _lts
     End Function
 End Class

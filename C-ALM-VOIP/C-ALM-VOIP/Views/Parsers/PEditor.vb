@@ -67,7 +67,7 @@ Public Class PEditor
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxstrmode And ev.EventType = ETs.Leave Then
                     If ceditm <> EditorMode.EditClient Then
-                        CType(_caddrbs, Contact).messagePassMode = args.held + 2
+                        CType(_caddrbs, Contact).messagePassMode = args.held + 1
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxipv And ev.EventType = ETs.Leave Then
                     If ceditm <> EditorMode.EditClient Then
