@@ -39,6 +39,9 @@ Public Module [Global]
     Public _IPv4Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
     Public _IPv6Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
     Public gserializer As ISerialize = New XSerializer()
+    Public samplerate As Integer = 12000
+    Public buffsdsecs As Integer = 1
+    Public buffmdmsecs As Integer = 125
 
     Public Function resolve(addr As String, fam As AddressFamily) As IPAddress
         Dim ipadd As IPAddress() = New IPAddress() {}

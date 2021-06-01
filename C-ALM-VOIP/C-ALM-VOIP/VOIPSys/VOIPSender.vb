@@ -6,21 +6,20 @@ Public NotInheritable Class VOIPSender
     Protected mic As WaveIn = Nothing
     Protected strm As Streamer = Nothing
     Protected buff As New SyncLockedList(Of Byte)
-    Protected buffsiz As Integer = 2000
+    Protected buffsiz As Integer = 3000
     Public Event dataAvailable(bts As Byte())
     Public Sub New()
         mic = New WaveIn()
-        mic.BufferMilliseconds = 100
+        mic.BufferMilliseconds = buffmdmsecs
         mic.DeviceNumber = input_device
         strm = New Streamer("", False)
-        mic.WaveFormat = New WaveFormat(12000, 16, 1)
+        mic.WaveFormat = New WaveFormat(samplerate, 16, 1)
         AddHandler mic.DataAvailable, AddressOf dataReceived
         mic.StartRecording()
     End Sub
 
     Private Sub dataReceived(sender As Object, e As WaveInEventArgs)
-        Dim bts As Byte() = DeepCopyHelper.deepCopy(Of Byte())(e.Buffer)
-        For Each b As Byte In bts
+        For Each b As Byte In e.Buffer
             buff.Add(b)
         Next
         If buff.Count > buffsiz Then

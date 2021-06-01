@@ -439,7 +439,7 @@ Public NotInheritable Class MainProgram
     End Sub
 
     Private Sub engage()
-        micVOIP = New VOIPSender() With {.samplebuffersize = 4000}
+        micVOIP = New VOIPSender() With {.samplebuffersize = samplerate \ (1000 \ buffmdmsecs)}
         spkVOIP = New VOIPReceiver()
         If Not selected_interfaceIPv4.Equals(IPAddress.None) Then
             tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = 0, .serializer = gserializer}
