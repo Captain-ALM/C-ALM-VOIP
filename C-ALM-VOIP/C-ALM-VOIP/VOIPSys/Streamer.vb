@@ -13,7 +13,7 @@ Public Class Streamer
     Public Event dataExgestWithVolume(data As Single())
 
     Public Sub New(name As String, havevolume As Boolean)
-        _wp = New BufferedWaveProvider(New WaveFormat(8000, 16, 1))
+        _wp = New BufferedWaveProvider(New WaveFormat(12000, 16, 1))
         _wsp = New Pcm16BitToSampleProvider(_wp)
         If havevolume Then
             _vsp = New VolumeSampleProvider(_wsp)

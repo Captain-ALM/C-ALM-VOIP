@@ -37,15 +37,6 @@ Public Class Contact
         End Set
     End Property
 
-    Public Overloads Property messagePassMode As MessagePassMode
-        Get
-            Return MyBase.messagePassMode
-        End Get
-        Set(value As MessagePassMode)
-            MyBase.messagePassMode = value
-        End Set
-    End Property
-
     Public Overloads Property targetIPVersion As IPVersion
         Get
             Return MyBase.targetIPVersion

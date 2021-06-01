@@ -95,7 +95,7 @@ Public MustInherit Class AddressableBase
         Get
             Return _passmode
         End Get
-        Protected Set(value As MessagePassMode)
+        Set(value As MessagePassMode)
             _passmode = value
         End Set
     End Property

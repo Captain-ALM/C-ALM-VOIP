@@ -80,7 +80,7 @@ Public Class Editor
             txtbxaddr.Text = caddrbs.targetAddress
             txtbxname.Text = caddrbs.name
             cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
-            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode - 1
+            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode
             cmbxtype.SelectedIndex = caddrbs.type - 1
             cmbxipv.Enabled = True
             cmbxstrmode.Enabled = True
@@ -111,10 +111,10 @@ Public Class Editor
             txtbxaddr.Text = caddrbs.targetAddress
             txtbxname.Text = caddrbs.name
             cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
-            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode - 1
+            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode
             cmbxtype.SelectedIndex = caddrbs.type - 1
             cmbxipv.Enabled = False
-            cmbxstrmode.Enabled = False 'Next version changing this on a client will hopefully be allowed.
+            cmbxstrmode.Enabled = True
             cmbxtype.Enabled = False
             txtbxaddr.Enabled = True
             txtbxaddr.ReadOnly = True
@@ -141,7 +141,7 @@ Public Class Editor
             txtbxaddr.Text = caddrbs.targetAddress
             txtbxname.Text = caddrbs.name
             cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
-            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode - 1
+            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode
             cmbxtype.SelectedIndex = caddrbs.type - 1
             cmbxipv.Enabled = True
             cmbxstrmode.Enabled = True

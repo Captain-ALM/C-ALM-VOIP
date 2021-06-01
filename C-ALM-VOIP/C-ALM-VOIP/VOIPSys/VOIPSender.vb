@@ -6,14 +6,14 @@ Public NotInheritable Class VOIPSender
     Protected mic As WaveIn = Nothing
     Protected strm As Streamer = Nothing
     Protected buff As New SyncLockedList(Of Byte)
-    Protected buffsiz As Integer = 800
+    Protected buffsiz As Integer = 2000
     Public Event dataAvailable(bts As Byte())
     Public Sub New()
         mic = New WaveIn()
-        mic.BufferMilliseconds = 50
+        mic.BufferMilliseconds = 100
         mic.DeviceNumber = input_device
         strm = New Streamer("", False)
-        mic.WaveFormat = New WaveFormat(8000, 16, 1)
+        mic.WaveFormat = New WaveFormat(12000, 16, 1)
         AddHandler mic.DataAvailable, AddressOf dataReceived
         mic.StartRecording()
     End Sub

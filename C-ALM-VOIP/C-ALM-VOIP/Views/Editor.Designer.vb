@@ -111,7 +111,7 @@ Partial Class Editor
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(12, 94)
+        Me.Label3.Location = New System.Drawing.Point(12, 97)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(76, 13)
         Me.Label3.TabIndex = 6
@@ -140,7 +140,7 @@ Partial Class Editor
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(207, 94)
+        Me.Label4.Location = New System.Drawing.Point(207, 97)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(58, 13)
         Me.Label4.TabIndex = 8
@@ -229,7 +229,7 @@ Partial Class Editor
         '
         Me.cmbxstrmode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbxstrmode.FormattingEnabled = True
-        Me.cmbxstrmode.Items.AddRange(New Object() {"Receive Only", "Send Only", "Biderectional"})
+        Me.cmbxstrmode.Items.AddRange(New Object() {"Disabled", "Receive Only", "Send Only", "Biderectional"})
         Me.cmbxstrmode.Location = New System.Drawing.Point(105, 271)
         Me.cmbxstrmode.Name = "cmbxstrmode"
         Me.cmbxstrmode.Size = New System.Drawing.Size(264, 21)

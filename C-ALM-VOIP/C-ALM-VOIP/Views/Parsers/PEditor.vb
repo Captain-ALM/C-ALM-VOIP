@@ -20,7 +20,7 @@ Public Class PEditor
                 Dim args As EventArgsDataContainer = castObject(Of EventArgsDataContainer)(ev.EventData)
                 If ev.EventSource.sourceObj Is frm.OK_Button And ev.EventType = ETs.Click Then
                     If ceditm = EditorMode.Create Then
-                        CType(caddrbs, Contact).messagePassMode = _caddrbs.messagePassMode
+                        caddrbs.messagePassMode = _caddrbs.messagePassMode
                         caddrbs.myAddress = _caddrbs.myAddress
                         caddrbs.myPort = _caddrbs.myPort
                         caddrbs.name = _caddrbs.name
@@ -29,11 +29,12 @@ Public Class PEditor
                         CType(caddrbs, Contact).targetPort = _caddrbs.targetPort
                         CType(caddrbs, Contact).type = _caddrbs.type
                     ElseIf ceditm = EditorMode.EditClient Then
+                        caddrbs.messagePassMode = _caddrbs.messagePassMode
                         caddrbs.myAddress = _caddrbs.myAddress
                         caddrbs.myPort = _caddrbs.myPort
                         caddrbs.name = _caddrbs.name
                     ElseIf ceditm = EditorMode.EditContact Then
-                        CType(caddrbs, Contact).messagePassMode = _caddrbs.messagePassMode
+                        caddrbs.messagePassMode = _caddrbs.messagePassMode
                         caddrbs.myAddress = _caddrbs.myAddress
                         caddrbs.myPort = _caddrbs.myPort
                         caddrbs.name = _caddrbs.name
@@ -66,9 +67,7 @@ Public Class PEditor
                         CType(_caddrbs, Contact).type = args.held + 1
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxstrmode And ev.EventType = ETs.Leave Then
-                    If ceditm <> EditorMode.EditClient Then
-                        CType(_caddrbs, Contact).messagePassMode = args.held + 1
-                    End If
+                    _caddrbs.messagePassMode = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxipv And ev.EventType = ETs.Leave Then
                     If ceditm <> EditorMode.EditClient Then
                         CType(_caddrbs, Contact).targetIPVersion = args.held + 1

@@ -439,7 +439,7 @@ Public NotInheritable Class MainProgram
     End Sub
 
     Private Sub engage()
-        micVOIP = New VOIPSender() With {.samplebuffersize = 2000}
+        micVOIP = New VOIPSender() With {.samplebuffersize = 4000}
         spkVOIP = New VOIPReceiver()
         If Not selected_interfaceIPv4.Equals(IPAddress.None) Then
             tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = 0, .serializer = gserializer}
@@ -639,7 +639,7 @@ Public NotInheritable Class MainProgram
                     Exit For
                 End If
             ElseIf c.type = AddressableType.TCP Then
-                If c.marshal.duplicatedInternalSocketConfig.remoteIPAddress = ip And c.marshal.duplicatedInternalSocketConfig.remotePort = port Then
+                If CType(c.marshal.internalSocket, INetConfig).remoteIPAddress = ip And CType(c.marshal.internalSocket, INetConfig).remotePort = port Then
                     toret = c
                     Exit For
                 End If
