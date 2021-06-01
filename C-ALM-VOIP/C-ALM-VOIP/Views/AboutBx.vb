@@ -78,7 +78,7 @@ Public NotInheritable Class AboutBx
         Me.LabelVersion.Text = String.Format("Version {0}", My.Application.Info.Version.ToString)
         Me.LabelCopyright.Text = My.Application.Info.Copyright
         Me.LabelCompanyName.Text = My.Application.Info.CompanyName
-        Me.TextBoxDescription.Text = "Description: " & vbCrLf & My.Application.Info.Description & vbCrLf & description
+        Me.TextBoxDescription.Text = "Description: " & vbCrLf & My.Application.Info.Description & vbCrLf & vbCrLf & "CALM-WorkerPump Version:" & vbCrLf & GetType(captainalm.workerpumper.WorkerPump).Assembly.GetName.Version.ToString() & vbCrLf & vbCrLf & "calmclientandserver Version:" & vbCrLf & GetType(captainalm.CALMNetMarshal.NetMarshalBase).Assembly.GetName.Version.ToString() & vbCrLf & vbCrLf & "NAudio Version:" & vbCrLf & GetType(NAudio.MmException).Assembly.GetName.Version.ToString() & vbCrLf & vbCrLf & description
         Me.TextBox1.Text = "License: " & vbCrLf & license
         If ue Then wp.addEvent(Me, EventTypes.Shown, e)
     End Sub
