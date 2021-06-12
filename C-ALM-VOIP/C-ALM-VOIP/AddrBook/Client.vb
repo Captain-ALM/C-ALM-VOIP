@@ -11,6 +11,10 @@ Public Class Client
     Protected _cl As NetMarshalBase = Nothing
     Protected _lts As DateTime = DateTime.UtcNow
 
+    Public Sub New(other As Contact)
+        MyBase.New(other)
+    End Sub
+
     Public Sub New(other As Contact, client As NetMarshalBase)
         MyBase.New(other)
         _str = spkVOIP.createStreamer(other.name)

@@ -121,7 +121,7 @@ Partial Class Editor
         '
         Me.cmbxtype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cmbxtype.FormattingEnabled = True
-        Me.cmbxtype.Items.AddRange(New Object() {"TCP", "UDP"})
+        Me.cmbxtype.Items.AddRange(New Object() {"TCP", "UDP", "Block"})
         Me.cmbxtype.Location = New System.Drawing.Point(105, 94)
         Me.cmbxtype.Name = "cmbxtype"
         Me.cmbxtype.Size = New System.Drawing.Size(96, 21)
@@ -175,11 +175,9 @@ Partial Class Editor
         '
         Me.nudport.Location = New System.Drawing.Point(105, 163)
         Me.nudport.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
-        Me.nudport.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudport.Name = "nudport"
         Me.nudport.Size = New System.Drawing.Size(264, 20)
         Me.nudport.TabIndex = 4
-        Me.nudport.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label7
         '
@@ -210,11 +208,9 @@ Partial Class Editor
         '
         Me.nudmyport.Location = New System.Drawing.Point(105, 234)
         Me.nudmyport.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
-        Me.nudmyport.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudmyport.Name = "nudmyport"
         Me.nudmyport.Size = New System.Drawing.Size(264, 20)
         Me.nudmyport.TabIndex = 6
-        Me.nudmyport.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label9
         '

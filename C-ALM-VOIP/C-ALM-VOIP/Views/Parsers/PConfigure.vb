@@ -11,8 +11,8 @@ Public Class PConfigure
     Private _port_UDP_IPv6 As Integer = 1
     Private _port_TCP_IPv4 As Integer = 1
     Private _port_TCP_IPv6 As Integer = 1
-    Private _external_UDP_Address_IPv4 As String = IPAddress.None.ToString()
-    Private _external_UDP_Address_IPv6 As String = IPAddress.IPv6None.ToString()
+    Private _external_Address_IPv4 As String = IPAddress.None.ToString()
+    Private _external_Address_IPv6 As String = IPAddress.IPv6None.ToString()
     Private _external_UDP_Port_IPv4 As Integer = 1
     Private _external_UDP_Port_IPv6 As Integer = 1
     Private _TCP_backlog As Integer = 1
@@ -29,8 +29,8 @@ Public Class PConfigure
                 _port_UDP_IPv6 = port_UDP_IPv6
                 _port_TCP_IPv4 = port_TCP_IPv4
                 _port_TCP_IPv6 = port_TCP_IPv6
-                _external_UDP_Address_IPv4 = external_UDP_Address_IPv4
-                _external_UDP_Address_IPv6 = external_UDP_Address_IPv6
+                _external_Address_IPv4 = external_Address_IPv4
+                _external_Address_IPv6 = external_Address_IPv6
                 _external_UDP_Port_IPv4 = external_UDP_Port_IPv4
                 _external_UDP_Port_IPv6 = external_UDP_Port_IPv6
                 _TCP_backlog = TCP_backlog
@@ -51,8 +51,8 @@ Public Class PConfigure
                     port_UDP_IPv6 = _port_UDP_IPv6
                     port_TCP_IPv4 = _port_TCP_IPv4
                     port_TCP_IPv6 = _port_TCP_IPv6
-                    external_UDP_Address_IPv4 = _external_UDP_Address_IPv4
-                    external_UDP_Address_IPv6 = _external_UDP_Address_IPv6
+                    external_Address_IPv4 = _external_Address_IPv4
+                    external_Address_IPv6 = _external_Address_IPv6
                     external_UDP_Port_IPv4 = _external_UDP_Port_IPv4
                     external_UDP_Port_IPv6 = _external_UDP_Port_IPv6
                     TCP_backlog = _TCP_backlog
@@ -77,9 +77,9 @@ Public Class PConfigure
                 ElseIf ev.EventSource.sourceObj Is frm.nududpextpIPv6 And ev.EventType = ETs.Leave Then
                     _external_UDP_Port_IPv6 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxudpextaddIPv4 And ev.EventType = ETs.Leave Then
-                    _external_UDP_Address_IPv4 = args.held
+                    _external_Address_IPv4 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxudpextaddIPv6 And ev.EventType = ETs.Leave Then
-                    _external_UDP_Address_IPv6 = args.held
+                    _external_Address_IPv6 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.chkbxena And ev.EventType = ETs.Leave Then
                     _TCP_delay = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.chkbxrdtcpc And ev.EventType = ETs.Leave Then

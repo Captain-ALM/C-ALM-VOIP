@@ -6,8 +6,8 @@ Public Class Contact
         MyBase.New(other)
     End Sub
 
-    Public Sub New(targAddress As String, targPort As Integer, aType As AddressableType, mpMode As MessagePassMode, targVer As IPVersion)
-        MyBase.New(targAddress, targPort, aType, mpMode, targVer)
+    Public Sub New(targAddress As String, targPort As Integer, targVer As IPVersion, aType As AddressableType)
+        MyBase.New(targAddress, targPort, targVer, aType)
     End Sub
 
     Public Overloads Property targetAddress As String

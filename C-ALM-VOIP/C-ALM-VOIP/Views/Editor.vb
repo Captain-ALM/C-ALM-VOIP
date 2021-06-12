@@ -9,6 +9,8 @@ Public Class Editor
     Private formClosedDone As Boolean = False
     Private wp As WorkerPump = Nothing
     Private ue As Boolean = False
+    Private slockchkf As New Object()
+    Private showing As Boolean = False
 
     'Should not construct externally.
     Sub New(Optional ByRef workerp As WorkerPump = Nothing)
@@ -39,15 +41,18 @@ Public Class Editor
 
     Private Sub Editor_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         If Not formClosingDone Then
-            If Me.Visible Then
-                'If close button pressed
-                e.Cancel = True
-                Me.Hide()
-                If Me.DialogResult = Windows.Forms.DialogResult.None Then Me.DialogResult = Windows.Forms.DialogResult.Cancel
-            End If
-            If ue Then wp.addEvent(New WorkerEvent(Me, ETs.Closing, e))
-            Me.OnFormClosed(New FormClosedEventArgs(e.CloseReason))
-            formClosingDone = True
+            showing = False
+            SyncLock slockchkf
+                If Me.Visible Then
+                    'If close button pressed
+                    e.Cancel = True
+                    Me.Hide()
+                    If Me.DialogResult = Windows.Forms.DialogResult.None Then Me.DialogResult = Windows.Forms.DialogResult.Cancel
+                End If
+                If ue Then wp.addEvent(New WorkerEvent(Me, ETs.Closing, e))
+                Me.OnFormClosed(New FormClosedEventArgs(e.CloseReason))
+                formClosingDone = True
+            End SyncLock
         End If
     End Sub
 
@@ -71,103 +76,79 @@ Public Class Editor
         While editfin
             Threading.Thread.Sleep(125)
         End While
-        'Begin Population
-        OK_Button.Select()
-        If ceditm = EditorMode.Create Then
-            Text = "Create:"
-            Label1.Text = "Create:"
+        SyncLock slockchkf
+            'Begin Population
+            OK_Button.Select()
             nudport.Value = caddrbs.targetPort
             txtbxaddr.Text = caddrbs.targetAddress
             txtbxname.Text = caddrbs.name
             cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
             cmbxstrmode.SelectedIndex = caddrbs.messagePassMode
             cmbxtype.SelectedIndex = caddrbs.type - 1
-            cmbxipv.Enabled = True
-            cmbxstrmode.Enabled = True
-            cmbxtype.Enabled = True
-            txtbxaddr.Enabled = True
-            txtbxaddr.ReadOnly = False
-            nudport.Enabled = True
-            nudport.ReadOnly = False
-            nudport.Controls(0).Enabled = True
-            txtbxmyaddr.ReadOnly = False
-            nudmyport.ReadOnly = False
-            nudmyport.Controls(0).Enabled = True
-            If caddrbs.type = AddressableType.TCP Then
-                txtbxmyaddr.Text = ""
-                nudmyport.Value = 1
-                txtbxmyaddr.Enabled = False
-                nudmyport.Enabled = False
-            ElseIf caddrbs.type = AddressableType.UDP Then
-                txtbxmyaddr.Text = external_UDP_Address_IPv4
-                nudmyport.Value = external_UDP_Port_IPv4
-                txtbxmyaddr.Enabled = True
-                nudmyport.Enabled = True
+            If ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact Then
+                cmbxipv.Enabled = True
+                cmbxtype.Enabled = True
+                txtbxaddr.Enabled = True
+                txtbxaddr.ReadOnly = False
+                nudport.Enabled = True
+                nudport.ReadOnly = False
+                nudport.Controls(0).Enabled = True
+                txtbxmyaddr.ReadOnly = False
+                nudmyport.ReadOnly = False
+                nudmyport.Controls(0).Enabled = True
+                If caddrbs.type <> AddressableType.Block Then
+                    If caddrbs.type = AddressableType.UDP Then
+                        txtbxmyaddr.Text = external_Address_IPv4
+                        nudmyport.Value = external_UDP_Port_IPv4
+                    ElseIf caddrbs.type = AddressableType.TCP Then
+                        txtbxmyaddr.Text = external_Address_IPv4
+                        nudmyport.Value = external_TCP_Port_IPv4
+                    End If
+                    txtbxmyaddr.Enabled = True
+                    nudmyport.Enabled = True
+                    cmbxstrmode.Enabled = True
+                Else
+                    txtbxmyaddr.Enabled = False
+                    nudmyport.Enabled = False
+                    cmbxstrmode.Enabled = False
+                End If
+                If ceditm = EditorMode.Create Then
+                    Text = "Create:"
+                    Label1.Text = "Create:"
+                ElseIf ceditm = EditorMode.EditContact Then
+                    Text = "Edit Contact:"
+                    Label1.Text = "Edit Contact:"
+                End If
+            ElseIf ceditm = EditorMode.EditBlocker Or ceditm = EditorMode.EditClient Then
+                cmbxipv.Enabled = False
+                cmbxtype.Enabled = False
+                txtbxaddr.Enabled = True
+                txtbxaddr.ReadOnly = True
+                nudport.Enabled = True
+                nudport.ReadOnly = True
+                nudport.Controls(0).Enabled = False
+                If ceditm = EditorMode.EditClient Then
+                    txtbxmyaddr.Text = caddrbs.advertisedAddress
+                    nudmyport.Value = caddrbs.advertisedPort
+                    txtbxmyaddr.Enabled = True
+                    nudmyport.Enabled = True
+                    cmbxstrmode.Enabled = True
+                    Text = "Edit Client:"
+                    Label1.Text = "Edit Client:"
+                ElseIf ceditm = EditorMode.EditBlocker Then
+                    txtbxmyaddr.Text = ""
+                    nudmyport.Value = 0
+                    txtbxmyaddr.Enabled = False
+                    nudmyport.Enabled = False
+                    cmbxstrmode.Enabled = False
+                    Text = "Edit Blocker:"
+                    Label1.Text = "Edit Blocker:"
+                End If
             End If
-        ElseIf ceditm = EditorMode.EditClient Then
-            Text = "View:"
-            Label1.Text = "View:"
-            nudport.Value = caddrbs.targetPort
-            txtbxaddr.Text = caddrbs.targetAddress
-            txtbxname.Text = caddrbs.name
-            cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
-            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode
-            cmbxtype.SelectedIndex = caddrbs.type - 1
-            cmbxipv.Enabled = False
-            cmbxstrmode.Enabled = True
-            cmbxtype.Enabled = False
-            txtbxaddr.Enabled = True
-            txtbxaddr.ReadOnly = True
-            nudport.Enabled = True
-            nudport.ReadOnly = True
-            nudport.Controls(0).Enabled = False
-            txtbxmyaddr.Enabled = False
-            nudmyport.Enabled = False
-            If caddrbs.type = AddressableType.TCP Then
-                txtbxmyaddr.Text = ""
-                nudmyport.Value = 1
-                txtbxmyaddr.Enabled = False
-                nudmyport.Enabled = False
-            ElseIf caddrbs.type = AddressableType.UDP Then
-                txtbxmyaddr.Text = caddrbs.myAddress
-                nudmyport.Value = caddrbs.myPort
-                txtbxmyaddr.Enabled = True
-                nudmyport.Enabled = True
-            End If
-        ElseIf ceditm = EditorMode.EditContact Then
-            Text = "Edit:"
-            Label1.Text = "Edit:"
-            nudport.Value = caddrbs.targetPort
-            txtbxaddr.Text = caddrbs.targetAddress
-            txtbxname.Text = caddrbs.name
-            cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
-            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode
-            cmbxtype.SelectedIndex = caddrbs.type - 1
-            cmbxipv.Enabled = True
-            cmbxstrmode.Enabled = True
-            cmbxtype.Enabled = True
-            txtbxaddr.Enabled = True
-            txtbxaddr.ReadOnly = False
-            nudport.Enabled = True
-            nudport.ReadOnly = False
-            nudport.Controls(0).Enabled = True
-            txtbxmyaddr.ReadOnly = False
-            nudmyport.ReadOnly = False
-            nudmyport.Controls(0).Enabled = True
-            If caddrbs.type = AddressableType.TCP Then
-                txtbxmyaddr.Text = ""
-                nudmyport.Value = 1
-                txtbxmyaddr.Enabled = False
-                nudmyport.Enabled = False
-            ElseIf caddrbs.type = AddressableType.UDP Then
-                txtbxmyaddr.Text = caddrbs.myAddress
-                nudmyport.Value = caddrbs.myPort
-                txtbxmyaddr.Enabled = True
-                nudmyport.Enabled = True
-            End If
-        End If
-        OK_Button.Select()
-        'End Population
+            OK_Button.Select()
+            'End Population
+        End SyncLock
+        showing = True
     End Sub
 
     Public Property WorkerPump As WorkerPump Implements IWorkerPumpReceiver.WorkerPump
@@ -183,7 +164,6 @@ Public Class Editor
     End Property
 
     Private Sub OK_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OK_Button.Click
-        If Not updat() Then Exit Sub
         OK_Button.Enabled = False
         OK_Button.Select()
         If ue Then
@@ -191,8 +171,6 @@ Public Class Editor
             l.Add(Me)
             wp.addEvent(New WorkerEvent(OK_Button, l, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
-        Me.DialogResult = Windows.Forms.DialogResult.OK
-        Me.Close()
     End Sub
 
     Private Sub Cancel_Button_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel_Button.Click
@@ -218,6 +196,8 @@ Public Class Editor
 
     Private Sub cmbxtype_Leave(sender As Object, e As EventArgs) Handles cmbxtype.Leave
         If ue Then
+            updateIDTST()
+            updateSelectedTypeIN()
             Dim l As New List(Of Object)
             l.Add(Me)
             wp.addEvent(New WorkerEvent(cmbxtype, l, ETs.Leave, New EventArgsDataContainer(cmbxtype.SelectedIndex)))
@@ -226,11 +206,11 @@ Public Class Editor
 
     Private Sub cmbxipv_Leave(sender As Object, e As EventArgs) Handles cmbxipv.Leave
         If ue Then
+            updateSelectedTypeIN()
             Dim l As New List(Of Object)
             l.Add(Me)
             wp.addEvent(New WorkerEvent(cmbxipv, l, ETs.Leave, New EventArgsDataContainer(cmbxipv.SelectedIndex)))
         End If
-        updat()
     End Sub
 
     Private Sub txtbxaddr_Leave(sender As Object, e As EventArgs) Handles txtbxaddr.Leave
@@ -239,7 +219,6 @@ Public Class Editor
             l.Add(Me)
             wp.addEvent(New WorkerEvent(txtbxaddr, l, ETs.Leave, New EventArgsDataContainer(txtbxaddr.Text)))
         End If
-        updat()
     End Sub
 
     Private Sub nudport_Leave(sender As Object, e As EventArgs) Handles nudport.Leave
@@ -274,72 +253,164 @@ Public Class Editor
         End If
     End Sub
 
-    Protected Function updat() As Boolean
-        If ceditm = EditorMode.EditClient Then Return True
-        Dim striphold As String = txtbxaddr.Text
-        Dim iphold As IPAddress = Nothing
-        Dim ver As Integer = -1
-        ver = cmbxipv.SelectedIndex
-        Try
-            iphold = IPAddress.Parse(striphold)
-        Catch ex As ArgumentNullException
-            iphold = Nothing
-        Catch ex As FormatException
-            iphold = Nothing
-        End Try
-        If iphold Is Nothing Then
-            Dim ipadd As IPAddress() = New IPAddress() {}
-            Try
-                ipadd = Dns.GetHostAddresses(striphold)
-            Catch ex As Sockets.SocketException
-            Catch ex As ArgumentException
-            End Try
-            If ipadd.Length < 1 Then
-                txtbxaddr.BackColor = Color.Orange
-                Return False
-            End If
-            For Each ia As IPAddress In ipadd
-                If ia.AddressFamily = Sockets.AddressFamily.InterNetwork And ver = 0 Then
-                    txtbxaddr.BackColor = Color.White
-                    Return True
-                ElseIf ia.AddressFamily = Sockets.AddressFamily.InterNetworkV6 And ver = 1 Then
-                    txtbxaddr.BackColor = Color.White
-                    Return True
-                Else
-                    txtbxaddr.BackColor = Color.Orange
-                    Return False
-                End If
-            Next
-            txtbxaddr.BackColor = Color.Orange
-            Return False
-        Else
-            If iphold.AddressFamily = Sockets.AddressFamily.InterNetwork And ver = 0 Then
-                txtbxaddr.BackColor = Color.White
-                Return True
-            ElseIf iphold.AddressFamily = Sockets.AddressFamily.InterNetworkV6 And ver = 1 Then
-                txtbxaddr.BackColor = Color.White
-                Return True
-            Else
-                txtbxaddr.BackColor = Color.Orange
-                Return False
-            End If
-            txtbxaddr.BackColor = Color.Orange
-            Return False
-        End If
-    End Function
-
     Private Sub cmbxtype_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxtype.SelectedIndexChanged
         If ue Then
-            If cmbxtype.SelectedIndex + 1 = AddressableType.TCP Then
-                txtbxmyaddr.Enabled = False
-                nudmyport.Enabled = False
-            ElseIf cmbxtype.SelectedIndex + 1 = AddressableType.UDP Then
-                txtbxmyaddr.Enabled = True
-                nudmyport.Enabled = True
-            End If
+            updateIDTST()
+            updateSelectedTypeIN()
             Dim l As New List(Of Object)
             l.Add(Me)
             wp.addEvent(New WorkerEvent(cmbxtype, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxtype.SelectedIndex)))
+        End If
+    End Sub
+
+    Private Sub cmbxipv_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxipv.SelectedIndexChanged
+        If ue Then
+            updateSelectedTypeIN()
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(cmbxipv, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxipv.SelectedIndex)))
+        End If
+    End Sub
+
+    Protected Sub updateIDTST()
+        If cmbxtype.SelectedIndex + 1 = AddressableType.Block Then
+            txtbxmyaddr.Enabled = False
+            nudmyport.Enabled = False
+            cmbxstrmode.Enabled = False
+        Else
+            txtbxmyaddr.Enabled = True
+            nudmyport.Enabled = True
+            cmbxstrmode.Enabled = True
+        End If
+    End Sub
+
+    Protected Sub updateSelectedTypeIN()
+        If ceditm = EditorMode.Create Then
+            If cmbxipv.SelectedIndex + 1 = IPVersion.IPv4 Then
+                If cmbxtype.SelectedIndex + 1 = AddressableType.UDP Then
+                    If udpmarshalIPv4 Is Nothing OrElse Not udpmarshalIPv4.ready Then
+                        If tcpmarshalIPv4 Is Nothing OrElse Not tcpmarshalIPv4.ready Then
+                            cmbxtype.SelectedIndex = AddressableType.Block - 1
+                        Else
+                            cmbxtype.SelectedIndex = AddressableType.TCP - 1
+                        End If
+                    Else
+                        cmbxtype.SelectedIndex = AddressableType.UDP - 1
+                    End If
+                ElseIf cmbxtype.SelectedIndex + 1 = AddressableType.TCP Then
+                    If tcpmarshalIPv4 Is Nothing OrElse Not tcpmarshalIPv4.ready Then
+                        If udpmarshalIPv4 Is Nothing OrElse Not udpmarshalIPv4.ready Then
+                            cmbxtype.SelectedIndex = AddressableType.Block - 1
+                        Else
+                            cmbxtype.SelectedIndex = AddressableType.UDP - 1
+                        End If
+                    Else
+                        cmbxtype.SelectedIndex = AddressableType.TCP - 1
+                    End If
+                End If
+            ElseIf cmbxipv.SelectedIndex + 1 = IPVersion.IPv6 Then
+                If cmbxtype.SelectedIndex + 1 = AddressableType.UDP Then
+                    If udpmarshalIPv6 Is Nothing OrElse Not udpmarshalIPv6.ready Then
+                        If tcpmarshalIPv6 Is Nothing OrElse Not tcpmarshalIPv6.ready Then
+                            cmbxtype.SelectedIndex = AddressableType.Block - 1
+                        Else
+                            cmbxtype.SelectedIndex = AddressableType.TCP - 1
+                        End If
+                    Else
+                        cmbxtype.SelectedIndex = AddressableType.UDP - 1
+                    End If
+                ElseIf cmbxtype.SelectedIndex + 1 = AddressableType.TCP Then
+                    If tcpmarshalIPv6 Is Nothing OrElse Not tcpmarshalIPv6.ready Then
+                        If udpmarshalIPv6 Is Nothing OrElse Not udpmarshalIPv6.ready Then
+                            cmbxtype.SelectedIndex = AddressableType.Block - 1
+                        Else
+                            cmbxtype.SelectedIndex = AddressableType.UDP - 1
+                        End If
+                    Else
+                        cmbxtype.SelectedIndex = AddressableType.TCP - 1
+                    End If
+                End If
+            End If
+        End If
+    End Sub
+
+    Public Function chkipformat() As Boolean
+        If ceditm = EditorMode.EditClient Or ceditm = EditorMode.EditBlocker Or Not showing Then Return True
+        Dim toret As Boolean = False
+        SyncLock slockchkf
+            Dim striphold As String = ""
+            If Me.InvokeRequired Then
+                striphold = Me.Invoke(Function() As String
+                                          Return txtbxaddr.Text
+                                      End Function)
+            Else
+                striphold = txtbxaddr.Text
+            End If
+            Dim iphold As IPAddress = Nothing
+            Dim ver As Integer = -1
+            If Me.InvokeRequired Then
+                ver = Me.Invoke(Function() As Integer
+                                    Return cmbxipv.SelectedIndex
+                                End Function)
+            Else
+                ver = cmbxipv.SelectedIndex
+            End If
+            Try
+                iphold = IPAddress.Parse(striphold)
+                toret = True
+            Catch ex As ArgumentNullException
+                iphold = Nothing
+            Catch ex As FormatException
+                iphold = Nothing
+            End Try
+            If iphold Is Nothing Then
+                Dim ipadd As IPAddress() = New IPAddress() {}
+                Try
+                    ipadd = Dns.GetHostAddresses(striphold)
+                Catch ex As Sockets.SocketException
+                Catch ex As ArgumentException
+                End Try
+                If ipadd.Length < 1 Then
+                    setBackColor(txtbxaddr, Color.Orange)
+                    toret = False
+                Else
+                    For Each ia As IPAddress In ipadd
+                        If ia.AddressFamily = Sockets.AddressFamily.InterNetwork And ver = 0 Then
+                            setBackColor(txtbxaddr, Color.White)
+                            toret = True
+                            Exit For
+                        ElseIf ia.AddressFamily = Sockets.AddressFamily.InterNetworkV6 And ver = 1 Then
+                            setBackColor(txtbxaddr, Color.White)
+                            toret = True
+                            Exit For
+                        Else
+                            setBackColor(txtbxaddr, Color.Orange)
+                            toret = False
+                        End If
+                    Next
+                End If
+            Else
+                If iphold.AddressFamily = Sockets.AddressFamily.InterNetwork And ver = 0 Then
+                    setBackColor(txtbxaddr, Color.White)
+                    toret = True
+                ElseIf iphold.AddressFamily = Sockets.AddressFamily.InterNetworkV6 And ver = 1 Then
+                    setBackColor(txtbxaddr, Color.White)
+                    toret = True
+                Else
+                    setBackColor(txtbxaddr, Color.Orange)
+                    toret = False
+                End If
+            End If
+            If ceditm = EditorMode.EditContact Then toret = True
+        End SyncLock
+        Return toret
+    End Function
+
+    Protected Sub setBackColor(txtbx As TextBox, bc As Color)
+        If txtbx.InvokeRequired Then
+            txtbx.Invoke(Sub() txtbx.BackColor = bc)
+        Else
+            txtbx.BackColor = bc
         End If
     End Sub
 End Class

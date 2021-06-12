@@ -133,7 +133,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             editfin = False
             ceditm = EditorMode.Create
-            caddrbs = New Contact("", 1, AddressableType.UDP, MessagePassMode.Bidirectional, IPVersion.IPv4)
+            caddrbs = New Contact("", 0, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}
             wp.showForm(Of Editor)(0, Me)
             While Not editfin
                 Threading.Thread.Sleep(125)
@@ -157,14 +157,14 @@ Public NotInheritable Class MainProgram
                 ElseIf caddrbs.type = AddressableType.UDP Then
                     If caddrbs.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
                         CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
-                        If caddrbs.myAddress = "" Then caddrbs.myAddress = external_UDP_Address_IPv4
+                        If caddrbs.myAddress = "" Then caddrbs.myAddress = external_Address_IPv4
                         If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv4
                         Dim cl As New Client(caddrbs, udpmarshalIPv4)
                         addCl(cl)
                         addStrm(cl.stream)
                     ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
                         CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
-                        If caddrbs.myAddress = "" Then caddrbs.myAddress = external_UDP_Address_IPv6
+                        If caddrbs.myAddress = "" Then caddrbs.myAddress = external_Address_IPv6
                         If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv6
                         Dim cl As New Client(caddrbs, udpmarshalIPv6)
                         addCl(cl)
@@ -230,7 +230,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             editfin = False
             ceditm = EditorMode.Create
-            caddrbs = New Contact("", 1, AddressableType.UDP, MessagePassMode.Bidirectional, IPVersion.IPv4)
+            caddrbs = New Contact("", 0, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}
             wp.showForm(Of Editor)(0, Me)
             While Not editfin
                 Threading.Thread.Sleep(125)
@@ -417,14 +417,14 @@ Public NotInheritable Class MainProgram
                 ElseIf cl.type = AddressableType.UDP Then
                     If cl.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
                         CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
-                        If cl.myAddress = "" Then cl.myAddress = external_UDP_Address_IPv4
+                        If cl.myAddress = "" Then cl.myAddress = external_Address_IPv4
                         If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv4
                         Dim cl2 As New Client(cl, udpmarshalIPv4)
                         addCl(cl2)
                         addStrm(cl2.stream)
                     ElseIf cl.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
                         CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
-                        If cl.myAddress = "" Then cl.myAddress = external_UDP_Address_IPv6
+                        If cl.myAddress = "" Then cl.myAddress = external_Address_IPv6
                         If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv6
                         Dim cl2 As New Client(cl, udpmarshalIPv6)
                         addCl(cl2)
@@ -526,7 +526,7 @@ Public NotInheritable Class MainProgram
         Else
             Dim cl As Client = retRegCl(msg.senderIP, msg.senderPort)
             If cl Is Nothing Then
-                cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork).ToString(), msg.senderPort, AddressableType.UDP, MessagePassMode.Bidirectional, IPVersion.IPv4), udpmarshalIPv4) With {.myAddress = external_UDP_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
+                cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork).ToString(), msg.senderPort, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv4) With {.myAddress = external_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
                 addCl(cl)
                 cl.forceReceive(msg)
                 addStrm(cl.stream)
@@ -540,7 +540,7 @@ Public NotInheritable Class MainProgram
         Else
             Dim cl As Client = retRegCl(msg.senderIP, msg.senderPort)
             If cl Is Nothing Then
-                cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6).ToString(), msg.senderPort, AddressableType.UDP, MessagePassMode.Bidirectional, IPVersion.IPv6), udpmarshalIPv6) With {.myAddress = external_UDP_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
+                cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6).ToString(), msg.senderPort, IPVersion.IPv6, AddressableType.UDP), udpmarshalIPv6) With {.myAddress = external_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
                 addCl(cl)
                 cl.forceReceive(msg)
                 addStrm(cl.stream)
@@ -566,12 +566,12 @@ Public NotInheritable Class MainProgram
                     Dim mpm As voip.MessagePassMode = getResvSetPM(lip, lport)
                     If tnom <> "" Then remResvSet(lip, lport)
                     If lip = llip And lport = llport Then
-                        cl = New Client(New Contact(rip, rport, AddressableType.TCP, mpm, IPVersion.IPv4), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
+                        cl = New Client(New Contact(rip, rport, IPVersion.IPv4, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
                     Else
                         If tnom = "" Then
                             tnom = rip & ":" & rport
                         End If
-                        cl = New Client(New Contact(lip, lport, AddressableType.TCP, mpm, IPVersion.IPv4), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
+                        cl = New Client(New Contact(lip, lport, IPVersion.IPv4, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                     End If
                     addCl(cl)
                     addStrm(cl.stream)
@@ -598,12 +598,12 @@ Public NotInheritable Class MainProgram
                     Dim mpm As voip.MessagePassMode = getResvSetPM(lip, lport)
                     If tnom <> "" Then remResvSet(lip, lport)
                     If lip = llip And lport = llport Then
-                        cl = New Client(New Contact(rip, rport, AddressableType.TCP, mpm, IPVersion.IPv6), clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
+                        cl = New Client(New Contact(rip, rport, IPVersion.IPv6, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
                     Else
                         If tnom = "" Then
                             tnom = rip & ":" & rport
                         End If
-                        cl = New Client(New Contact(lip, lport, AddressableType.TCP, mpm, IPVersion.IPv6), clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
+                        cl = New Client(New Contact(lip, lport, IPVersion.IPv4, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                     End If
                     addCl(cl)
                     addStrm(cl.stream)

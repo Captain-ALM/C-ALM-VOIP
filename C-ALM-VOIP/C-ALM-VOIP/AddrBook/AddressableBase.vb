@@ -5,6 +5,8 @@ Public MustInherit Class AddressableBase
     Protected _targport As Integer = 0
     Protected _myaddress As String = ""
     Protected _myport As Integer = 0
+    Protected _advaddress As String = ""
+    Protected _advport As Integer = 0
     Protected _type As AddressableType = AddressableType.None
     Protected _passmode As MessagePassMode = messagePassMode.Disable
     Protected _targver As IPVersion = IPVersion.None
@@ -20,11 +22,10 @@ Public MustInherit Class AddressableBase
         _targver = other._targver
     End Sub
 
-    Public Sub New(targAddress As String, targPort As Integer, aType As AddressableType, mpMode As MessagePassMode, targVer As IPVersion)
+    Public Sub New(targAddress As String, targPort As Integer, targVer As IPVersion, aType As AddressableType)
         _targaddress = targAddress
         _targport = targPort
         _type = aType
-        _passmode = mpMode
         _targver = targVer
     End Sub
 
@@ -73,6 +74,26 @@ Public MustInherit Class AddressableBase
         End Set
     End Property
 
+    Public Overridable Property advertisedAddress As String
+        Get
+            If _advaddress Is Nothing OrElse _advaddress = "" Then Return _myaddress
+            Return _advaddress
+        End Get
+        Set(value As String)
+            _advaddress = value
+        End Set
+    End Property
+
+    Public Overridable Property advertisedPort As Integer
+        Get
+            If _advport = 0 Then Return _myport
+            Return _advport
+        End Get
+        Set(value As Integer)
+            _advport = value
+        End Set
+    End Property
+
     Public Overridable Property type As AddressableType
         Get
             Return _type
@@ -107,6 +128,7 @@ Public Enum AddressableType As Integer
     None = 0
     TCP = 1
     UDP = 2
+    Block = 3
 End Enum
 
 Public Enum MessagePassMode As Integer

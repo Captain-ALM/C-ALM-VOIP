@@ -126,8 +126,8 @@ Public NotInheritable Class Configure
         nududpextpIPv4.Value = external_UDP_Port_IPv4
         nududpextpIPv6.Value = external_UDP_Port_IPv6
         chkbxena.Checked = TCP_delay
-        txtbxudpextaddIPv4.Text = external_UDP_Address_IPv4
-        txtbxudpextaddIPv6.Text = external_UDP_Address_IPv6
+        txtbxudpextaddIPv4.Text = external_Address_IPv4
+        txtbxudpextaddIPv6.Text = external_Address_IPv6
         chkbxrdtcpc.Checked = TCP_remove_disconnected_clients
         If InListening Then
             cmbxsniipv4.Enabled = False
