@@ -82,6 +82,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AddrBook\BlockClient.vb" />
     <Compile Include="Views\AboutBx.designer.vb">
       <DependentUpon>AboutBx.vb</DependentUpon>
     </Compile>
