@@ -78,13 +78,6 @@ Public Class Editor
         End While
         SyncLock slockchkf
             'Begin Population
-            OK_Button.Select()
-            nudport.Value = caddrbs.targetPort
-            txtbxaddr.Text = caddrbs.targetAddress
-            txtbxname.Text = caddrbs.name
-            cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
-            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode
-            cmbxtype.SelectedIndex = caddrbs.type - 1
             If ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact Then
                 cmbxipv.Enabled = True
                 cmbxtype.Enabled = True
@@ -145,6 +138,12 @@ Public Class Editor
                     Label1.Text = "Edit Blocker:"
                 End If
             End If
+            nudport.Value = caddrbs.targetPort
+            txtbxaddr.Text = caddrbs.targetAddress
+            txtbxname.Text = caddrbs.name
+            cmbxipv.SelectedIndex = caddrbs.targetIPVersion - 1
+            cmbxstrmode.SelectedIndex = caddrbs.messagePassMode
+            cmbxtype.SelectedIndex = caddrbs.type - 1
             OK_Button.Select()
             'End Population
         End SyncLock
