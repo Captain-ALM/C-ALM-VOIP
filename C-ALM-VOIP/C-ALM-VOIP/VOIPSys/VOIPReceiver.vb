@@ -1,13 +1,13 @@
 ﻿Imports NAudio.Wave
 Imports NAudio.Wave.SampleProviders
 
-Public Class VOIPReceiver
+Public NotInheritable Class VOIPReceiver
     Implements IDisposable
 
-    Protected spk As WaveOut = Nothing
-    Protected msp As MixingSampleProvider = Nothing
-    Protected slockprov As New Object()
-    Protected slockcs As New Object()
+    Private spk As WaveOut = Nothing
+    Private msp As MixingSampleProvider = Nothing
+    Private slockprov As New Object()
+    Private slockcs As New Object()
     Public Sub New()
         spk = New WaveOut()
         msp = New MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(samplerate, 1))
@@ -38,7 +38,7 @@ Public Class VOIPReceiver
     Private disposedValue As Boolean ' To detect redundant calls
 
     ' IDisposable
-    Protected Overridable Sub Dispose(disposing As Boolean)
+    Private Sub Dispose(disposing As Boolean)
         If Not Me.disposedValue Then
             If disposing Then
                 SyncLock slockprov

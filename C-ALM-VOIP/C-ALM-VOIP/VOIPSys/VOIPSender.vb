@@ -3,10 +3,10 @@
 Public NotInheritable Class VOIPSender
     Implements IDisposable
 
-    Protected mic As WaveIn = Nothing
-    Protected strm As Streamer = Nothing
-    Protected buff As New SyncLockedList(Of Byte)
-    Protected buffsiz As Integer = 3000
+    Private mic As WaveIn = Nothing
+    Private strm As Streamer = Nothing
+    Private buff As New SyncLockedList(Of Byte)
+    Private buffsiz As Integer = 3000
     Public Event dataAvailable(bts As Byte())
     Public Sub New()
         mic = New WaveIn()
@@ -19,8 +19,8 @@ Public NotInheritable Class VOIPSender
     End Sub
 
     Private Sub dataReceived(sender As Object, e As WaveInEventArgs)
-        For Each b As Byte In e.Buffer
-            buff.Add(b)
+        For i As Integer = 0 To e.BytesRecorded - 1 Step 1
+            buff.Add(e.Buffer(i))
         Next
         If buff.Count > buffsiz Then
             Dim bts2(buff.Count - 1) As Byte
@@ -50,7 +50,7 @@ Public NotInheritable Class VOIPSender
     Private disposedValue As Boolean ' To detect redundant calls
 
     ' IDisposable
-    Protected Sub Dispose(disposing As Boolean)
+    Private Sub Dispose(disposing As Boolean)
         If Not Me.disposedValue Then
             If disposing Then
                 RemoveHandler mic.DataAvailable, AddressOf dataReceived
