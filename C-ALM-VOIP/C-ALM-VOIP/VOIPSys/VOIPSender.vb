@@ -22,7 +22,7 @@ Public NotInheritable Class VOIPSender
         For i As Integer = 0 To e.BytesRecorded - 1 Step 1
             buff.Add(e.Buffer(i))
         Next
-        If buff.Count > buffsiz Then
+        If buff.Count >= buffsiz Then
             Dim bts2(buff.Count - 1) As Byte
             buff.CopyTo(bts2, 0)
             buff.Clear()

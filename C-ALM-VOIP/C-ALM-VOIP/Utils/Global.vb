@@ -12,24 +12,26 @@ Public Module [Global]
     Public selected_interfaceIPv6 As IPAddress = Nothing
     Public _IPv4Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
     Public _IPv6Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
-    Public port_UDP_IPv4 As Integer = 1
-    Public port_UDP_IPv6 As Integer = 1
-    Public port_TCP_IPv4 As Integer = 1
-    Public port_TCP_IPv6 As Integer = 1
+    Public port_UDP_IPv4 As Integer = 0
+    Public port_UDP_IPv6 As Integer = 0
+    Public port_TCP_IPv4 As Integer = 0
+    Public port_TCP_IPv6 As Integer = 0
     Public external_Address_IPv4 As String = IPAddress.None.ToString()
     Public external_Address_IPv6 As String = IPAddress.IPv6None.ToString()
-    Public external_UDP_Port_IPv4 As Integer = 1
-    Public external_UDP_Port_IPv6 As Integer = 1
-    Public external_TCP_Port_IPv4 As Integer = 1
-    Public external_TCP_Port_IPv6 As Integer = 1
+    Public external_UDP_Port_IPv4 As Integer = 0
+    Public external_UDP_Port_IPv6 As Integer = 0
+    Public external_TCP_Port_IPv4 As Integer = 0
+    Public external_TCP_Port_IPv6 As Integer = 0
     Public TCP_backlog As Integer = 1
     Public TCP_delay As Boolean = False
     Public input_device As Integer = -1
     Public TCP_remove_disconnected_clients As Boolean = False
+    Public TCP_beat_timeout As Integer = 0
     Public gserializer As ISerialize = New XSerializer()
     Public samplerate As Integer = 12000
-    Public buffsdsecs As Integer = 1
     Public buffmdmsecs As Integer = 125
+    Public myName As String = ""
+    Public setAdvertisedNames As Boolean = True
     'Global marshals, VOIP units and status
     Public InListening As Boolean = False
     Public tcpmarshalIPv4 As NetMarshalTCP = Nothing

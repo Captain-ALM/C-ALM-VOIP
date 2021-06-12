@@ -439,11 +439,11 @@ Public NotInheritable Class MainProgram
     End Sub
 
     Private Sub engage()
-        micVOIP = New VOIPSender() With {.samplebuffersize = samplerate \ (1000 \ buffmdmsecs)}
+        micVOIP = New VOIPSender() With {.samplebuffersize = samplerate * (buffmdmsecs / 1000) * 2}
         spkVOIP = New VOIPReceiver()
         If Not selected_interfaceIPv4.Equals(IPAddress.None) Then
-            tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = 0, .serializer = gserializer}
-            udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4) With {.serializer = gserializer}
+            tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = TCP_beat_timeout, .serializer = gserializer, .bufferSize = 65000}
+            udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4) With {.serializer = gserializer, .bufferSize = 65000}
             AddHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
             AddHandler tcpmarshalIPv4.clientDisconnected, AddressOf discon
             AddHandler udpmarshalIPv4.MessageReceived, AddressOf msgRecIPv4
@@ -452,8 +452,8 @@ Public NotInheritable Class MainProgram
             InListening = True
         End If
         If Not selected_interfaceIPv6 Is Nothing Then
-            tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = 0, .serializer = gserializer}
-            udpmarshalIPv6 = New NetMarshalUDP(selected_interfaceIPv6, port_UDP_IPv6) With {.serializer = gserializer}
+            tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = TCP_beat_timeout, .serializer = gserializer, .bufferSize = 65000}
+            udpmarshalIPv6 = New NetMarshalUDP(selected_interfaceIPv6, port_UDP_IPv6) With {.serializer = gserializer, .bufferSize = 65000}
             AddHandler tcpmarshalIPv6.clientConnected, AddressOf conIPv6
             AddHandler tcpmarshalIPv6.clientDisconnected, AddressOf discon
             AddHandler udpmarshalIPv6.MessageReceived, AddressOf msgRecIPv6

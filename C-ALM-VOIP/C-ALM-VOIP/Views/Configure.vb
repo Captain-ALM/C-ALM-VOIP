@@ -2,6 +2,7 @@
 Imports System.Net
 Imports captainalm.CALMNetLib
 Imports NAudio.Wave
+Imports captainalm.Serialize
 
 Public NotInheritable Class Configure
     Implements IWorkerPumpReceiver
@@ -70,7 +71,7 @@ Public NotInheritable Class Configure
         nudspudpipv6.BackColor = Color.White
         butOK.Enabled = True
         butCANCEL.Enabled = True
-        updat()
+        updprtchk()
         configfin = True
         If ue Then wp.addEvent(Me, ETs.Shown, e)
         While configfin
@@ -125,10 +126,23 @@ Public NotInheritable Class Configure
         nudtcpbl.Value = TCP_backlog
         nududpextpIPv4.Value = external_UDP_Port_IPv4
         nududpextpIPv6.Value = external_UDP_Port_IPv6
+        nudtcpextpIPv4.Value = external_TCP_Port_IPv4
+        nudtcpextpIPv6.Value = external_TCP_Port_IPv6
         chkbxena.Checked = TCP_delay
-        txtbxudpextaddIPv4.Text = external_Address_IPv4
-        txtbxudpextaddIPv6.Text = external_Address_IPv6
+        txtbxextaddIPv4.Text = external_Address_IPv4
+        txtbxextaddIPv6.Text = external_Address_IPv6
         chkbxrdtcpc.Checked = TCP_remove_disconnected_clients
+        txtbxcnom.Text = myName
+        chkbxsan.Checked = setAdvertisedNames
+        If (Not gserializer Is Nothing) AndAlso TypeOf gserializer Is Serializer Then
+            cmbxis.SelectedIndex = 1
+        Else
+            cmbxis.SelectedIndex = 0
+            If gserializer Is Nothing Then gserializer = New XSerializer()
+        End If
+        nudtcpto.Value = TCP_beat_timeout
+        nudsr.Value = samplerate
+        nudrb.Value = buffmdmsecs
         If InListening Then
             cmbxsniipv4.Enabled = False
             nudsptcpipv4.Enabled = False
@@ -139,6 +153,10 @@ Public NotInheritable Class Configure
             cmbxsid.Enabled = False
             nudtcpbl.Enabled = False
             chkbxena.Enabled = False
+            nudtcpto.Enabled = False
+            cmbxis.Enabled = False
+            nudsr.Enabled = False
+            nudrb.Enabled = False
         Else
             cmbxsniipv4.Enabled = True
             nudsptcpipv4.Enabled = True
@@ -149,6 +167,10 @@ Public NotInheritable Class Configure
             cmbxsid.Enabled = True
             nudtcpbl.Enabled = True
             chkbxena.Enabled = True
+            nudtcpto.Enabled = True
+            cmbxis.Enabled = True
+            nudsr.Enabled = True
+            nudrb.Enabled = True
         End If
         butOK.Select()
         'End Population
@@ -180,7 +202,7 @@ Public NotInheritable Class Configure
             l.Add(Me)
             wp.addEvent(New WorkerEvent(nudspudpipv4, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv4.Value)))
         End If
-        updat()
+        updprtchk()
     End Sub
 
     Private Sub nudsptcpipv4_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv4.Leave
@@ -189,7 +211,7 @@ Public NotInheritable Class Configure
             l.Add(Me)
             wp.addEvent(New WorkerEvent(nudsptcpipv4, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv4.Value)))
         End If
-        updat()
+        updprtchk()
     End Sub
 
     Private Sub cmbxsniipv6_Leave(sender As Object, e As EventArgs) Handles cmbxsniipv6.Leave
@@ -206,7 +228,7 @@ Public NotInheritable Class Configure
             l.Add(Me)
             wp.addEvent(New WorkerEvent(nudspudpipv6, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv6.Value)))
         End If
-        updat()
+        updprtchk()
     End Sub
 
     Private Sub nudsptcpipv6_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv6.Leave
@@ -215,37 +237,8 @@ Public NotInheritable Class Configure
             l.Add(Me)
             wp.addEvent(New WorkerEvent(nudsptcpipv6, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv6.Value)))
         End If
-        updat()
+        updprtchk()
     End Sub
-
-    Protected Function updat() As Boolean
-        Dim toret As Boolean = True
-        If nudspudpipv4.Value = nudsptcpipv4.Value Or nudspudpipv4.Value = nudsptcpipv6.Value Or nudspudpipv4.Value = nudspudpipv6.Value Then
-            nudspudpipv4.BackColor = Color.Orange
-            toret = False
-        Else
-            nudspudpipv4.BackColor = Color.White
-        End If
-        If nudspudpipv6.Value = nudsptcpipv4.Value Or nudspudpipv6.Value = nudsptcpipv6.Value Or nudspudpipv6.Value = nudspudpipv4.Value Then
-            nudspudpipv6.BackColor = Color.Orange
-            toret = False
-        Else
-            nudspudpipv6.BackColor = Color.White
-        End If
-        If nudsptcpipv4.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudsptcpipv6.Value Or nudsptcpipv4.Value = nudspudpipv6.Value Then
-            nudsptcpipv4.BackColor = Color.Orange
-            toret = False
-        Else
-            nudsptcpipv4.BackColor = Color.White
-        End If
-        If nudsptcpipv6.Value = nudspudpipv4.Value Or nudsptcpipv6.Value = nudsptcpipv4.Value Or nudsptcpipv6.Value = nudspudpipv6.Value Then
-            nudsptcpipv6.BackColor = Color.Orange
-            toret = False
-        Else
-            nudsptcpipv6.BackColor = Color.White
-        End If
-        Return toret
-    End Function
 
     Private Sub nudtcpbl_Leave(sender As Object, e As EventArgs) Handles nudtcpbl.Leave
         If ue Then
@@ -263,11 +256,11 @@ Public NotInheritable Class Configure
         End If
     End Sub
 
-    Private Sub txtbxudpextaddIPv4_Leave(sender As Object, e As EventArgs) Handles txtbxudpextaddIPv4.Leave
+    Private Sub txtbxextaddIPv4_Leave(sender As Object, e As EventArgs) Handles txtbxextaddIPv4.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxudpextaddIPv4, l, ETs.Leave, New EventArgsDataContainer(txtbxudpextaddIPv4.Text)))
+            wp.addEvent(New WorkerEvent(txtbxextaddIPv4, l, ETs.Leave, New EventArgsDataContainer(txtbxextaddIPv4.Text)))
         End If
     End Sub
 
@@ -279,11 +272,11 @@ Public NotInheritable Class Configure
         End If
     End Sub
 
-    Private Sub txtbxudpextaddIPv6_Leave(sender As Object, e As EventArgs) Handles txtbxudpextaddIPv6.Leave
+    Private Sub txtbxextaddIPv6_Leave(sender As Object, e As EventArgs) Handles txtbxextaddIPv6.Leave
         If ue Then
             Dim l As New List(Of Object)
             l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxudpextaddIPv6, l, ETs.Leave, New EventArgsDataContainer(txtbxudpextaddIPv6.Text)))
+            wp.addEvent(New WorkerEvent(txtbxextaddIPv6, l, ETs.Leave, New EventArgsDataContainer(txtbxextaddIPv6.Text)))
         End If
     End Sub
 
@@ -296,7 +289,7 @@ Public NotInheritable Class Configure
     End Sub
 
     Private Sub butOK_Click(sender As Object, e As EventArgs) Handles butOK.Click
-        If Not updat() Then Exit Sub
+        If Not updprtchk() Then Exit Sub
         butOK.Enabled = False
         butOK.Select()
         If ue Then
@@ -337,6 +330,70 @@ Public NotInheritable Class Configure
         End If
     End Sub
 
+    Private Sub nudtcpto_Leave(sender As Object, e As EventArgs) Handles nudtcpto.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(nudtcpto, l, ETs.Leave, New EventArgsDataContainer(nudtcpto.Value)))
+        End If
+    End Sub
+
+    Private Sub txtbxcnom_Leave(sender As Object, e As EventArgs) Handles txtbxcnom.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(txtbxcnom, l, ETs.Leave, New EventArgsDataContainer(txtbxcnom.Text)))
+        End If
+    End Sub
+
+    Private Sub chkbxsan_Leave(sender As Object, e As EventArgs) Handles chkbxsan.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(chkbxsan, l, ETs.Leave, New EventArgsDataContainer(chkbxsan.Checked)))
+        End If
+    End Sub
+
+    Private Sub cmbxis_Leave(sender As Object, e As EventArgs) Handles cmbxis.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(cmbxis, l, ETs.Leave, New EventArgsDataContainer(cmbxis.SelectedIndex)))
+        End If
+    End Sub
+
+    Private Sub nudsr_Leave(sender As Object, e As EventArgs) Handles nudsr.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(nudsr, l, ETs.Leave, New EventArgsDataContainer(nudsr.Value)))
+        End If
+    End Sub
+
+    Private Sub nudrb_Leave(sender As Object, e As EventArgs) Handles nudrb.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(nudrb, l, ETs.Leave, New EventArgsDataContainer(nudrb.Value)))
+        End If
+    End Sub
+
+    Private Sub nudtcpextpIPv4_Leave(sender As Object, e As EventArgs) Handles nudtcpextpIPv4.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(nudtcpextpIPv4, l, ETs.Leave, New EventArgsDataContainer(nudtcpextpIPv4.Value)))
+        End If
+    End Sub
+
+    Private Sub nudtcpextpIPv6_Leave(sender As Object, e As EventArgs) Handles nudtcpextpIPv6.Leave
+        If ue Then
+            Dim l As New List(Of Object)
+            l.Add(Me)
+            wp.addEvent(New WorkerEvent(nudtcpextpIPv6, l, ETs.Leave, New EventArgsDataContainer(nudtcpextpIPv6.Value)))
+        End If
+    End Sub
+
     Private Function indexOfIP(ip As IPAddress, lst As IList(Of Tuple(Of String, IPAddress)))
         For i As Integer = 0 To lst.Count - 1 Step 1
             Dim c As Tuple(Of String, IPAddress) = lst(i)
@@ -359,5 +416,34 @@ Public NotInheritable Class Configure
             wic.Add(WaveIn.GetCapabilities(i))
         Next
         Return wic.ToArray()
+    End Function
+
+    Protected Function updprtchk() As Boolean
+        Dim toret As Boolean = True
+        If (nudspudpipv4.Value = nudsptcpipv4.Value Or nudspudpipv4.Value = nudsptcpipv6.Value Or nudspudpipv4.Value = nudspudpipv6.Value) And nudspudpipv4.Value <> 0 Then
+            nudspudpipv4.BackColor = Color.Orange
+            toret = False
+        Else
+            nudspudpipv4.BackColor = Color.White
+        End If
+        If (nudspudpipv6.Value = nudsptcpipv4.Value Or nudspudpipv6.Value = nudsptcpipv6.Value Or nudspudpipv6.Value = nudspudpipv4.Value) And nudspudpipv6.Value <> 0 Then
+            nudspudpipv6.BackColor = Color.Orange
+            toret = False
+        Else
+            nudspudpipv6.BackColor = Color.White
+        End If
+        If (nudsptcpipv4.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudsptcpipv6.Value Or nudsptcpipv4.Value = nudspudpipv6.Value) And nudsptcpipv4.Value <> 0 Then
+            nudsptcpipv4.BackColor = Color.Orange
+            toret = False
+        Else
+            nudsptcpipv4.BackColor = Color.White
+        End If
+        If (nudsptcpipv6.Value = nudspudpipv4.Value Or nudsptcpipv6.Value = nudsptcpipv4.Value Or nudsptcpipv6.Value = nudspudpipv6.Value) And nudsptcpipv6.Value <> 0 Then
+            nudsptcpipv6.BackColor = Color.Orange
+            toret = False
+        Else
+            nudsptcpipv6.BackColor = Color.White
+        End If
+        Return toret
     End Function
 End Class

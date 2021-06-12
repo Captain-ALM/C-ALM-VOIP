@@ -15,7 +15,7 @@ Public Class Streamer
     Public Sub New(name As String, havevolume As Boolean)
         _wp = New BufferedWaveProvider(New WaveFormat(samplerate, 16, 1))
         _wp.DiscardOnBufferOverflow = True
-        _wp.BufferDuration = New TimeSpan(0, 0, buffsdsecs)
+        _wp.BufferDuration = New TimeSpan(0, 0, buffmdmsecs * 8)
         _wsp = New Pcm16BitToSampleProvider(_wp)
         If havevolume Then
             _vsp = New VolumeSampleProvider(_wsp)
