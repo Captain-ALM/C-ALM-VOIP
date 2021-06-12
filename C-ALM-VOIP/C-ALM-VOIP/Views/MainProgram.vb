@@ -639,7 +639,7 @@ Public NotInheritable Class MainProgram
                     Exit For
                 End If
             ElseIf c.type = AddressableType.TCP Then
-                If CType(c.marshal.internalSocket, INetConfig).remoteIPAddress = ip And CType(c.marshal.internalSocket, INetConfig).remotePort = port Then
+                If c.marshal.duplicatedInternalSocketConfig.remoteIPAddress = ip And c.marshal.duplicatedInternalSocketConfig.remotePort = port Then
                     toret = c
                     Exit For
                 End If
