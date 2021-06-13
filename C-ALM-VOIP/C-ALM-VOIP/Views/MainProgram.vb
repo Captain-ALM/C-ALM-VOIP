@@ -58,6 +58,12 @@ Public NotInheritable Class MainProgram
     End Sub
 #End Region
 
+    Private Sub MainProgram_Load(sender As Object, e As EventArgs) Handles Me.Load
+        clientreg = New ListViewedRegistry(Of Client)(ListViewcl)
+        contactreg = New ListViewedRegistry(Of Contact)(ListViewcl2)
+        streamreg = New ListViewedRegistry(Of Streamer)(ListViewsc)
+    End Sub
+
     Private Sub MainProgram_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         Me.DialogResult = Windows.Forms.DialogResult.None
         formClosingDone = False
@@ -160,15 +166,15 @@ Public NotInheritable Class MainProgram
                         If caddrbs.myAddress = "" Then caddrbs.myAddress = external_Address_IPv4
                         If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv4
                         Dim cl As New Client(caddrbs, udpmarshalIPv4)
-                        addCl(cl)
-                        addStrm(cl.stream)
+                        clientreg.add(cl)
+                        streamreg.add(cl.stream)
                     ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
                         CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
                         If caddrbs.myAddress = "" Then caddrbs.myAddress = external_Address_IPv6
                         If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv6
                         Dim cl As New Client(caddrbs, udpmarshalIPv6)
-                        addCl(cl)
-                        addStrm(cl.stream)
+                        clientreg.add(cl)
+                        streamreg.add(cl.stream)
                     End If
                 End If
                 editsuccess = False
@@ -185,11 +191,11 @@ Public NotInheritable Class MainProgram
         If ue Then
             If ListViewcl.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewcl.SelectedIndices(0)
-                Dim cl As Client = indxCl(indx)
+                Dim cl As Client = clientreg(indx)
                 Dim strm As Streamer = cl.stream
-                remStrm(strm)
+                streamreg.remove(strm)
                 cl.stop()
-                remCl(cl)
+                clientreg.remove(cl)
             End If
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -201,9 +207,9 @@ Public NotInheritable Class MainProgram
         If ue Then
             If ListViewcl.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewcl.SelectedIndices(0)
-                Dim cl As Client = indxCl(indx)
+                Dim cl As Client = clientreg(indx)
                 Dim ab As AddressableBase = cl.duplicateToNew()
-                addCon(ab)
+                contactreg.add(ab)
             End If
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -213,12 +219,12 @@ Public NotInheritable Class MainProgram
 
     Private Sub butclccls_Click(sender As Object, e As EventArgs) Handles butclccls.Click
         If ue Then
-            For i As Integer = clients.Count - 1 To 0 Step -1
-                Dim c As Client = clients(i)
+            For i As Integer = clientreg.count - 1 To 0 Step -1
+                Dim c As Client = clientreg(i)
                 If Not c.stream Is Nothing Then _
-                    remStrm(c.stream)
+                    streamreg.remove(c.stream)
                 c.stop()
-                remCl(c)
+                clientreg.remove(c)
             Next
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -237,7 +243,7 @@ Public NotInheritable Class MainProgram
             End While
             If editsuccess Then
                 If caddrbs.name = "" Then caddrbs.name = caddrbs.targetAddress & ":" & caddrbs.targetPort
-                addCon(caddrbs)
+                contactreg.add(caddrbs)
                 editsuccess = False
             End If
             ceditm = EditorMode.None
@@ -252,8 +258,8 @@ Public NotInheritable Class MainProgram
         If ue Then
             If ListViewcl2.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewcl2.SelectedIndices(0)
-                Dim cl As Contact = indxCon(indx)
-                remCon(cl)
+                Dim cl As Contact = contactreg(indx)
+                contactreg.remove(cl)
             End If
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -267,13 +273,13 @@ Public NotInheritable Class MainProgram
                 Dim indx As Integer = ListViewcl2.SelectedIndices(0)
                 editfin = False
                 ceditm = EditorMode.EditContact
-                caddrbs = indxCon(indx)
+                caddrbs = contactreg(indx)
                 wp.showForm(Of Editor)(0, Me)
                 While Not editfin
                     Threading.Thread.Sleep(125)
                 End While
                 If editsuccess Then
-                    upCon(caddrbs)
+                    contactreg(contactreg.indexOf(caddrbs)).updateLVI(True)
                     editsuccess = False
                 End If
                 ceditm = EditorMode.None
@@ -287,10 +293,7 @@ Public NotInheritable Class MainProgram
 
     Private Sub butcl2ccls_Click(sender As Object, e As EventArgs) Handles butcl2ccls.Click
         If ue Then
-            For i As Integer = contacts.Count - 1 To 0 Step -1
-                Dim c As Contact = contacts(i)
-                remCon(c)
-            Next
+            contactreg.clear()
             Dim l As New List(Of Object)
             l.Add(Me)
             wp.addEvent(New WorkerEvent(butcl2ccls, l, ETs.Click, e))
@@ -301,7 +304,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             If ListViewsc.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = indxStrm(indx)
+                Dim strm As Streamer = streamreg(indx)
                 TrackBarvol.Value = strm.volume * 100
                 NumericUpDownvol.Value = strm.volume * 100
             End If
@@ -315,9 +318,9 @@ Public NotInheritable Class MainProgram
         If ue Then
             If ListViewsc.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = indxStrm(indx)
+                Dim strm As Streamer = streamreg(indx)
                 strm.muted = True
-                upStrm(strm)
+                streamreg(streamreg.indexOf(strm)).updateLVI(True)
             End If
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -329,9 +332,9 @@ Public NotInheritable Class MainProgram
         If ue Then
             If ListViewsc.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = indxStrm(indx)
+                Dim strm As Streamer = streamreg(indx)
                 strm.muted = False
-                upStrm(strm)
+                streamreg(streamreg.indexOf(strm)).updateLVI(True)
             End If
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -344,9 +347,9 @@ Public NotInheritable Class MainProgram
             NumericUpDownvol.Value = TrackBarvol.Value
             If ListViewsc.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = indxStrm(indx)
+                Dim strm As Streamer = streamreg(indx)
                 strm.volume = TrackBarvol.Value / 100
-                upStrm(strm)
+                streamreg(streamreg.indexOf(strm)).updateLVI(True)
             End If
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -359,9 +362,9 @@ Public NotInheritable Class MainProgram
             TrackBarvol.Value = NumericUpDownvol.Value
             If ListViewsc.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = indxStrm(indx)
+                Dim strm As Streamer = streamreg(indx)
                 strm.volume = NumericUpDownvol.Value / 100
-                upStrm(strm)
+                streamreg(streamreg.indexOf(strm)).updateLVI(True)
             End If
             Dim l As New List(Of Object)
             l.Add(Me)
@@ -375,14 +378,14 @@ Public NotInheritable Class MainProgram
                 Dim indx As Integer = ListViewcl.SelectedIndices(0)
                 editfin = False
                 ceditm = EditorMode.EditClient
-                caddrbs = indxCl(indx)
+                caddrbs = clientreg(indx)
                 wp.showForm(Of Editor)(0, Me)
                 While Not editfin
                     Threading.Thread.Sleep(125)
                 End While
                 If editsuccess Then
-                    upCl(caddrbs)
-                    upStrm(CType(caddrbs, Client).stream)
+                    clientreg(clientreg.indexOf(caddrbs)).updateLVI(True)
+                    streamreg(streamreg.indexOf(CType(caddrbs, Client).stream)).updateLVI(True)
                     editsuccess = False
                 End If
                 ceditm = EditorMode.None
@@ -398,7 +401,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             If ListViewcl2.SelectedIndices.Count > 0 Then
                 Dim indx As Integer = ListViewcl2.SelectedIndices(0)
-                Dim cl As Contact = indxCon(indx)
+                Dim cl As Contact = contactreg(indx)
                 If cl.name = "" Then cl.name = cl.targetAddress & ":" & cl.targetPort
                 If cl.type = AddressableType.TCP Then
                     If cl.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
@@ -420,15 +423,15 @@ Public NotInheritable Class MainProgram
                         If cl.myAddress = "" Then cl.myAddress = external_Address_IPv4
                         If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv4
                         Dim cl2 As New Client(cl, udpmarshalIPv4)
-                        addCl(cl2)
-                        addStrm(cl2.stream)
+                        clientreg.add(cl2)
+                        streamreg.add(cl2.stream)
                     ElseIf cl.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
                         CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
                         If cl.myAddress = "" Then cl.myAddress = external_Address_IPv6
                         If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv6
                         Dim cl2 As New Client(cl, udpmarshalIPv6)
-                        addCl(cl2)
-                        addStrm(cl2.stream)
+                        clientreg.add(cl2)
+                        streamreg.add(cl2.stream)
                     End If
                 End If
             End If
@@ -461,7 +464,7 @@ Public NotInheritable Class MainProgram
             udpmarshalIPv6.start()
             InListening = True
         End If
-        addStrm(micVOIP.streamer)
+        streamreg.add(micVOIP.streamer)
         If InListening Then
             lblstatus.Text = "Listening."
         Else
@@ -470,16 +473,16 @@ Public NotInheritable Class MainProgram
     End Sub
 
     Private Sub disengage()
-        remStrm(micVOIP.streamer)
-        For i As Integer = clients.Count - 1 To 0 Step -1
-            Dim c As Client = clients(i)
+        streamreg.remove(micVOIP.streamer)
+        For i As Integer = clientreg.count - 1 To 0 Step -1
+            Dim c As Client = clientreg(i)
             If Not c.stream Is Nothing Then _
-                remStrm(c.stream)
+                streamreg.remove(c.stream)
             c.stop()
-            remCl(c)
+            clientreg.remove(c)
         Next
-        streams.Clear()
-        clients.Clear()
+        streamreg.clear()
+        clientreg.clear()
         If Not tcpmarshalIPv4 Is Nothing Then
             RemoveHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
             RemoveHandler tcpmarshalIPv4.clientDisconnected, AddressOf discon
@@ -527,9 +530,9 @@ Public NotInheritable Class MainProgram
             Dim cl As Client = retRegCl(msg.senderIP, msg.senderPort)
             If cl Is Nothing Then
                 cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork).ToString(), msg.senderPort, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv4) With {.myAddress = external_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
-                addCl(cl)
+                clientreg.add(cl)
                 cl.forceReceive(msg)
-                addStrm(cl.stream)
+                streamreg.add(cl.stream)
             End If
         End If
     End Sub
@@ -541,9 +544,9 @@ Public NotInheritable Class MainProgram
             Dim cl As Client = retRegCl(msg.senderIP, msg.senderPort)
             If cl Is Nothing Then
                 cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6).ToString(), msg.senderPort, IPVersion.IPv6, AddressableType.UDP), udpmarshalIPv6) With {.myAddress = external_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
-                addCl(cl)
+                clientreg.add(cl)
                 cl.forceReceive(msg)
-                addStrm(cl.stream)
+                streamreg.add(cl.stream)
             End If
         End If
     End Sub
@@ -573,8 +576,8 @@ Public NotInheritable Class MainProgram
                         End If
                         cl = New Client(New Contact(lip, lport, IPVersion.IPv4, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                     End If
-                    addCl(cl)
-                    addStrm(cl.stream)
+                    clientreg.add(cl)
+                    streamreg.add(cl.stream)
                 End If
             End If
         End If
@@ -605,8 +608,8 @@ Public NotInheritable Class MainProgram
                         End If
                         cl = New Client(New Contact(lip, lport, IPVersion.IPv4, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
                     End If
-                    addCl(cl)
-                    addStrm(cl.stream)
+                    clientreg.add(cl)
+                    streamreg.add(cl.stream)
                 End If
             End If
         End If
@@ -620,33 +623,15 @@ Public NotInheritable Class MainProgram
             If cl IsNot Nothing Then
                 Dim strm As Streamer = cl.stream
                 If Not strm Is Nothing Then _
-                    remStrm(strm)
+                    streamreg.remove(strm)
                 If TCP_remove_disconnected_clients Then
-                    remCl(cl)
+                    clientreg.remove(cl)
                 Else
-                    upCl(cl)
+                    clientreg(clientreg.indexOf(cl)).updateLVI(True)
                 End If
             End If
         End If
     End Sub
-
-    Private Function retRegCl(ip As String, port As Integer) As Client
-        Dim toret As Client = Nothing
-        For Each c As Client In clients
-            If c.type = AddressableType.UDP Then
-                If c.targetAddress = ip And c.targetPort = port Then
-                    toret = c
-                    Exit For
-                End If
-            ElseIf c.type = AddressableType.TCP Then
-                If c.marshal.duplicatedInternalSocketConfig.remoteIPAddress = ip And c.marshal.duplicatedInternalSocketConfig.remotePort = port Then
-                    toret = c
-                    Exit For
-                End If
-            End If
-        Next
-        Return toret
-    End Function
 
     'TCP Client Reserved Settings Management
 
@@ -682,226 +667,23 @@ Public NotInheritable Class MainProgram
         Next
     End Sub
 
-    'Stream Management
-
-    Private slockstrm As New Object()
-
-    Public Sub addStrm(strm As Streamer)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() addStrm(strm))
-        Else
-            SyncLock slockstrm
-                streams.Add(strm)
-                Dim lvi As New ListViewItem(strm.name)
-                lvi.SubItems.Add(strm.muted)
-                lvi.SubItems.Add(strm.volume * 100)
-                ListViewsc.Items.Add(lvi)
-            End SyncLock
-        End If
-    End Sub
-
-    Public Function indxStrm(strm As Streamer) As Integer
-        Dim toret As Integer = -1
-        SyncLock slockstrm
-            toret = streams.IndexOf(strm)
-        End SyncLock
-        Return toret
-    End Function
-
-    Public Function indxStrm(indx As Integer) As Streamer
-        Dim toret As Streamer = Nothing
-        SyncLock slockstrm
-            If indx > -1 And indx < streams.Count Then _
-                toret = streams(indx)
-        End SyncLock
-        Return toret
-    End Function
-
-    Public Sub upStrm(strm As Streamer)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() upStrm(strm))
-        Else
-            SyncLock slockstrm
-                Dim indx As Integer = indxStrm(strm)
-                If indx > -1 Then
-                    Dim lvi As New ListViewItem(strm.name)
-                    lvi.SubItems.Add(strm.muted)
-                    lvi.SubItems.Add(strm.volume * 100)
-                    ListViewsc.Items(indx) = lvi
-                End If
-            End SyncLock
-        End If
-    End Sub
-
-    Public Sub remStrm(strm As Streamer)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() remStrm(strm))
-        Else
-            SyncLock slockstrm
-                Dim indx As Integer = indxStrm(strm)
-                If indx > -1 Then
-                    ListViewsc.Items.RemoveAt(indx)
-                    streams.RemoveAt(indx)
-                End If
-            End SyncLock
-        End If
-    End Sub
-
     'Client Management
 
-    Private slockCl As New Object()
-
-    Public Sub addCl(Cl As Client)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() addCl(Cl))
-        Else
-            SyncLock slockCl
-                clients.Add(Cl)
-                Dim lvi As New ListViewItem(Cl.name)
-                If Cl.type = AddressableType.TCP Then
-                    lvi.SubItems.Add(Cl.myAddress)
-                    lvi.SubItems.Add(Cl.myPort)
-                    lvi.SubItems.Add("TCP")
-                    lvi.SubItems.Add(Cl.connected)
-                ElseIf Cl.type = AddressableType.UDP Then
-                    lvi.SubItems.Add(Cl.targetAddress)
-                    lvi.SubItems.Add(Cl.targetPort)
-                    lvi.SubItems.Add("UDP")
-                    lvi.SubItems.Add("True")
-                End If
-                ListViewcl.Items.Add(lvi)
-            End SyncLock
-        End If
-    End Sub
-
-    Public Function indxCl(Cl As Client) As Integer
-        Dim toret As Integer = -1
-        SyncLock slockCl
-            toret = clients.IndexOf(Cl)
-        End SyncLock
-        Return toret
-    End Function
-
-    Public Function indxCl(indx As Integer) As Client
+    Private Function retRegCl(ip As String, port As Integer) As Client
         Dim toret As Client = Nothing
-        SyncLock slockCl
-            If indx > -1 And indx < clients.Count Then _
-                toret = clients(indx)
-        End SyncLock
+        For Each c As Client In clientreg.backingList
+            If c.type = AddressableType.UDP Then
+                If c.targetAddress = ip And c.targetPort = port Then
+                    toret = c
+                    Exit For
+                End If
+            ElseIf c.type = AddressableType.TCP Then
+                If c.marshal.duplicatedInternalSocketConfig.remoteIPAddress = ip And c.marshal.duplicatedInternalSocketConfig.remotePort = port Then
+                    toret = c
+                    Exit For
+                End If
+            End If
+        Next
         Return toret
     End Function
-
-    Public Sub upCl(Cl As Client)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() upCl(Cl))
-        Else
-            SyncLock slockCl
-                Dim indx As Integer = indxCl(Cl)
-                If indx > -1 Then
-                    Dim lvi As New ListViewItem(Cl.name)
-                    If Cl.type = AddressableType.TCP Then
-                        lvi.SubItems.Add(Cl.myAddress)
-                        lvi.SubItems.Add(Cl.myPort)
-                        lvi.SubItems.Add("TCP")
-                        lvi.SubItems.Add(Cl.connected)
-                    ElseIf Cl.type = AddressableType.UDP Then
-                        lvi.SubItems.Add(Cl.targetAddress)
-                        lvi.SubItems.Add(Cl.targetPort)
-                        lvi.SubItems.Add("UDP")
-                        lvi.SubItems.Add("True")
-                    End If
-                    ListViewcl.Items(indx) = lvi
-                End If
-            End SyncLock
-        End If
-    End Sub
-
-    Public Sub remCl(Cl As Client)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() remCl(Cl))
-        Else
-            SyncLock slockCl
-                Dim indx As Integer = indxCl(Cl)
-                If indx > -1 Then
-                    ListViewcl.Items.RemoveAt(indx)
-                    clients.RemoveAt(indx)
-                End If
-            End SyncLock
-        End If
-    End Sub
-
-    'Contact Management
-
-    Private slockCon As New Object()
-
-    Public Sub addCon(Con As Contact)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() addCon(Con))
-        Else
-            SyncLock slockCon
-                contacts.Add(Con)
-                Dim lvi As New ListViewItem(Con.name)
-                lvi.SubItems.Add(Con.targetAddress)
-                lvi.SubItems.Add(Con.targetPort)
-                If Con.type = AddressableType.TCP Then
-                    lvi.SubItems.Add("TCP")
-                ElseIf Con.type = AddressableType.UDP Then
-                    lvi.SubItems.Add("UDP")
-                End If
-                ListViewcl2.Items.Add(lvi)
-            End SyncLock
-        End If
-    End Sub
-
-    Public Function indxCon(Con As Contact) As Integer
-        Dim toret As Integer = -1
-        SyncLock slockCon
-            toret = contacts.IndexOf(Con)
-        End SyncLock
-        Return toret
-    End Function
-
-    Public Function indxCon(indx As Integer) As Contact
-        Dim toret As Contact = Nothing
-        SyncLock slockCon
-            If indx > -1 And indx < contacts.Count Then _
-                toret = contacts(indx)
-        End SyncLock
-        Return toret
-    End Function
-
-    Public Sub upCon(Con As Contact)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() upCon(Con))
-        Else
-            SyncLock slockCon
-                Dim indx As Integer = indxCon(Con)
-                If indx > -1 Then
-                    Dim lvi As New ListViewItem(Con.name)
-                    lvi.SubItems.Add(Con.targetAddress)
-                    lvi.SubItems.Add(Con.targetPort)
-                    If Con.type = AddressableType.TCP Then
-                        lvi.SubItems.Add("TCP")
-                    ElseIf Con.type = AddressableType.UDP Then
-                        lvi.SubItems.Add("UDP")
-                    End If
-                    ListViewcl2.Items(indx) = lvi
-                End If
-            End SyncLock
-        End If
-    End Sub
-
-    Public Sub remCon(Con As Contact)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() remCon(Con))
-        Else
-            SyncLock slockCon
-                Dim indx As Integer = indxCon(Con)
-                If indx > -1 Then
-                    ListViewcl2.Items.RemoveAt(indx)
-                    contacts.RemoveAt(indx)
-                End If
-            End SyncLock
-        End If
-    End Sub
 End Class

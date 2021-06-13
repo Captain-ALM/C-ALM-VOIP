@@ -6,6 +6,7 @@
     Public Sub New(lvIn As ListView)
         SyncLock slock
             backedView = lvIn
+            'AddHandler backedView.SelectedIndexChanged, AddressOf backed_selected_indices_changed
         End SyncLock
     End Sub
 
@@ -23,7 +24,7 @@
 
     Public Sub remove(itemIn As t)
         If backedView.InvokeRequired Then
-            backedView.Invoke(Sub() add(itemIn))
+            backedView.Invoke(Sub() remove(itemIn))
         Else
             SyncLock slock
                 backedView.Items.Remove(itemIn.item)
@@ -52,6 +53,33 @@
         Else
             SyncLock slock
                 backedView.Refresh()
+            End SyncLock
+        End If
+    End Sub
+
+    Public ReadOnly Property count As Integer
+        Get
+            SyncLock slock
+                Return backedList.Count
+            End SyncLock
+        End Get
+    End Property
+
+    Public ReadOnly Property backingList As SyncLockedList(Of t)
+        Get
+            SyncLock slock
+                Return backedList
+            End SyncLock
+        End Get
+    End Property
+
+    Public Sub clear()
+        If backedView.InvokeRequired Then
+            backedView.Invoke(Sub() clear())
+        Else
+            SyncLock slock
+                backedView.Items.Clear()
+                backedList.Clear()
             End SyncLock
         End If
     End Sub

@@ -46,10 +46,11 @@ Public Module [Global]
     Public ceditm As EditorMode = EditorMode.None
     Public editsuccess As Boolean = False
     Public editfin As Boolean = True
-    'Listview backed lists
-    Public clients As New SyncLockedList(Of Client)
-    Public contacts As New SyncLockedList(Of Contact)
-    Public streams As New SyncLockedList(Of Streamer)
+    'ListViewedRegistry
+    Public clientreg As ListViewedRegistry(Of Client)
+    Public contactreg As ListViewedRegistry(Of Contact)
+    Public streamreg As ListViewedRegistry(Of Streamer)
+    'Config interface storage
     Public configfin As Boolean = True
 
     Public Function resolve(addr As String, fam As AddressFamily) As IPAddress

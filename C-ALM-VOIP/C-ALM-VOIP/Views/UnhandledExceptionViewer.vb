@@ -27,6 +27,7 @@
         extxt &= ex.Source & crlf & crlf
         extxt &= ex.StackTrace & crlf & crlf
         txtbxex.Text = extxt
+        txtbxex.DeselectAll()
     End Sub
 
     Private Sub butcont_Click(sender As Object, e As EventArgs) Handles butcont.Click

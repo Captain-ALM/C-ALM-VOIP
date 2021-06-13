@@ -132,10 +132,11 @@ Public MustInherit Class AddressableBase
 
     Public Overridable Sub updateLVI(u As Boolean) Implements IListViewable.updateItem
         If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
-        If _lvi.SubItems.Count < 1 Then _lvi.SubItems.Add(_targaddress) Else _lvi.SubItems(0).Text = _targaddress
-        If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_targport) Else _lvi.SubItems(1).Text = _targport
-        If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(_type.ToString()) Else _lvi.SubItems(2).Text = _type.ToString()
+        If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_targaddress) Else _lvi.SubItems(1).Text = _targaddress
+        If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(_targport) Else _lvi.SubItems(2).Text = _targport
+        If _lvi.SubItems.Count < 4 Then _lvi.SubItems.Add(_type.ToString()) Else _lvi.SubItems(3).Text = _type.ToString()
         'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
+        'Uneeded as the list view automatically updates
     End Sub
 
     Public ReadOnly Property item As ListViewItem Implements IListViewable.item
