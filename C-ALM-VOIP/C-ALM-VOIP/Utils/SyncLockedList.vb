@@ -19,6 +19,12 @@
         End SyncLock
     End Sub
 
+    Public Sub AddRange(item As t())
+        SyncLock _slocklist
+            _list.AddRange(item)
+        End SyncLock
+    End Sub
+
     Public Sub Clear() Implements ICollection(Of t).Clear
         SyncLock _slocklist
             _list.Clear()

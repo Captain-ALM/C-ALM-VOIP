@@ -19,9 +19,9 @@ Public NotInheritable Class VOIPSender
     End Sub
 
     Private Sub dataReceived(sender As Object, e As WaveInEventArgs)
-        For i As Integer = 0 To e.BytesRecorded - 1 Step 1
-            buff.Add(e.Buffer(i))
-        Next
+        Dim nb(e.BytesRecorded - 1) As Byte
+        Buffer.BlockCopy(e.Buffer, 0, nb, 0, e.BytesRecorded)
+        buff.AddRange(nb)
         If buff.Count >= buffsiz Then
             Dim bts2(buff.Count - 1) As Byte
             buff.CopyTo(bts2, 0)

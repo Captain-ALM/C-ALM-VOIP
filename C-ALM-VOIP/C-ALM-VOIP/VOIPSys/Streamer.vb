@@ -18,7 +18,7 @@ Public Class Streamer
     Public Sub New(name As String, havevolume As Boolean)
         _wp = New BufferedWaveProvider(New WaveFormat(samplerate, 16, 1))
         _wp.DiscardOnBufferOverflow = True
-        _wp.BufferDuration = New TimeSpan(0, 0, buffmdmsecs * 8)
+        _wp.BufferDuration = New TimeSpan(0, 0, 0, 0, buffmdmsecs * 8)
         _wsp = New Pcm16BitToSampleProvider(_wp)
         If havevolume Then
             _vsp = New VolumeSampleProvider(_wsp)
@@ -57,7 +57,6 @@ Public Class Streamer
         End Get
         Set(value As Boolean)
             _m = value
-            updateLVI(True)
         End Set
     End Property
 
@@ -69,7 +68,6 @@ Public Class Streamer
         Set(value As Single)
             If _vsp Is Nothing Then Exit Property
             _vsp.Volume = value
-            updateLVI(True)
         End Set
     End Property
 
@@ -97,7 +95,6 @@ Public Class Streamer
         End Get
         Set(value As String)
             _name = value
-            updateLVI(True)
         End Set
     End Property
 
@@ -108,11 +105,15 @@ Public Class Streamer
     End Property
 
     Public Overridable Sub updateLVI(u As Boolean) Implements IListViewable.updateItem
-        If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
-        If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_m) Else _lvi.SubItems(1).Text = _m
-        If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(Me.volume * 100) Else _lvi.SubItems(2).Text = Me.volume * 100
-        'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
-        'Uneeded as the list view automatically updates
+        If (Not _lvi Is Nothing) AndAlso (Not _lvi.ListView Is Nothing) AndAlso _lvi.ListView.InvokeRequired Then
+            _lvi.ListView.Invoke(Sub() Me.updateLVI(u))
+        Else
+            If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
+            If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_m) Else _lvi.SubItems(1).Text = _m
+            If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(Me.volume * 100) Else _lvi.SubItems(2).Text = Me.volume * 100
+            'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
+            'Uneeded as the list view automatically updates
+        End If
     End Sub
 
     Public ReadOnly Property item As ListViewItem Implements IListViewable.item

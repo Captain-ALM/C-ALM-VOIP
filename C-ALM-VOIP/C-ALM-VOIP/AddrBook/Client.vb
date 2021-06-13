@@ -165,9 +165,13 @@ Public Class Client
     End Function
 
     Public Overrides Sub updateLVI(u As Boolean)
-        MyBase.updateLVI(False)
-        If _lvi.SubItems.Count < 5 Then _lvi.SubItems.Add(Me.connected) Else _lvi.SubItems(4).Text = Me.connected
-        'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
-        'Uneeded as the list view automatically updates
+        If (Not _lvi Is Nothing) AndAlso (Not _lvi.ListView Is Nothing) AndAlso _lvi.ListView.InvokeRequired Then
+            _lvi.ListView.Invoke(Sub() Me.updateLVI(u))
+        Else
+            MyBase.updateLVI(False)
+            If _lvi.SubItems.Count < 5 Then _lvi.SubItems.Add(Me.connected) Else _lvi.SubItems(4).Text = Me.connected
+            'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
+            'Uneeded as the list view automatically updates
+        End If
     End Sub
 End Class

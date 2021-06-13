@@ -527,7 +527,7 @@ Public NotInheritable Class MainProgram
         If Me.InvokeRequired Then
             Me.Invoke(Sub() msgRecIPv4(msg))
         Else
-            Dim cl As Client = retRegCl(msg.senderIP, msg.senderPort)
+            Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(msg.senderIP, msg.senderPort)))
             If cl Is Nothing Then
                 cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork).ToString(), msg.senderPort, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv4) With {.myAddress = external_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
                 clientreg.add(cl)
@@ -541,7 +541,7 @@ Public NotInheritable Class MainProgram
         If Me.InvokeRequired Then
             Me.Invoke(Sub() msgRecIPv6(msg))
         Else
-            Dim cl As Client = retRegCl(msg.senderIP, msg.senderPort)
+            Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(msg.senderIP, msg.senderPort)))
             If cl Is Nothing Then
                 cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6).ToString(), msg.senderPort, IPVersion.IPv6, AddressableType.UDP), udpmarshalIPv6) With {.myAddress = external_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
                 clientreg.add(cl)
@@ -555,7 +555,7 @@ Public NotInheritable Class MainProgram
         If Me.InvokeRequired Then
             Me.Invoke(Sub() conIPv4(ip, port))
         Else
-            Dim cl As Client = retRegCl(ip, port)
+            Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port)))
             If cl Is Nothing Then
                 Dim clm As NetMarshalTCPClient = tcpmarshalIPv4.client(ip, port)
                 If Not clm.internalSocket Is Nothing AndAlso clm.ready Then
@@ -587,7 +587,7 @@ Public NotInheritable Class MainProgram
         If Me.InvokeRequired Then
             Me.Invoke(Sub() conIPv6(ip, port))
         Else
-            Dim cl As Client = retRegCl(ip, port)
+            Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port)))
             If cl Is Nothing Then
                 Dim clm As NetMarshalTCPClient = tcpmarshalIPv6.client(ip, port)
                 If Not clm.internalSocket Is Nothing AndAlso clm.ready Then
@@ -619,7 +619,7 @@ Public NotInheritable Class MainProgram
         If Me.InvokeRequired Then
             Me.Invoke(Sub() discon(ip, port))
         Else
-            Dim cl As Client = retRegCl(ip, port)
+            Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port)))
             If cl IsNot Nothing Then
                 Dim strm As Streamer = cl.stream
                 If Not strm Is Nothing Then _
@@ -666,24 +666,4 @@ Public NotInheritable Class MainProgram
             End If
         Next
     End Sub
-
-    'Client Management
-
-    Private Function retRegCl(ip As String, port As Integer) As Client
-        Dim toret As Client = Nothing
-        For Each c As Client In clientreg.backingList
-            If c.type = AddressableType.UDP Then
-                If c.targetAddress = ip And c.targetPort = port Then
-                    toret = c
-                    Exit For
-                End If
-            ElseIf c.type = AddressableType.TCP Then
-                If c.marshal.duplicatedInternalSocketConfig.remoteIPAddress = ip And c.marshal.duplicatedInternalSocketConfig.remotePort = port Then
-                    toret = c
-                    Exit For
-                End If
-            End If
-        Next
-        Return toret
-    End Function
 End Class

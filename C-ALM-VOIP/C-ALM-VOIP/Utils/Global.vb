@@ -67,6 +67,10 @@ Public Module [Global]
         Next
         Return Nothing
     End Function
+
+    Public Function returnFirstItemOrNothing(Of t)(input As t()) As t
+        If input Is Nothing OrElse input.Length < 1 Then Return Nothing Else Return input(0)
+    End Function
 End Module
 
 Public Enum EditorMode As Integer

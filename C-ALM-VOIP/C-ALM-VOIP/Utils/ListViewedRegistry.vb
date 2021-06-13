@@ -39,6 +39,16 @@
         End SyncLock
     End Function
 
+    Public Function find(matcher As IMatcher(Of t)) As t()
+        Dim toret As New List(Of t)
+        SyncLock slock
+            For Each c As t In backedList
+                If matcher.doesMatch(c) Then toret.Add(c)
+            Next
+        End SyncLock
+        Return toret.ToArray()
+    End Function
+
     Default Public ReadOnly Property Item(index As Integer) As t
         Get
             SyncLock slock
@@ -61,14 +71,6 @@
         Get
             SyncLock slock
                 Return backedList.Count
-            End SyncLock
-        End Get
-    End Property
-
-    Public ReadOnly Property backingList As SyncLockedList(Of t)
-        Get
-            SyncLock slock
-                Return backedList
             End SyncLock
         End Get
     End Property
