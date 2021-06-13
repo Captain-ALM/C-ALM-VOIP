@@ -2,6 +2,8 @@
 Imports NAudio.Wave.SampleProviders
 
 Public Class Streamer
+    Implements IListViewable
+
     Protected _vsp As VolumeSampleProvider = Nothing
     Protected _wp As BufferedWaveProvider = Nothing
     Protected _wsp As Pcm16BitToSampleProvider = Nothing
@@ -9,6 +11,7 @@ Public Class Streamer
     Protected _m As Boolean = False
     Protected _name As String = ""
     Protected _up As Boolean = False
+    Protected _lvi As ListViewItem = Nothing
     Public Event dataExgest(data As Byte())
     Public Event dataExgestWithVolume(data As Single())
 
@@ -54,6 +57,7 @@ Public Class Streamer
         End Get
         Set(value As Boolean)
             _m = value
+            updateLVI(True)
         End Set
     End Property
 
@@ -65,6 +69,7 @@ Public Class Streamer
         Set(value As Single)
             If _vsp Is Nothing Then Exit Property
             _vsp.Volume = value
+            updateLVI(True)
         End Set
     End Property
 
@@ -92,6 +97,7 @@ Public Class Streamer
         End Get
         Set(value As String)
             _name = value
+            updateLVI(True)
         End Set
     End Property
 
@@ -100,6 +106,23 @@ Public Class Streamer
             Return _up
         End Get
     End Property
+
+    Public Overridable Sub updateLVI(u As Boolean) Implements IListViewable.updateItem
+        If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
+        If _lvi.SubItems.Count < 1 Then _lvi.SubItems.Add(_m) Else _lvi.SubItems(0).Text = _m
+        If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(Me.volume * 100) Else _lvi.SubItems(1).Text = Me.volume * 100
+        'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
+    End Sub
+
+    Public ReadOnly Property item As ListViewItem Implements IListViewable.item
+        Get
+            Return _lvi
+        End Get
+    End Property
+
+    Public Sub cleanItem() Implements IListViewable.cleanItem
+        _lvi = Nothing
+    End Sub
 End Class
 
 

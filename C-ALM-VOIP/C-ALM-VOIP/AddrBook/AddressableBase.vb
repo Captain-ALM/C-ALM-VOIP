@@ -1,5 +1,7 @@
 ﻿<Serializable>
 Public MustInherit Class AddressableBase
+    Implements IListViewable
+
     Protected _name As String = ""
     Protected _targaddress As String = ""
     Protected _targport As Integer = 0
@@ -10,6 +12,7 @@ Public MustInherit Class AddressableBase
     Protected _type As AddressableType = AddressableType.None
     Protected _passmode As MessagePassMode = messagePassMode.Disable
     Protected _targver As IPVersion = IPVersion.None
+    Protected _lvi As ListViewItem = Nothing
 
     Public Sub New(other As AddressableBase)
         _name = other._name
@@ -35,6 +38,7 @@ Public MustInherit Class AddressableBase
         End Get
         Set(value As String)
             _name = value
+            updateLVI(True)
         End Set
     End Property
 
@@ -44,6 +48,7 @@ Public MustInherit Class AddressableBase
         End Get
         Protected Set(value As String)
             _targaddress = value
+            updateLVI(True)
         End Set
     End Property
 
@@ -53,6 +58,7 @@ Public MustInherit Class AddressableBase
         End Get
         Protected Set(value As Integer)
             _targport = value
+            updateLVI(True)
         End Set
     End Property
 
@@ -100,6 +106,7 @@ Public MustInherit Class AddressableBase
         End Get
         Protected Set(value As AddressableType)
             _type = value
+            updateLVI(True)
         End Set
     End Property
 
@@ -122,6 +129,24 @@ Public MustInherit Class AddressableBase
     End Property
 
     Public MustOverride Function duplicateToNew() As AddressableBase
+
+    Public Overridable Sub updateLVI(u As Boolean) Implements IListViewable.updateItem
+        If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
+        If _lvi.SubItems.Count < 1 Then _lvi.SubItems.Add(_targaddress) Else _lvi.SubItems(0).Text = _targaddress
+        If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_targport) Else _lvi.SubItems(1).Text = _targport
+        If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(_type.ToString()) Else _lvi.SubItems(2).Text = _type.ToString()
+        'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
+    End Sub
+
+    Public ReadOnly Property item As ListViewItem Implements IListViewable.item
+        Get
+            Return _lvi
+        End Get
+    End Property
+
+    Public Sub cleanItem() Implements IListViewable.cleanItem
+        _lvi = Nothing
+    End Sub
 End Class
 
 Public Enum AddressableType As Integer

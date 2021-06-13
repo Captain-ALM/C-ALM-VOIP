@@ -65,6 +65,7 @@ Public Class Client
 
     Public Overridable ReadOnly Property connected As Boolean
         Get
+            If _cl Is Nothing Then Return False
             Return _cl.ready
         End Get
     End Property
@@ -162,4 +163,10 @@ Public Class Client
     Protected Overridable Function isNewerTimeStamp(tstchk As Tuple(Of Byte(), DateTime)) As Boolean
         Return tstchk.Item2 > _lts
     End Function
+
+    Public Overrides Sub updateLVI(u As Boolean)
+        MyBase.updateLVI(False)
+        If _lvi.SubItems.Count < 4 Then _lvi.SubItems.Add(Me.connected) Else _lvi.SubItems(3).Text = Me.connected
+        'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
+    End Sub
 End Class
