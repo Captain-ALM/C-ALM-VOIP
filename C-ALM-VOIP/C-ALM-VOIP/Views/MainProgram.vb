@@ -92,9 +92,7 @@ Public NotInheritable Class MainProgram
     Private Sub butabout_Click(sender As Object, e As EventArgs) Handles butabout.Click
         If ue Then
             wp.showForm(Of AboutBx)(0, Me)
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butabout, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butabout, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
@@ -106,9 +104,7 @@ Public NotInheritable Class MainProgram
                     Threading.Thread.Sleep(125)
                 End While
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butrconf, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butrconf, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
@@ -120,17 +116,13 @@ Public NotInheritable Class MainProgram
                 Threading.Thread.Sleep(125)
             End While
             engage()
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butrset, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butrset, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butstp_Click(sender As Object, e As EventArgs) Handles butstp.Click
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butstp, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butstp, New Object() {Me}, ETs.Click, e))
         End If
         Me.Close()
     End Sub
@@ -181,39 +173,33 @@ Public NotInheritable Class MainProgram
             End If
             ceditm = EditorMode.None
             caddrbs = Nothing
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butcladd, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butcladd, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butclrem_Click(sender As Object, e As EventArgs) Handles butclrem.Click
         If ue Then
-            If ListViewcl.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewcl.SelectedIndices(0)
-                Dim cl As Client = clientreg(indx)
+            clientreg.updateCachedIndices()
+            If clientreg.selectedIndices.Count > 0 Then
+                Dim cl As Client = clientreg(clientreg.selectedIndices(0))
                 Dim strm As Streamer = cl.stream
                 streamreg.remove(strm)
                 cl.stop()
                 clientreg.remove(cl)
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butclrem, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butclrem, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butclcreatec_Click(sender As Object, e As EventArgs) Handles butclcreatec.Click
         If ue Then
-            If ListViewcl.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewcl.SelectedIndices(0)
-                Dim cl As Client = clientreg(indx)
+            clientreg.updateCachedIndices()
+            If clientreg.selectedIndices.Count > 0 Then
+                Dim cl As Client = clientreg(clientreg.selectedIndices(0))
                 Dim ab As AddressableBase = cl.duplicateToNew()
                 contactreg.add(ab)
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butclcreatec, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butclcreatec, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
@@ -226,9 +212,7 @@ Public NotInheritable Class MainProgram
                 c.stop()
                 clientreg.remove(c)
             Next
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butclccls, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butclccls, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
@@ -248,160 +232,129 @@ Public NotInheritable Class MainProgram
             End If
             ceditm = EditorMode.None
             caddrbs = Nothing
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butcl2add, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butcl2add, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butcl2rem_Click(sender As Object, e As EventArgs) Handles butcl2rem.Click
         If ue Then
-            If ListViewcl2.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewcl2.SelectedIndices(0)
-                Dim cl As Contact = contactreg(indx)
+            contactreg.updateCachedIndices()
+            If contactreg.selectedIndices.Count > 0 Then
+                Dim cl As Contact = contactreg(contactreg.selectedIndices(0))
                 contactreg.remove(cl)
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butcl2rem, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butcl2rem, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butcl2editc_Click(sender As Object, e As EventArgs) Handles butcl2editc.Click
         If ue Then
-            If ListViewcl2.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewcl2.SelectedIndices(0)
+            contactreg.updateCachedIndices()
+            If contactreg.selectedIndices.Count > 0 Then
                 editfin = False
                 ceditm = EditorMode.EditContact
-                caddrbs = contactreg(indx)
+                caddrbs = contactreg(contactreg.selectedIndices(0))
                 wp.showForm(Of Editor)(0, Me)
                 While Not editfin
                     Threading.Thread.Sleep(125)
                 End While
                 If editsuccess Then
-                    contactreg(contactreg.indexOf(caddrbs)).updateLVI(True)
+                    caddrbs.updateLVI(True)
                     editsuccess = False
                 End If
                 ceditm = EditorMode.None
                 caddrbs = Nothing
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butcl2editc, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butcl2editc, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butcl2ccls_Click(sender As Object, e As EventArgs) Handles butcl2ccls.Click
         If ue Then
             contactreg.clear()
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butcl2ccls, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butcl2ccls, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub ListViewsc_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListViewsc.SelectedIndexChanged
         If ue Then
-            If ListViewsc.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = streamreg(indx)
+            streamreg.updateCachedIndices()
+            If streamreg.selectedIndices.Count > 0 Then
+                Dim strm As Streamer = streamreg(streamreg.selectedIndices(0))
                 TrackBarvol.Value = strm.volume * 100
-                NumericUpDownvol.Value = strm.volume * 100
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(ListViewsc, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(ListViewsc.SelectedIndices)))
+            wp.addEvent(New WorkerEvent(ListViewsc, New Object() {Me}, ETs.SelectedIndexChanged, New EventArgsDataContainer(ListViewsc.SelectedIndices)))
         End If
     End Sub
 
     Private Sub butscmutes_Click(sender As Object, e As EventArgs) Handles butscmutes.Click
         If ue Then
-            If ListViewsc.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = streamreg(indx)
-                strm.muted = True
-                streamreg(streamreg.indexOf(strm)).updateLVI(True)
+            streamreg.updateCachedIndices()
+            If streamreg.selectedIndices.Count > 0 Then
+                mmuteStreamer(streamreg(streamreg.selectedIndices(0)), True)
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butscmutes, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butscmutes, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butscunmutes_Click(sender As Object, e As EventArgs) Handles butscunmutes.Click
         If ue Then
-            If ListViewsc.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = streamreg(indx)
-                strm.muted = False
-                streamreg(streamreg.indexOf(strm)).updateLVI(True)
+            streamreg.updateCachedIndices()
+            If streamreg.selectedIndices.Count > 0 Then
+                mmuteStreamer(streamreg(streamreg.selectedIndices(0)), False)
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butscunmutes, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butscunmutes, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
-    Private Sub TrackBarvol_Leave(sender As Object, e As EventArgs) Handles TrackBarvol.Leave
+    Private Sub TrackBarvol_ValueChanged(sender As Object, e As EventArgs) Handles TrackBarvol.ValueChanged
         If ue Then
-            NumericUpDownvol.Value = TrackBarvol.Value
-            If ListViewsc.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = streamreg(indx)
+            streamreg.updateCachedIndices()
+            If streamreg.selectedIndices.Count > 0 Then
+                Dim strm As Streamer = streamreg(streamreg.selectedIndices(0))
                 strm.volume = TrackBarvol.Value / 100
-                streamreg(streamreg.indexOf(strm)).updateLVI(True)
+                strm.updateLVI(True)
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(TrackBarvol, l, ETs.Leave, New EventArgsDataContainer(TrackBarvol.Value)))
+            If NumericUpDownvol.Value <> TrackBarvol.Value Then NumericUpDownvol.Value = TrackBarvol.Value
+            wp.addEvent(New WorkerEvent(TrackBarvol, New Object() {Me}, ETs.ValueChanged, New EventArgsDataContainer(TrackBarvol.Value)))
         End If
     End Sub
 
-    Private Sub NumericUpDownvol_Leave(sender As Object, e As EventArgs) Handles NumericUpDownvol.Leave
+    Private Sub NumericUpDownvol_ValueChanged(sender As Object, e As EventArgs) Handles NumericUpDownvol.ValueChanged
         If ue Then
-            TrackBarvol.Value = NumericUpDownvol.Value
-            If ListViewsc.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewsc.SelectedIndices(0)
-                Dim strm As Streamer = streamreg(indx)
-                strm.volume = NumericUpDownvol.Value / 100
-                streamreg(streamreg.indexOf(strm)).updateLVI(True)
-            End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(NumericUpDownvol, l, ETs.Leave, New EventArgsDataContainer(NumericUpDownvol.Value)))
+            If NumericUpDownvol.Value <> TrackBarvol.Value Then TrackBarvol.Value = NumericUpDownvol.Value
+            wp.addEvent(New WorkerEvent(NumericUpDownvol, New Object() {Me}, ETs.ValueChanged, New EventArgsDataContainer(NumericUpDownvol.Value)))
         End If
     End Sub
 
     Private Sub butclviewc_Click(sender As Object, e As EventArgs) Handles butclviewc.Click
         If ue Then
-            If ListViewcl.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewcl.SelectedIndices(0)
+            clientreg.updateCachedIndices()
+            If clientreg.selectedIndices.Count > 0 Then
                 editfin = False
                 ceditm = EditorMode.EditClient
-                caddrbs = clientreg(indx)
+                caddrbs = clientreg(clientreg.selectedIndices(0))
                 wp.showForm(Of Editor)(0, Me)
                 While Not editfin
                     Threading.Thread.Sleep(125)
                 End While
                 If editsuccess Then
-                    clientreg(clientreg.indexOf(caddrbs)).updateLVI(True)
-                    streamreg(streamreg.indexOf(CType(caddrbs, Client).stream)).updateLVI(True)
+                    caddrbs.updateLVI(True)
+                    CType(caddrbs, Client).stream.updateLVI(True)
                     editsuccess = False
                 End If
                 ceditm = EditorMode.None
                 caddrbs = Nothing
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butclviewc, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butclviewc, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butcl2cc_Click(sender As Object, e As EventArgs) Handles butcl2cc.Click
         If ue Then
-            If ListViewcl2.SelectedIndices.Count > 0 Then
-                Dim indx As Integer = ListViewcl2.SelectedIndices(0)
-                Dim cl As Contact = contactreg(indx)
+            contactreg.updateCachedIndices()
+            If contactreg.selectedIndices.Count > 0 Then
+                Dim cl As Contact = contactreg(contactreg.selectedIndices(0))
                 If cl.name = "" Then cl.name = cl.targetAddress & ":" & cl.targetPort
                 If cl.type = AddressableType.TCP Then
                     If cl.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
@@ -435,9 +388,7 @@ Public NotInheritable Class MainProgram
                     End If
                 End If
             End If
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butcl2cc, l, ETs.Click, e))
+            wp.addEvent(New WorkerEvent(butcl2cc, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
@@ -627,7 +578,7 @@ Public NotInheritable Class MainProgram
                 If TCP_remove_disconnected_clients Then
                     clientreg.remove(cl)
                 Else
-                    clientreg(clientreg.indexOf(cl)).updateLVI(True)
+                    cl.updateLVI(True)
                 End If
             End If
         End If
@@ -665,5 +616,12 @@ Public NotInheritable Class MainProgram
                 Exit For
             End If
         Next
+    End Sub
+
+    'Audio Management
+
+    Private Sub mmuteStreamer(strm As Streamer, isMuted As Boolean)
+        strm.muted = isMuted
+        strm.updateLVI(True)
     End Sub
 End Class

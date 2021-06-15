@@ -111,12 +111,7 @@ Public Class PEditor
     End Function
 
     Private Function canCastObject(Of t)(f As Object) As Boolean
-        Try
-            Dim nf As t = f
-            Return True
-        Catch ex As InvalidCastException
-            Return False
-        End Try
+        Return GetType(t).IsAssignableFrom(f.GetType())
     End Function
 
     Private Function getValueFromControl(Of t)(ctrl As Control, del As [Delegate]) As t

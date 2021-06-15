@@ -2,11 +2,12 @@
     Private backedList As New SyncLockedList(Of t)
     Private backedView As ListView = Nothing
     Private slock As New Object()
+    Private selectedIdxs As New SyncLockedList(Of Integer)
+    Private slocksi As New Object()
 
     Public Sub New(lvIn As ListView)
         SyncLock slock
             backedView = lvIn
-            'AddHandler backedView.SelectedIndexChanged, AddressOf backed_selected_indices_changed
         End SyncLock
     End Sub
 
@@ -84,5 +85,22 @@
                 backedList.Clear()
             End SyncLock
         End If
+    End Sub
+
+    Public ReadOnly Property selectedIndices As Integer()
+        Get
+            SyncLock slocksi
+                Return selectedIdxs.toArray()
+            End SyncLock
+        End Get
+    End Property
+
+    Public Sub updateCachedIndices()
+        SyncLock slocksi
+            selectedIdxs.Clear()
+            For Each c As Integer In backedView.SelectedIndices
+                selectedIdxs.Add(c)
+            Next
+        End SyncLock
     End Sub
 End Class

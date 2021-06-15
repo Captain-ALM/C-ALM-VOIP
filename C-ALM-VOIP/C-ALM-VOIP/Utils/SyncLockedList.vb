@@ -19,7 +19,7 @@
         End SyncLock
     End Sub
 
-    Public Sub AddRange(item As t())
+    Public Sub AddRange(item As IEnumerable(Of t))
         SyncLock _slocklist
             _list.AddRange(item)
         End SyncLock
@@ -44,6 +44,12 @@
             _list.CopyTo(array, arrayIndex)
         End SyncLock
     End Sub
+
+    Public Function toArray() As t()
+        SyncLock _slocklist
+            Return _list.ToArray()
+        End SyncLock
+    End Function
 
     Public ReadOnly Property Count As Integer Implements ICollection(Of t).Count
         Get

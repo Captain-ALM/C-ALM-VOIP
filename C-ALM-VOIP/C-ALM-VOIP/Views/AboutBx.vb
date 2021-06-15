@@ -23,9 +23,7 @@ Public NotInheritable Class AboutBx
     Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OKButton.Click
         Me.Close()
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(OKButton, l, EventTypes.Click, e))
+            wp.addEvent(New WorkerEvent(OKButton, New Object() {Me}, EventTypes.Click, e))
         End If
     End Sub
 

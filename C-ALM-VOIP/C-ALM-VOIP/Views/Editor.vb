@@ -166,9 +166,7 @@ Public Class Editor
         OK_Button.Enabled = False
         OK_Button.Select()
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(OK_Button, l, ETs.Click, New EventArgsDataContainer(Nothing)))
+            wp.addEvent(New WorkerEvent(OK_Button, New Object() {Me}, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
     End Sub
 
@@ -177,9 +175,7 @@ Public Class Editor
         Cancel_Button.Select()
         editfin = True
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(Cancel_Button, l, ETs.Click, New EventArgsDataContainer(Nothing)))
+            wp.addEvent(New WorkerEvent(Cancel_Button, New Object() {Me}, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
         Me.Close()
@@ -187,9 +183,7 @@ Public Class Editor
 
     Private Sub txtbxname_Leave(sender As Object, e As EventArgs) Handles txtbxname.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxname, l, ETs.Leave, New EventArgsDataContainer(txtbxname.Text)))
+            wp.addEvent(New WorkerEvent(txtbxname, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxname.Text)))
         End If
     End Sub
 
@@ -197,58 +191,44 @@ Public Class Editor
         If ue Then
             updateIDTST()
             updateSelectedTypeIN()
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxtype, l, ETs.Leave, New EventArgsDataContainer(cmbxtype.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxtype, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxtype.SelectedIndex)))
         End If
     End Sub
 
     Private Sub cmbxipv_Leave(sender As Object, e As EventArgs) Handles cmbxipv.Leave
         If ue Then
             updateSelectedTypeIN()
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxipv, l, ETs.Leave, New EventArgsDataContainer(cmbxipv.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxipv, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxipv.SelectedIndex)))
         End If
     End Sub
 
     Private Sub txtbxaddr_Leave(sender As Object, e As EventArgs) Handles txtbxaddr.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxaddr, l, ETs.Leave, New EventArgsDataContainer(txtbxaddr.Text)))
+            wp.addEvent(New WorkerEvent(txtbxaddr, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxaddr.Text)))
         End If
     End Sub
 
     Private Sub nudport_Leave(sender As Object, e As EventArgs) Handles nudport.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudport, l, ETs.Leave, New EventArgsDataContainer(nudport.Value)))
+            wp.addEvent(New WorkerEvent(nudport, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudport.Value)))
         End If
     End Sub
 
     Private Sub txtbxmyaddr_Leave(sender As Object, e As EventArgs) Handles txtbxmyaddr.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxmyaddr, l, ETs.Leave, New EventArgsDataContainer(txtbxmyaddr.Text)))
+            wp.addEvent(New WorkerEvent(txtbxmyaddr, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxmyaddr.Text)))
         End If
     End Sub
 
     Private Sub nudmyport_Leave(sender As Object, e As EventArgs) Handles nudmyport.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudmyport, l, ETs.Leave, New EventArgsDataContainer(nudmyport.Value)))
+            wp.addEvent(New WorkerEvent(nudmyport, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudmyport.Value)))
         End If
     End Sub
 
     Private Sub cmbxstrmode_Leave(sender As Object, e As EventArgs) Handles cmbxstrmode.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxstrmode, l, ETs.Leave, New EventArgsDataContainer(cmbxstrmode.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxstrmode, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxstrmode.SelectedIndex)))
         End If
     End Sub
 
@@ -256,18 +236,14 @@ Public Class Editor
         If ue Then
             updateIDTST()
             updateSelectedTypeIN()
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxtype, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxtype.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxtype, New Object() {Me}, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxtype.SelectedIndex)))
         End If
     End Sub
 
     Private Sub cmbxipv_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxipv.SelectedIndexChanged
         If ue Then
             updateSelectedTypeIN()
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxipv, l, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxipv.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxipv, New Object() {Me}, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxipv.SelectedIndex)))
         End If
     End Sub
 

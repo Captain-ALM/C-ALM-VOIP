@@ -190,101 +190,77 @@ Public NotInheritable Class Configure
 
     Private Sub cmbxsniipv4_Leave(sender As Object, e As EventArgs) Handles cmbxsniipv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxsniipv4, l, ETs.Leave, New EventArgsDataContainer(cmbxsniipv4.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxsniipv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxsniipv4.SelectedIndex)))
         End If
     End Sub
 
     Private Sub nudspudpipv4_Leave(sender As Object, e As EventArgs) Handles nudspudpipv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudspudpipv4, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv4.Value)))
+            wp.addEvent(New WorkerEvent(nudspudpipv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudspudpipv4.Value)))
         End If
         updprtchk()
     End Sub
 
     Private Sub nudsptcpipv4_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudsptcpipv4, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv4.Value)))
+            wp.addEvent(New WorkerEvent(nudsptcpipv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudsptcpipv4.Value)))
         End If
         updprtchk()
     End Sub
 
     Private Sub cmbxsniipv6_Leave(sender As Object, e As EventArgs) Handles cmbxsniipv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxsniipv6, l, ETs.Leave, New EventArgsDataContainer(cmbxsniipv6.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxsniipv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxsniipv6.SelectedIndex)))
         End If
     End Sub
 
     Private Sub nudspudpipv6_Leave(sender As Object, e As EventArgs) Handles nudspudpipv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudspudpipv6, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv6.Value)))
+            wp.addEvent(New WorkerEvent(nudspudpipv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudspudpipv6.Value)))
         End If
         updprtchk()
     End Sub
 
     Private Sub nudsptcpipv6_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudsptcpipv6, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv6.Value)))
+            wp.addEvent(New WorkerEvent(nudsptcpipv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudsptcpipv6.Value)))
         End If
         updprtchk()
     End Sub
 
     Private Sub nudtcpbl_Leave(sender As Object, e As EventArgs) Handles nudtcpbl.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudtcpbl, l, ETs.Leave, New EventArgsDataContainer(nudtcpbl.Value)))
+            wp.addEvent(New WorkerEvent(nudtcpbl, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudtcpbl.Value)))
         End If
     End Sub
 
     Private Sub chkbxena_Leave(sender As Object, e As EventArgs) Handles chkbxena.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(chkbxena, l, ETs.Leave, New EventArgsDataContainer(chkbxena.Checked)))
+            wp.addEvent(New WorkerEvent(chkbxena, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(chkbxena.Checked)))
         End If
     End Sub
 
     Private Sub txtbxextaddIPv4_Leave(sender As Object, e As EventArgs) Handles txtbxextaddIPv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxextaddIPv4, l, ETs.Leave, New EventArgsDataContainer(txtbxextaddIPv4.Text)))
+            wp.addEvent(New WorkerEvent(txtbxextaddIPv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxextaddIPv4.Text)))
         End If
     End Sub
 
     Private Sub nududpextpIPv4_Leave(sender As Object, e As EventArgs) Handles nududpextpIPv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nududpextpIPv4, l, ETs.Leave, New EventArgsDataContainer(nududpextpIPv4.Value)))
+            wp.addEvent(New WorkerEvent(nududpextpIPv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nududpextpIPv4.Value)))
         End If
     End Sub
 
     Private Sub txtbxextaddIPv6_Leave(sender As Object, e As EventArgs) Handles txtbxextaddIPv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxextaddIPv6, l, ETs.Leave, New EventArgsDataContainer(txtbxextaddIPv6.Text)))
+            wp.addEvent(New WorkerEvent(txtbxextaddIPv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxextaddIPv6.Text)))
         End If
     End Sub
 
     Private Sub nududpextpIPv6_Leave(sender As Object, e As EventArgs) Handles nududpextpIPv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nududpextpIPv6, l, ETs.Leave, New EventArgsDataContainer(nududpextpIPv6.Value)))
+            wp.addEvent(New WorkerEvent(nududpextpIPv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nududpextpIPv6.Value)))
         End If
     End Sub
 
@@ -293,9 +269,7 @@ Public NotInheritable Class Configure
         butOK.Enabled = False
         butOK.Select()
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butOK, l, ETs.Click, New EventArgsDataContainer(Nothing)))
+            wp.addEvent(New WorkerEvent(butOK, New Object() {Me}, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
         Me.DialogResult = Windows.Forms.DialogResult.OK
         Me.Close()
@@ -306,9 +280,7 @@ Public NotInheritable Class Configure
         butCANCEL.Select()
         configfin = True
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butCANCEL, l, ETs.Click, New EventArgsDataContainer(Nothing)))
+            wp.addEvent(New WorkerEvent(butCANCEL, New Object() {Me}, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
         Me.Close()
@@ -316,81 +288,61 @@ Public NotInheritable Class Configure
 
     Private Sub cmbxsid_Leave(sender As Object, e As EventArgs) Handles cmbxsid.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxsid, l, ETs.Leave, New EventArgsDataContainer(cmbxsid.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxsid, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxsid.SelectedIndex)))
         End If
     End Sub
 
     Private Sub chkbxrdtcpc_Leave(sender As Object, e As EventArgs) Handles chkbxrdtcpc.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(chkbxrdtcpc, l, ETs.Leave, New EventArgsDataContainer(chkbxrdtcpc.Checked)))
+            wp.addEvent(New WorkerEvent(chkbxrdtcpc, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(chkbxrdtcpc.Checked)))
         End If
     End Sub
 
     Private Sub nudtcpto_Leave(sender As Object, e As EventArgs) Handles nudtcpto.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudtcpto, l, ETs.Leave, New EventArgsDataContainer(nudtcpto.Value)))
+            wp.addEvent(New WorkerEvent(nudtcpto, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudtcpto.Value)))
         End If
     End Sub
 
     Private Sub txtbxcnom_Leave(sender As Object, e As EventArgs) Handles txtbxcnom.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxcnom, l, ETs.Leave, New EventArgsDataContainer(txtbxcnom.Text)))
+            wp.addEvent(New WorkerEvent(txtbxcnom, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxcnom.Text)))
         End If
     End Sub
 
     Private Sub chkbxsan_Leave(sender As Object, e As EventArgs) Handles chkbxsan.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(chkbxsan, l, ETs.Leave, New EventArgsDataContainer(chkbxsan.Checked)))
+            wp.addEvent(New WorkerEvent(chkbxsan, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(chkbxsan.Checked)))
         End If
     End Sub
 
     Private Sub cmbxis_Leave(sender As Object, e As EventArgs) Handles cmbxis.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxis, l, ETs.Leave, New EventArgsDataContainer(cmbxis.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxis, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxis.SelectedIndex)))
         End If
     End Sub
 
     Private Sub nudsr_Leave(sender As Object, e As EventArgs) Handles nudsr.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudsr, l, ETs.Leave, New EventArgsDataContainer(nudsr.Value)))
+            wp.addEvent(New WorkerEvent(nudsr, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudsr.Value)))
         End If
     End Sub
 
     Private Sub nudrb_Leave(sender As Object, e As EventArgs) Handles nudrb.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudrb, l, ETs.Leave, New EventArgsDataContainer(nudrb.Value)))
+            wp.addEvent(New WorkerEvent(nudrb, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudrb.Value)))
         End If
     End Sub
 
     Private Sub nudtcpextpIPv4_Leave(sender As Object, e As EventArgs) Handles nudtcpextpIPv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudtcpextpIPv4, l, ETs.Leave, New EventArgsDataContainer(nudtcpextpIPv4.Value)))
+            wp.addEvent(New WorkerEvent(nudtcpextpIPv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudtcpextpIPv4.Value)))
         End If
     End Sub
 
     Private Sub nudtcpextpIPv6_Leave(sender As Object, e As EventArgs) Handles nudtcpextpIPv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudtcpextpIPv6, l, ETs.Leave, New EventArgsDataContainer(nudtcpextpIPv6.Value)))
+            wp.addEvent(New WorkerEvent(nudtcpextpIPv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudtcpextpIPv6.Value)))
         End If
     End Sub
 
