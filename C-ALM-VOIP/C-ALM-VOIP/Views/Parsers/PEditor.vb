@@ -19,7 +19,7 @@ Public Class PEditor
                 Dim frm As Editor = castObject(Of Editor)(ra(0))
                 Dim args As EventArgsDataContainer = castObject(Of EventArgsDataContainer)(ev.EventData)
                 If ev.EventSource.sourceObj Is frm.OK_Button And ev.EventType = ETs.Click Then
-                    If frm.chkipformat() Then
+                    If frm.chkipformat() And frm.chkprtnum() Then
                         frm.Invoke(Sub()
                                        frm.DialogResult = DialogResult.OK
                                        frm.Close()
@@ -50,10 +50,12 @@ Public Class PEditor
                 ElseIf ev.EventSource.sourceObj Is frm.Cancel_Button And ev.EventType = ETs.Leave Then
                     editfin = True
                 ElseIf ev.EventSource.sourceObj Is frm.nudport And ev.EventType = ETs.Leave Then
+                    frm.chkprtnum()
                     If ceditm <> EditorMode.EditClient And ceditm <> EditorMode.EditBlocker Then
                         CType(_caddrbs, Contact).targetPort = args.held
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.nudmyport And ev.EventType = ETs.Leave Then
+                    frm.chkprtnum()
                     If ceditm <> EditorMode.EditBlocker Then
                         If _caddrbs.type = AddressableType.UDP Then
                             _caddrbs.myPort = args.held
@@ -77,6 +79,7 @@ Public Class PEditor
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxname And ev.EventType = ETs.Leave Then
                     _caddrbs.name = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxtype And ev.EventType = ETs.Leave Then
+                    frm.chkprtnum()
                     If ceditm <> EditorMode.EditClient And ceditm <> EditorMode.EditBlocker Then
                         CType(_caddrbs, Contact).type = args.held + 1
                     End If

@@ -50,8 +50,8 @@ Partial Class Configure
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
-        Me.nudtcpextpIPv6 = New System.Windows.Forms.NumericUpDown()
         Me.nudtcpextpIPv4 = New System.Windows.Forms.NumericUpDown()
+        Me.nudtcpextpIPv6 = New System.Windows.Forms.NumericUpDown()
         Me.GroupBox3 = New System.Windows.Forms.GroupBox()
         Me.nudtcpto = New System.Windows.Forms.NumericUpDown()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -73,8 +73,8 @@ Partial Class Configure
         CType(Me.nududpextpIPv6, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
-        CType(Me.nudtcpextpIPv6, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nudtcpextpIPv4, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.nudtcpextpIPv6, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox3.SuspendLayout()
         CType(Me.nudtcpto, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.nudsr, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -332,14 +332,6 @@ Partial Class Configure
         Me.GroupBox2.TabStop = False
         Me.GroupBox2.Text = "External Address:"
         '
-        'nudtcpextpIPv6
-        '
-        Me.nudtcpextpIPv6.Location = New System.Drawing.Point(480, 43)
-        Me.nudtcpextpIPv6.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
-        Me.nudtcpextpIPv6.Name = "nudtcpextpIPv6"
-        Me.nudtcpextpIPv6.Size = New System.Drawing.Size(71, 20)
-        Me.nudtcpextpIPv6.TabIndex = 11
-        '
         'nudtcpextpIPv4
         '
         Me.nudtcpextpIPv4.Location = New System.Drawing.Point(480, 14)
@@ -347,6 +339,14 @@ Partial Class Configure
         Me.nudtcpextpIPv4.Name = "nudtcpextpIPv4"
         Me.nudtcpextpIPv4.Size = New System.Drawing.Size(71, 20)
         Me.nudtcpextpIPv4.TabIndex = 8
+        '
+        'nudtcpextpIPv6
+        '
+        Me.nudtcpextpIPv6.Location = New System.Drawing.Point(480, 43)
+        Me.nudtcpextpIPv6.Maximum = New Decimal(New Integer() {65535, 0, 0, 0})
+        Me.nudtcpextpIPv6.Name = "nudtcpextpIPv6"
+        Me.nudtcpextpIPv6.Size = New System.Drawing.Size(71, 20)
+        Me.nudtcpextpIPv6.TabIndex = 11
         '
         'GroupBox3
         '
@@ -519,8 +519,8 @@ Partial Class Configure
         Me.GroupBox1.PerformLayout()
         Me.GroupBox2.ResumeLayout(False)
         Me.GroupBox2.PerformLayout()
-        CType(Me.nudtcpextpIPv6, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.nudtcpextpIPv4, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.nudtcpextpIPv6, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox3.ResumeLayout(False)
         Me.GroupBox3.PerformLayout()
         CType(Me.nudtcpto, System.ComponentModel.ISupportInitialize).EndInit()

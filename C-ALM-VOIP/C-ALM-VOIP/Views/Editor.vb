@@ -9,7 +9,7 @@ Public Class Editor
     Private formClosedDone As Boolean = False
     Private wp As WorkerPump = Nothing
     Private ue As Boolean = False
-    Private slockchkf As New Object()
+    Private slockchker As New Object()
     Private showing As Boolean = False
 
     'Should not construct externally.
@@ -41,8 +41,8 @@ Public Class Editor
 
     Private Sub Editor_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         If Not formClosingDone Then
-            showing = False
-            SyncLock slockchkf
+            SyncLock slockchker
+                showing = False
                 If Me.Visible Then
                     'If close button pressed
                     e.Cancel = True
@@ -69,6 +69,8 @@ Public Class Editor
         formClosingDone = False
         formClosedDone = False
         txtbxaddr.BackColor = Color.White
+        nudport.BackColor = Color.White
+        nudmyport.BackColor = Color.White
         OK_Button.Enabled = True
         Cancel_Button.Enabled = True
         editfin = True
@@ -76,7 +78,7 @@ Public Class Editor
         While editfin
             Threading.Thread.Sleep(125)
         End While
-        SyncLock slockchkf
+        SyncLock slockchker
             'Begin Population
             If ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact Then
                 cmbxipv.Enabled = True
@@ -236,6 +238,7 @@ Public Class Editor
         If ue Then
             updateIDTST()
             updateSelectedTypeIN()
+            chkprtnum()
             wp.addEvent(New WorkerEvent(cmbxtype, New Object() {Me}, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxtype.SelectedIndex)))
         End If
     End Sub
@@ -312,8 +315,8 @@ Public Class Editor
     Public Function chkipformat() As Boolean
         If ceditm = EditorMode.EditClient Or ceditm = EditorMode.EditBlocker Or Not showing Then Return True
         Dim toret As Boolean = False
-        SyncLock slockchkf
-            Dim striphold As String = ""
+        SyncLock slockchker
+            Dim striphold As String
             If Me.InvokeRequired Then
                 striphold = Me.Invoke(Function() As String
                                           Return txtbxaddr.Text
@@ -322,7 +325,7 @@ Public Class Editor
                 striphold = txtbxaddr.Text
             End If
             Dim iphold As IPAddress = Nothing
-            Dim ver As Integer = -1
+            Dim ver As Integer
             If Me.InvokeRequired Then
                 ver = Me.Invoke(Function() As Integer
                                     Return cmbxipv.SelectedIndex
@@ -381,11 +384,48 @@ Public Class Editor
         Return toret
     End Function
 
-    Protected Sub setBackColor(txtbx As TextBox, bc As Color)
-        If txtbx.InvokeRequired Then
-            txtbx.Invoke(Sub() txtbx.BackColor = bc)
+    Public Function chkprtnum() As Boolean
+        If Not showing Then Return True
+        Dim toret As Boolean = False
+        SyncLock slockchker
+            Dim ctyp As AddressableType
+            If Me.InvokeRequired Then
+                ctyp = Me.Invoke(Function() As Integer
+                                     Return cmbxtype.SelectedIndex + 1
+                                 End Function)
+            Else
+                ctyp = cmbxtype.SelectedIndex + 1
+            End If
+            Dim iblkm As Boolean = (ceditm = EditorMode.EditBlocker) Or ((ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact) And ctyp = AddressableType.Block)
+            Dim ptr1 As Integer
+            If Me.InvokeRequired Then
+                ptr1 = Me.Invoke(Function() As Integer
+                                     Return nudport.Value
+                                 End Function)
+            Else
+                ptr1 = nudport.Value
+            End If
+            Dim ptr2 As Integer
+            If Me.InvokeRequired Then
+                ptr2 = Me.Invoke(Function() As Integer
+                                     Return nudmyport.Value
+                                 End Function)
+            Else
+                ptr2 = nudmyport.Value
+            End If
+            If ptr1 < 1 And (Not iblkm) Then setBackColor(nudport, Color.Orange) Else setBackColor(nudport, Color.White)
+            If ptr2 < 1 And (Not iblkm) Then setBackColor(nudmyport, Color.Orange) Else setBackColor(nudmyport, Color.White)
+            toret = Not (ptr1 < 1 Or ptr2 < 1)
+            If iblkm Then toret = True
+        End SyncLock
+        Return toret
+    End Function
+
+    Protected Sub setBackColor(ctrl As Control, bc As Color)
+        If ctrl.InvokeRequired Then
+            ctrl.Invoke(Sub() ctrl.BackColor = bc)
         Else
-            txtbx.BackColor = bc
+            ctrl.BackColor = bc
         End If
     End Sub
 End Class

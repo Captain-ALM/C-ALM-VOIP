@@ -7,6 +7,11 @@ Public Class BlockClient
         MyBase.New(other)
     End Sub
 
+    Public Sub New(other As Contact, targIp As String)
+        MyBase.New(other)
+        _targaddress = targIp
+    End Sub
+
     Public Overrides Sub forceReceive(msg As IPacket)
     End Sub
 
@@ -29,5 +34,13 @@ Public Class BlockClient
         Get
             Return Nothing
         End Get
+    End Property
+
+    Public Overrides Property messagePassMode As MessagePassMode
+        Get
+            Return voip.MessagePassMode.Disable
+        End Get
+        Set(value As MessagePassMode)
+        End Set
     End Property
 End Class

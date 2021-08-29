@@ -372,25 +372,25 @@ Public NotInheritable Class Configure
 
     Protected Function updprtchk() As Boolean
         Dim toret As Boolean = True
-        If (nudspudpipv4.Value = nudsptcpipv4.Value Or nudspudpipv4.Value = nudsptcpipv6.Value Or nudspudpipv4.Value = nudspudpipv6.Value) And nudspudpipv4.Value <> 0 Then
+        If (nudspudpipv4.Value = nudsptcpipv4.Value) And nudspudpipv4.Value <> 0 And cmbxsniipv4.SelectedIndex > 0 Then
             nudspudpipv4.BackColor = Color.Orange
             toret = False
         Else
             nudspudpipv4.BackColor = Color.White
         End If
-        If (nudspudpipv6.Value = nudsptcpipv4.Value Or nudspudpipv6.Value = nudsptcpipv6.Value Or nudspudpipv6.Value = nudspudpipv4.Value) And nudspudpipv6.Value <> 0 Then
+        If (nudspudpipv6.Value = nudsptcpipv6.Value) And nudspudpipv6.Value <> 0 And cmbxsniipv6.SelectedIndex > 0 Then
             nudspudpipv6.BackColor = Color.Orange
             toret = False
         Else
             nudspudpipv6.BackColor = Color.White
         End If
-        If (nudsptcpipv4.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudsptcpipv6.Value Or nudsptcpipv4.Value = nudspudpipv6.Value) And nudsptcpipv4.Value <> 0 Then
+        If (nudsptcpipv4.Value = nudspudpipv4.Value) And nudsptcpipv4.Value <> 0 And cmbxsniipv4.SelectedIndex > 0 Then
             nudsptcpipv4.BackColor = Color.Orange
             toret = False
         Else
             nudsptcpipv4.BackColor = Color.White
         End If
-        If (nudsptcpipv6.Value = nudspudpipv4.Value Or nudsptcpipv6.Value = nudsptcpipv4.Value Or nudsptcpipv6.Value = nudspudpipv6.Value) And nudsptcpipv6.Value <> 0 Then
+        If (nudsptcpipv6.Value = nudspudpipv6.Value) And nudsptcpipv6.Value <> 0 And cmbxsniipv6.SelectedIndex > 0 Then
             nudsptcpipv6.BackColor = Color.Orange
             toret = False
         Else
@@ -398,4 +398,18 @@ Public NotInheritable Class Configure
         End If
         Return toret
     End Function
+
+    Private Sub cmbxsniipv4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxsniipv4.SelectedIndexChanged
+        If ue Then
+            wp.addEvent(New WorkerEvent(cmbxsniipv4, New Object() {Me}, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxsniipv4.SelectedIndex)))
+        End If
+        updprtchk()
+    End Sub
+
+    Private Sub cmbxsniipv6_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxsniipv6.SelectedIndexChanged
+        If ue Then
+            wp.addEvent(New WorkerEvent(cmbxsniipv6, New Object() {Me}, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxsniipv6.SelectedIndex)))
+        End If
+        updprtchk()
+    End Sub
 End Class

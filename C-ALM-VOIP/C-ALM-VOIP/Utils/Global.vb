@@ -53,7 +53,8 @@ Public Module [Global]
     'Config interface storage
     Public configfin As Boolean = True
 
-    Public Function resolve(addr As String, fam As AddressFamily) As IPAddress
+    Public Function resolve(addr As String, fam As AddressFamily) As IPAddress()
+        Dim toret As New List(Of IPAddress)
         Dim ipadd As IPAddress() = New IPAddress() {}
         Try
             ipadd = Dns.GetHostAddresses(addr)
@@ -63,9 +64,9 @@ Public Module [Global]
             Return Nothing
         End Try
         For Each ia As IPAddress In ipadd
-            If ia.AddressFamily = fam Then Return ia
+            If ia.AddressFamily = fam Then toret.Add(ia)
         Next
-        Return Nothing
+        Return toret.ToArray()
     End Function
 
     Public Function returnFirstItemOrNothing(Of t)(input As t()) As t

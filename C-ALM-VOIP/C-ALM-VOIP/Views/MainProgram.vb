@@ -140,13 +140,13 @@ Public NotInheritable Class MainProgram
                 If caddrbs.name = "" Then caddrbs.name = caddrbs.targetAddress & ":" & caddrbs.targetPort
                 If caddrbs.type = AddressableType.TCP Then
                     If caddrbs.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
-                        CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
+                        CType(caddrbs, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
                         Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name, caddrbs.messagePassMode)
                         tcpResvSetReg.Add(tpl)
                         Dim chk As Boolean = tcpmarshalIPv4.connect(caddrbs.targetAddress, caddrbs.targetPort)
                         If Not chk Then tcpResvSetReg.Remove(tpl)
                     ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 And Not tcpmarshalIPv6 Is Nothing Then
-                        CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
+                        CType(caddrbs, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
                         Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name, caddrbs.messagePassMode)
                         tcpResvSetReg.Add(tpl)
                         Dim chk As Boolean = tcpmarshalIPv6.connect(caddrbs.targetAddress, caddrbs.targetPort)
@@ -154,19 +154,31 @@ Public NotInheritable Class MainProgram
                     End If
                 ElseIf caddrbs.type = AddressableType.UDP Then
                     If caddrbs.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
-                        CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
+                        CType(caddrbs, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
                         If caddrbs.myAddress = "" Then caddrbs.myAddress = external_Address_IPv4
                         If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv4
                         Dim cl As New Client(caddrbs, udpmarshalIPv4)
                         clientreg.add(cl)
                         streamreg.add(cl.stream)
                     ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
-                        CType(caddrbs, Contact).targetAddress = resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
+                        CType(caddrbs, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
                         If caddrbs.myAddress = "" Then caddrbs.myAddress = external_Address_IPv6
                         If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv6
                         Dim cl As New Client(caddrbs, udpmarshalIPv6)
                         clientreg.add(cl)
                         streamreg.add(cl.stream)
+                    End If
+                ElseIf caddrbs.type = AddressableType.Block Then
+                    If caddrbs.targetIPVersion = IPVersion.IPv4 Then
+                        For Each c As IPAddress In resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork)
+                            Dim cl As New BlockClient(caddrbs, c.ToString())
+                            clientreg.add(cl)
+                        Next
+                    ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 Then
+                        For Each c As IPAddress In resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)
+                            Dim cl As New BlockClient(caddrbs, c.ToString())
+                            clientreg.add(cl)
+                        Next
                     End If
                 End If
                 editsuccess = False
@@ -183,7 +195,7 @@ Public NotInheritable Class MainProgram
             If clientreg.selectedIndices.Count > 0 Then
                 Dim cl As Client = clientreg(clientreg.selectedIndices(0))
                 Dim strm As Streamer = cl.stream
-                streamreg.remove(strm)
+                If Not strm Is Nothing Then streamreg.remove(strm)
                 cl.stop()
                 clientreg.remove(cl)
             End If
@@ -340,7 +352,7 @@ Public NotInheritable Class MainProgram
                 End While
                 If editsuccess Then
                     caddrbs.updateLVI(True)
-                    CType(caddrbs, Client).stream.updateLVI(True)
+                    If Not CType(caddrbs, Client).stream Is Nothing Then CType(caddrbs, Client).stream.updateLVI(True)
                     editsuccess = False
                 End If
                 ceditm = EditorMode.None
@@ -358,13 +370,13 @@ Public NotInheritable Class MainProgram
                 If cl.name = "" Then cl.name = cl.targetAddress & ":" & cl.targetPort
                 If cl.type = AddressableType.TCP Then
                     If cl.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
-                        CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
+                        CType(cl, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
                         Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(cl.targetAddress, cl.targetPort, cl.name, cl.messagePassMode)
                         tcpResvSetReg.Add(tpl)
                         Dim chk As Boolean = tcpmarshalIPv4.connect(cl.targetAddress, cl.targetPort)
                         If Not chk Then tcpResvSetReg.Remove(tpl)
                     ElseIf cl.targetIPVersion = IPVersion.IPv6 And Not tcpmarshalIPv6 Is Nothing Then
-                        CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
+                        CType(cl, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
                         Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(cl.targetAddress, cl.targetPort, cl.name, cl.messagePassMode)
                         tcpResvSetReg.Add(tpl)
                         Dim chk As Boolean = tcpmarshalIPv6.connect(cl.targetAddress, cl.targetPort)
@@ -372,19 +384,31 @@ Public NotInheritable Class MainProgram
                     End If
                 ElseIf cl.type = AddressableType.UDP Then
                     If cl.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
-                        CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork).ToString()
+                        CType(cl, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
                         If cl.myAddress = "" Then cl.myAddress = external_Address_IPv4
                         If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv4
                         Dim cl2 As New Client(cl, udpmarshalIPv4)
                         clientreg.add(cl2)
                         streamreg.add(cl2.stream)
                     ElseIf cl.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
-                        CType(cl, Contact).targetAddress = resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6).ToString()
+                        CType(cl, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
                         If cl.myAddress = "" Then cl.myAddress = external_Address_IPv6
                         If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv6
                         Dim cl2 As New Client(cl, udpmarshalIPv6)
                         clientreg.add(cl2)
                         streamreg.add(cl2.stream)
+                    End If
+                ElseIf cl.type = AddressableType.Block Then
+                    If cl.targetIPVersion = IPVersion.IPv4 Then
+                        For Each c As IPAddress In resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork)
+                            Dim cl2 As New BlockClient(cl, c.ToString())
+                            clientreg.add(cl2)
+                        Next
+                    ElseIf cl.targetIPVersion = IPVersion.IPv6 Then
+                        For Each c As IPAddress In resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)
+                            Dim cl2 As New BlockClient(cl, c.ToString())
+                            clientreg.add(cl2)
+                        Next
                     End If
                 End If
             End If
@@ -396,24 +420,34 @@ Public NotInheritable Class MainProgram
         micVOIP = New VOIPSender() With {.samplebuffersize = samplerate * (buffmdmsecs / 1000) * 2}
         spkVOIP = New VOIPReceiver()
         If Not selected_interfaceIPv4.Equals(IPAddress.None) Then
-            tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = TCP_beat_timeout, .serializer = gserializer, .bufferSize = 65000}
-            udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4) With {.serializer = gserializer, .bufferSize = 65000}
-            AddHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
-            AddHandler tcpmarshalIPv4.clientDisconnected, AddressOf discon
-            AddHandler udpmarshalIPv4.MessageReceived, AddressOf msgRecIPv4
-            tcpmarshalIPv4.start()
-            udpmarshalIPv4.start()
-            InListening = True
+            If port_TCP_IPv4 <> 0 Then
+                tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = TCP_beat_timeout, .serializer = gserializer, .bufferSize = 65000}
+                AddHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
+                AddHandler tcpmarshalIPv4.clientDisconnected, AddressOf discon
+                tcpmarshalIPv4.start()
+                InListening = True
+            End If
+            If port_UDP_IPv4 <> 0 Then
+                udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4) With {.serializer = gserializer, .bufferSize = 65000}
+                AddHandler udpmarshalIPv4.MessageReceived, AddressOf msgRecIPv4
+                udpmarshalIPv4.start()
+                InListening = True
+            End If
         End If
         If Not selected_interfaceIPv6 Is Nothing Then
-            tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = TCP_beat_timeout, .serializer = gserializer, .bufferSize = 65000}
-            udpmarshalIPv6 = New NetMarshalUDP(selected_interfaceIPv6, port_UDP_IPv6) With {.serializer = gserializer, .bufferSize = 65000}
-            AddHandler tcpmarshalIPv6.clientConnected, AddressOf conIPv6
-            AddHandler tcpmarshalIPv6.clientDisconnected, AddressOf discon
-            AddHandler udpmarshalIPv6.MessageReceived, AddressOf msgRecIPv6
-            tcpmarshalIPv6.start()
-            udpmarshalIPv6.start()
-            InListening = True
+            If port_TCP_IPv6 <> 0 Then
+                tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = TCP_beat_timeout, .serializer = gserializer, .bufferSize = 65000}
+                AddHandler tcpmarshalIPv6.clientConnected, AddressOf conIPv6
+                AddHandler tcpmarshalIPv6.clientDisconnected, AddressOf discon
+                tcpmarshalIPv6.start()
+                InListening = True
+            End If
+            If port_UDP_IPv6 <> 0 Then
+                udpmarshalIPv6 = New NetMarshalUDP(selected_interfaceIPv6, port_UDP_IPv6) With {.serializer = gserializer, .bufferSize = 65000}
+                AddHandler udpmarshalIPv6.MessageReceived, AddressOf msgRecIPv6
+                udpmarshalIPv6.start()
+                InListening = True
+            End If
         End If
         streamreg.add(micVOIP.streamer)
         If InListening Then
@@ -480,7 +514,7 @@ Public NotInheritable Class MainProgram
         Else
             Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(msg.senderIP, msg.senderPort)))
             If cl Is Nothing Then
-                cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork).ToString(), msg.senderPort, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv4) With {.myAddress = external_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
+                cl = New Client(New Contact(returnFirstItemOrNothing(Of IPAddress)(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork)).ToString(), msg.senderPort, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv4) With {.myAddress = external_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
                 clientreg.add(cl)
                 cl.forceReceive(msg)
                 streamreg.add(cl.stream)
@@ -494,7 +528,7 @@ Public NotInheritable Class MainProgram
         Else
             Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(msg.senderIP, msg.senderPort)))
             If cl Is Nothing Then
-                cl = New Client(New Contact(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6).ToString(), msg.senderPort, IPVersion.IPv6, AddressableType.UDP), udpmarshalIPv6) With {.myAddress = external_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
+                cl = New Client(New Contact(returnFirstItemOrNothing(Of IPAddress)(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6)).ToString(), msg.senderPort, IPVersion.IPv6, AddressableType.UDP), udpmarshalIPv6) With {.myAddress = external_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
                 clientreg.add(cl)
                 cl.forceReceive(msg)
                 streamreg.add(cl.stream)
