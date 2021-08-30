@@ -69,11 +69,12 @@ Public Class GlobalSettings
     Public Sub load(data As String)
         setupGS()
         Dim setting As GlobalSettings = settings.gserializer.deSerialize(Of GlobalSettings)(data)
-        takeACopy(setting)
+        If Not setting Is Nothing Then takeACopy(setting)
         setting = Nothing
     End Sub
 
     Public Sub load(toDuplicate As GlobalSettings)
+        If toDuplicate Is Nothing Then Return
         takeACopy(toDuplicate)
     End Sub
 

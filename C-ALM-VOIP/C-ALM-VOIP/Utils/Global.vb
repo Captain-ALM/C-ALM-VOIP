@@ -2,6 +2,7 @@
 Imports captainalm.CALMNetMarshal
 Imports System.Net.Sockets
 Imports captainalm.Serialize
+Imports System.IO
 
 Public Module [Global]
     'Global Information
@@ -54,6 +55,43 @@ Public Module [Global]
     Public Function returnFirstItemOrNothing(Of t)(input As t()) As t
         If input Is Nothing OrElse input.Length < 1 Then Return Nothing Else Return input(0)
     End Function
+
+    Public Function loadSettings() As GlobalSettings
+        Dim toret As New GlobalSettings()
+        Try
+            toret.load(File.ReadAllText(settingsStoreLoc))
+        Catch ex As IOException
+            toret = New GlobalSettings()
+        End Try
+        Return toret
+    End Function
+
+    Public Sub saveSettings(setIn As GlobalSettings)
+        If setIn Is Nothing Then Return
+        Try
+            File.WriteAllText(settingsStoreLoc, setIn.save())
+        Catch ex As IOException
+        End Try
+    End Sub
+
+    Public Function loadContacts() As Contacts
+        Dim toret As New Contacts()
+        Try
+            toret = Contacts.load(File.ReadAllText(contactStoreLoc))
+            If toret Is Nothing Then toret = New Contacts()
+        Catch ex As IOException
+            toret = New Contacts()
+        End Try
+        Return toret
+    End Function
+
+    Public Sub saveContacts(csIn As Contacts)
+        If csIn Is Nothing Then Return
+        Try
+            File.WriteAllText(contactStoreLoc, csIn.save())
+        Catch ex As IOException
+        End Try
+    End Sub
 End Module
 
 Public Enum EditorMode As Integer

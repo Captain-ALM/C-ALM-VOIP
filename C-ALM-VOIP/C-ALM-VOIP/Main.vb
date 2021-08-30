@@ -14,10 +14,13 @@ Module Main
     Public Const quote As Char = """c"
     Public programAssembly As Assembly = Assembly.GetEntryAssembly()
     Public programPath As String = programAssembly.Location
+    Public programName As String = Path.GetFileNameWithoutExtension(programPath)
     Public execdir As String = Path.GetDirectoryName(programPath)
     Public worker As WorkerPump = Nothing
     Public forms As New List(Of Form)
     Public parsers As New List(Of IEventParser)
+    Public contactStoreLoc As String = execdir & "\" + programName & ".contacts"
+    Public settingsStoreLoc As String = execdir & "\" + programName & ".settings"
 
     Public Sub main()
         Try
@@ -56,6 +59,22 @@ Module Main
             End If
         Catch ex As IOException
         End Try
+
+        Dim args As String() = Environment.GetCommandLineArgs()
+        If args.Length > 1 Then
+            For i As Integer = 1 To args.Length - 1 Step 1
+                Try
+                    If File.Exists(args(i)) Then
+                        If Path.GetExtension(args(i)) = ".contacts" Then
+                            contactStoreLoc = args(i)
+                        ElseIf Path.GetExtension(args(i)) = ".settings" Then
+                            settingsStoreLoc = args(i)
+                        End If
+                    End If
+                Catch ex As IOException
+                End Try
+            Next
+        End If
 
         worker = New WorkerPump()
         AddHandler worker.OnPumpException, AddressOf ope

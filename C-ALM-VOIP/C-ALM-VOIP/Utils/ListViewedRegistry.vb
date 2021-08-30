@@ -103,4 +103,10 @@
             Next
         End SyncLock
     End Sub
+
+    Public ReadOnly Property internalList As SyncLockedList(Of t)
+        Get
+            Return backedList
+        End Get
+    End Property
 End Class

@@ -62,6 +62,20 @@ Public NotInheritable Class MainProgram
         clientreg = New ListViewedRegistry(Of Client)(ListViewcl)
         contactreg = New ListViewedRegistry(Of Contact)(ListViewcl2)
         streamreg = New ListViewedRegistry(Of Streamer)(ListViewsc)
+        settings = loadSettings()
+        lContacts()
+    End Sub
+
+    Private Sub lContacts()
+        Dim cs As Contact() = loadContacts().contacts
+        contactreg.clear()
+        For Each c As Contact In cs
+            addContact(c)
+        Next
+    End Sub
+
+    Private Sub sContacts()
+        saveContacts(New Contacts() With {.contacts = contactreg.internalList.toArray()})
     End Sub
 
     Private Sub MainProgram_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
@@ -103,6 +117,7 @@ Public NotInheritable Class MainProgram
                 While Not configfin
                     Threading.Thread.Sleep(125)
                 End While
+                saveSettings(settings)
             End If
             wp.addEvent(New WorkerEvent(butrconf, New Object() {Me}, ETs.Click, e))
         End If
@@ -311,6 +326,8 @@ Public NotInheritable Class MainProgram
     'Marshal Management
 
     Private Sub engage()
+        saveSettings(settings)
+        lContacts()
         micVOIP = New VOIPSender() With {.samplebuffersize = settings.samplerate * (settings.buffmdmsecs / 1000) * 2}
         spkVOIP = New VOIPReceiver()
         If Not settings.selected_interfaceIPv4.Equals(IPAddress.None) Then
@@ -379,6 +396,8 @@ Public NotInheritable Class MainProgram
         micVOIP = Nothing
         spkVOIP.Dispose()
         spkVOIP = Nothing
+        settings = loadSettings()
+        sContacts()
     End Sub
 
     Private Function terminateMarshal(marshalIn As NetMarshalBase) As NetMarshalBase

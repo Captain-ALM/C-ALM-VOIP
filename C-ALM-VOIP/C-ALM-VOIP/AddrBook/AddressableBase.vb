@@ -42,7 +42,7 @@ Public MustInherit Class AddressableBase
             _name = value
         End Set
     End Property
-
+    <Xml.Serialization.XmlIgnore>
     Public Overridable Property targetAddress As String
         Get
             Return _targaddress
@@ -51,7 +51,7 @@ Public MustInherit Class AddressableBase
             _targaddress = value
         End Set
     End Property
-
+    <Xml.Serialization.XmlIgnore>
     Public Overridable Property targetPort As Integer
         Get
             Return _targport
@@ -98,7 +98,7 @@ Public MustInherit Class AddressableBase
             _advport = value
         End Set
     End Property
-
+    <Xml.Serialization.XmlIgnore>
     Public Overridable Property type As AddressableType
         Get
             Return _type
@@ -107,7 +107,7 @@ Public MustInherit Class AddressableBase
             _type = value
         End Set
     End Property
-
+    <Xml.Serialization.XmlIgnore>
     Public Overridable Property targetIPVersion As IPVersion
         Get
             Return _targver
