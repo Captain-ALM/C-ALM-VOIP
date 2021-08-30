@@ -137,50 +137,7 @@ Public NotInheritable Class MainProgram
                 Threading.Thread.Sleep(125)
             End While
             If editsuccess Then
-                If caddrbs.name = "" Then caddrbs.name = caddrbs.targetAddress & ":" & caddrbs.targetPort
-                If caddrbs.type = AddressableType.TCP Then
-                    If caddrbs.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
-                        CType(caddrbs, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
-                        Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name, caddrbs.messagePassMode)
-                        tcpResvSetReg.Add(tpl)
-                        Dim chk As Boolean = tcpmarshalIPv4.connect(caddrbs.targetAddress, caddrbs.targetPort)
-                        If Not chk Then tcpResvSetReg.Remove(tpl)
-                    ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 And Not tcpmarshalIPv6 Is Nothing Then
-                        CType(caddrbs, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
-                        Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(caddrbs.targetAddress, caddrbs.targetPort, caddrbs.name, caddrbs.messagePassMode)
-                        tcpResvSetReg.Add(tpl)
-                        Dim chk As Boolean = tcpmarshalIPv6.connect(caddrbs.targetAddress, caddrbs.targetPort)
-                        If Not chk Then tcpResvSetReg.Remove(tpl)
-                    End If
-                ElseIf caddrbs.type = AddressableType.UDP Then
-                    If caddrbs.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
-                        CType(caddrbs, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
-                        If caddrbs.myAddress = "" Then caddrbs.myAddress = external_Address_IPv4
-                        If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv4
-                        Dim cl As New Client(caddrbs, udpmarshalIPv4)
-                        clientreg.add(cl)
-                        streamreg.add(cl.stream)
-                    ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
-                        CType(caddrbs, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
-                        If caddrbs.myAddress = "" Then caddrbs.myAddress = external_Address_IPv6
-                        If caddrbs.myPort = 0 Then caddrbs.myPort = external_UDP_Port_IPv6
-                        Dim cl As New Client(caddrbs, udpmarshalIPv6)
-                        clientreg.add(cl)
-                        streamreg.add(cl.stream)
-                    End If
-                ElseIf caddrbs.type = AddressableType.Block Then
-                    If caddrbs.targetIPVersion = IPVersion.IPv4 Then
-                        For Each c As IPAddress In resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetwork)
-                            Dim cl As New BlockClient(caddrbs, c.ToString())
-                            clientreg.add(cl)
-                        Next
-                    ElseIf caddrbs.targetIPVersion = IPVersion.IPv6 Then
-                        For Each c As IPAddress In resolve(caddrbs.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)
-                            Dim cl As New BlockClient(caddrbs, c.ToString())
-                            clientreg.add(cl)
-                        Next
-                    End If
-                End If
+                generateClient(caddrbs)
                 editsuccess = False
             End If
             ceditm = EditorMode.None
@@ -193,11 +150,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             clientreg.updateCachedIndices()
             If clientreg.selectedIndices.Count > 0 Then
-                Dim cl As Client = clientreg(clientreg.selectedIndices(0))
-                Dim strm As Streamer = cl.stream
-                If Not strm Is Nothing Then streamreg.remove(strm)
-                cl.stop()
-                clientreg.remove(cl)
+                removeClient(clientreg(clientreg.selectedIndices(0)), True, True)
             End If
             wp.addEvent(New WorkerEvent(butclrem, New Object() {Me}, ETs.Click, e))
         End If
@@ -206,24 +159,14 @@ Public NotInheritable Class MainProgram
     Private Sub butclcreatec_Click(sender As Object, e As EventArgs) Handles butclcreatec.Click
         If ue Then
             clientreg.updateCachedIndices()
-            If clientreg.selectedIndices.Count > 0 Then
-                Dim cl As Client = clientreg(clientreg.selectedIndices(0))
-                Dim ab As AddressableBase = cl.duplicateToNew()
-                contactreg.add(ab)
-            End If
+            If clientreg.selectedIndices.Count > 0 Then addContact(clientreg(clientreg.selectedIndices(0)).duplicateToNew())
             wp.addEvent(New WorkerEvent(butclcreatec, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butclccls_Click(sender As Object, e As EventArgs) Handles butclccls.Click
         If ue Then
-            For i As Integer = clientreg.count - 1 To 0 Step -1
-                Dim c As Client = clientreg(i)
-                If Not c.stream Is Nothing Then _
-                    streamreg.remove(c.stream)
-                c.stop()
-                clientreg.remove(c)
-            Next
+            clearAllClients()
             wp.addEvent(New WorkerEvent(butclccls, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
@@ -239,7 +182,7 @@ Public NotInheritable Class MainProgram
             End While
             If editsuccess Then
                 If caddrbs.name = "" Then caddrbs.name = caddrbs.targetAddress & ":" & caddrbs.targetPort
-                contactreg.add(caddrbs)
+                addContact(caddrbs)
                 editsuccess = False
             End If
             ceditm = EditorMode.None
@@ -252,8 +195,7 @@ Public NotInheritable Class MainProgram
         If ue Then
             contactreg.updateCachedIndices()
             If contactreg.selectedIndices.Count > 0 Then
-                Dim cl As Contact = contactreg(contactreg.selectedIndices(0))
-                contactreg.remove(cl)
+                contactreg.remove(contactreg(contactreg.selectedIndices(0)))
             End If
             wp.addEvent(New WorkerEvent(butcl2rem, New Object() {Me}, ETs.Click, e))
         End If
@@ -301,20 +243,14 @@ Public NotInheritable Class MainProgram
 
     Private Sub butscmutes_Click(sender As Object, e As EventArgs) Handles butscmutes.Click
         If ue Then
-            streamreg.updateCachedIndices()
-            If streamreg.selectedIndices.Count > 0 Then
-                mmuteStreamer(streamreg(streamreg.selectedIndices(0)), True)
-            End If
+            muteSelectedStreamer(True)
             wp.addEvent(New WorkerEvent(butscmutes, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
 
     Private Sub butscunmutes_Click(sender As Object, e As EventArgs) Handles butscunmutes.Click
         If ue Then
-            streamreg.updateCachedIndices()
-            If streamreg.selectedIndices.Count > 0 Then
-                mmuteStreamer(streamreg(streamreg.selectedIndices(0)), False)
-            End If
+            muteSelectedStreamer(False)
             wp.addEvent(New WorkerEvent(butscunmutes, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
@@ -366,55 +302,13 @@ Public NotInheritable Class MainProgram
         If ue Then
             contactreg.updateCachedIndices()
             If contactreg.selectedIndices.Count > 0 Then
-                Dim cl As Contact = contactreg(contactreg.selectedIndices(0))
-                If cl.name = "" Then cl.name = cl.targetAddress & ":" & cl.targetPort
-                If cl.type = AddressableType.TCP Then
-                    If cl.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
-                        CType(cl, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
-                        Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(cl.targetAddress, cl.targetPort, cl.name, cl.messagePassMode)
-                        tcpResvSetReg.Add(tpl)
-                        Dim chk As Boolean = tcpmarshalIPv4.connect(cl.targetAddress, cl.targetPort)
-                        If Not chk Then tcpResvSetReg.Remove(tpl)
-                    ElseIf cl.targetIPVersion = IPVersion.IPv6 And Not tcpmarshalIPv6 Is Nothing Then
-                        CType(cl, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
-                        Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(cl.targetAddress, cl.targetPort, cl.name, cl.messagePassMode)
-                        tcpResvSetReg.Add(tpl)
-                        Dim chk As Boolean = tcpmarshalIPv6.connect(cl.targetAddress, cl.targetPort)
-                        If Not chk Then tcpResvSetReg.Remove(tpl)
-                    End If
-                ElseIf cl.type = AddressableType.UDP Then
-                    If cl.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
-                        CType(cl, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
-                        If cl.myAddress = "" Then cl.myAddress = external_Address_IPv4
-                        If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv4
-                        Dim cl2 As New Client(cl, udpmarshalIPv4)
-                        clientreg.add(cl2)
-                        streamreg.add(cl2.stream)
-                    ElseIf cl.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
-                        CType(cl, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
-                        If cl.myAddress = "" Then cl.myAddress = external_Address_IPv6
-                        If cl.myPort = 0 Then cl.myPort = external_UDP_Port_IPv6
-                        Dim cl2 As New Client(cl, udpmarshalIPv6)
-                        clientreg.add(cl2)
-                        streamreg.add(cl2.stream)
-                    End If
-                ElseIf cl.type = AddressableType.Block Then
-                    If cl.targetIPVersion = IPVersion.IPv4 Then
-                        For Each c As IPAddress In resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetwork)
-                            Dim cl2 As New BlockClient(cl, c.ToString())
-                            clientreg.add(cl2)
-                        Next
-                    ElseIf cl.targetIPVersion = IPVersion.IPv6 Then
-                        For Each c As IPAddress In resolve(cl.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)
-                            Dim cl2 As New BlockClient(cl, c.ToString())
-                            clientreg.add(cl2)
-                        Next
-                    End If
-                End If
+                generateClient(contactreg(contactreg.selectedIndices(0)))
             End If
             wp.addEvent(New WorkerEvent(butcl2cc, New Object() {Me}, ETs.Click, e))
         End If
     End Sub
+
+    'Marshal Management
 
     Private Sub engage()
         micVOIP = New VOIPSender() With {.samplebuffersize = samplerate * (buffmdmsecs / 1000) * 2}
@@ -459,54 +353,40 @@ Public NotInheritable Class MainProgram
 
     Private Sub disengage()
         streamreg.remove(micVOIP.streamer)
-        For i As Integer = clientreg.count - 1 To 0 Step -1
-            Dim c As Client = clientreg(i)
-            If Not c.stream Is Nothing Then _
-                streamreg.remove(c.stream)
-            c.stop()
-            clientreg.remove(c)
-        Next
+        clearAllClients()
         streamreg.clear()
         clientreg.clear()
         If Not tcpmarshalIPv4 Is Nothing Then
             RemoveHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
             RemoveHandler tcpmarshalIPv4.clientDisconnected, AddressOf discon
-            If tcpmarshalIPv4.ready Then
-                tcpmarshalIPv4.close()
-            End If
-            tcpmarshalIPv4 = Nothing
-            InListening = False
+            tcpmarshalIPv4 = terminateMarshal(tcpmarshalIPv4)
         End If
         If Not tcpmarshalIPv6 Is Nothing Then
             RemoveHandler tcpmarshalIPv6.clientConnected, AddressOf conIPv6
             RemoveHandler tcpmarshalIPv6.clientDisconnected, AddressOf discon
-            If tcpmarshalIPv6.ready Then
-                tcpmarshalIPv6.close()
-            End If
-            tcpmarshalIPv6 = Nothing
-            InListening = False
+            tcpmarshalIPv6 = terminateMarshal(tcpmarshalIPv6)
         End If
         If Not udpmarshalIPv4 Is Nothing Then
             RemoveHandler udpmarshalIPv4.MessageReceived, AddressOf msgRecIPv4
-            If udpmarshalIPv4.ready Then
-                udpmarshalIPv4.close()
-            End If
-            udpmarshalIPv4 = Nothing
-            InListening = False
+            udpmarshalIPv4 = terminateMarshal(udpmarshalIPv4)
         End If
         If Not udpmarshalIPv6 Is Nothing Then
             RemoveHandler udpmarshalIPv6.MessageReceived, AddressOf msgRecIPv6
-            If udpmarshalIPv6.ready Then
-                udpmarshalIPv6.close()
-            End If
-            udpmarshalIPv6 = Nothing
-            InListening = False
+            udpmarshalIPv6 = terminateMarshal(udpmarshalIPv6)
         End If
+        InListening = False
         micVOIP.Dispose()
         micVOIP = Nothing
         spkVOIP.Dispose()
         spkVOIP = Nothing
     End Sub
+
+    Private Function terminateMarshal(marshalIn As NetMarshalBase) As NetMarshalBase
+        If marshalIn.ready Then marshalIn.close()
+        Return Nothing
+    End Function
+
+    'Connection Management
 
     Private Sub msgRecIPv4(msg As IPacket)
         If Me.InvokeRequired Then
@@ -515,9 +395,7 @@ Public NotInheritable Class MainProgram
             Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(msg.senderIP, msg.senderPort)))
             If cl Is Nothing Then
                 cl = New Client(New Contact(returnFirstItemOrNothing(Of IPAddress)(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork)).ToString(), msg.senderPort, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv4) With {.myAddress = external_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
-                clientreg.add(cl)
-                cl.forceReceive(msg)
-                streamreg.add(cl.stream)
+                addClient(cl, msg)
             End If
         End If
     End Sub
@@ -529,93 +407,129 @@ Public NotInheritable Class MainProgram
             Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(msg.senderIP, msg.senderPort)))
             If cl Is Nothing Then
                 cl = New Client(New Contact(returnFirstItemOrNothing(Of IPAddress)(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6)).ToString(), msg.senderPort, IPVersion.IPv6, AddressableType.UDP), udpmarshalIPv6) With {.myAddress = external_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
-                clientreg.add(cl)
-                cl.forceReceive(msg)
-                streamreg.add(cl.stream)
+                addClient(cl, msg)
+            End If
+        End If
+    End Sub
+
+    Private Sub con(ip As String, port As Integer, ipv As IPVersion)
+        Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port)))
+        If cl Is Nothing Then
+            Dim clm As NetMarshalTCPClient = Nothing
+            If ipv = IPVersion.IPv6 Then clm = tcpmarshalIPv6.client(ip, port) Else clm = tcpmarshalIPv4.client(ip, port)
+            If Not clm.internalSocket Is Nothing AndAlso clm.ready Then
+                Dim lip As String = CType(clm.internalSocket, NetTCPClient).listenerIPAddress
+                Dim lport As Integer = CType(clm.internalSocket, NetTCPClient).listenerPort
+                Dim rip As String = CType(clm.internalSocket, NetTCPClient).remoteIPAddress
+                Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
+                Dim llip As String = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localIPAddress
+                Dim llport As Integer = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localPort
+                If ipv = IPVersion.IPv6 Then
+                    llip = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localIPAddress
+                    llport = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localPort
+                End If
+                Dim tnom As String = getResvSetName(lip, lport)
+                Dim mpm As voip.MessagePassMode = getResvSetPM(lip, lport)
+                If tnom <> "" Then remResvSet(lip, lport)
+                If lip = llip And lport = llport Then
+                    cl = New Client(New Contact(rip, rport, ipv, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
+                Else
+                    If tnom = "" Then
+                        tnom = rip & ":" & rport
+                    End If
+                    cl = New Client(New Contact(lip, lport, ipv, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
+                End If
+                addClient(cl, Nothing)
             End If
         End If
     End Sub
 
     Private Sub conIPv4(ip As String, port As Integer)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() conIPv4(ip, port))
-        Else
-            Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port)))
-            If cl Is Nothing Then
-                Dim clm As NetMarshalTCPClient = tcpmarshalIPv4.client(ip, port)
-                If Not clm.internalSocket Is Nothing AndAlso clm.ready Then
-                    Dim lip As String = CType(clm.internalSocket, NetTCPClient).listenerIPAddress
-                    Dim lport As Integer = CType(clm.internalSocket, NetTCPClient).listenerPort
-                    Dim rip As String = CType(clm.internalSocket, NetTCPClient).remoteIPAddress
-                    Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
-                    Dim llip As String = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localIPAddress
-                    Dim llport As Integer = CType(tcpmarshalIPv4.internalSocket, NetTCPListener).localPort
-                    Dim tnom As String = getResvSetName(lip, lport)
-                    Dim mpm As voip.MessagePassMode = getResvSetPM(lip, lport)
-                    If tnom <> "" Then remResvSet(lip, lport)
-                    If lip = llip And lport = llport Then
-                        cl = New Client(New Contact(rip, rport, IPVersion.IPv4, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
-                    Else
-                        If tnom = "" Then
-                            tnom = rip & ":" & rport
-                        End If
-                        cl = New Client(New Contact(lip, lport, IPVersion.IPv4, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
-                    End If
-                    clientreg.add(cl)
-                    streamreg.add(cl.stream)
-                End If
-            End If
-        End If
+        If Me.InvokeRequired Then Me.Invoke(Sub() con(ip, port, IPVersion.IPv4)) Else con(ip, port, IPVersion.IPv4)
     End Sub
 
     Private Sub conIPv6(ip As String, port As Integer)
-        If Me.InvokeRequired Then
-            Me.Invoke(Sub() conIPv6(ip, port))
-        Else
-            Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port)))
-            If cl Is Nothing Then
-                Dim clm As NetMarshalTCPClient = tcpmarshalIPv6.client(ip, port)
-                If Not clm.internalSocket Is Nothing AndAlso clm.ready Then
-                    Dim lip As String = CType(clm.internalSocket, NetTCPClient).listenerIPAddress
-                    Dim lport As Integer = CType(clm.internalSocket, NetTCPClient).listenerPort
-                    Dim rip As String = CType(clm.internalSocket, NetTCPClient).remoteIPAddress
-                    Dim rport As String = CType(clm.internalSocket, NetTCPClient).remotePort
-                    Dim llip As String = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localIPAddress
-                    Dim llport As Integer = CType(tcpmarshalIPv6.internalSocket, NetTCPListener).localPort
-                    Dim tnom As String = getResvSetName(lip, lport)
-                    Dim mpm As voip.MessagePassMode = getResvSetPM(lip, lport)
-                    If tnom <> "" Then remResvSet(lip, lport)
-                    If lip = llip And lport = llport Then
-                        cl = New Client(New Contact(rip, rport, IPVersion.IPv6, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = rip & ":" & rport, .myAddress = rip, .myPort = rport}
-                    Else
-                        If tnom = "" Then
-                            tnom = rip & ":" & rport
-                        End If
-                        cl = New Client(New Contact(lip, lport, IPVersion.IPv4, AddressableType.TCP) With {.messagePassMode = mpm}, clm) With {.name = tnom, .myAddress = rip, .myPort = rport}
-                    End If
-                    clientreg.add(cl)
-                    streamreg.add(cl.stream)
-                End If
-            End If
-        End If
+        If Me.InvokeRequired Then Me.Invoke(Sub() con(ip, port, IPVersion.IPv6)) Else con(ip, port, IPVersion.IPv6)
     End Sub
 
     Private Sub discon(ip As String, port As Integer)
         If Me.InvokeRequired Then
             Me.Invoke(Sub() discon(ip, port))
         Else
-            Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port)))
-            If cl IsNot Nothing Then
-                Dim strm As Streamer = cl.stream
-                If Not strm Is Nothing Then _
-                    streamreg.remove(strm)
-                If TCP_remove_disconnected_clients Then
-                    clientreg.remove(cl)
-                Else
-                    cl.updateLVI(True)
-                End If
+            removeClient(returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port))), TCP_remove_disconnected_clients, False)
+        End If
+    End Sub
+
+    'Client Management
+
+    Private Sub generateClient(adbIn As AddressableBase)
+        If adbIn.name = "" Then adbIn.name = adbIn.targetAddress & ":" & adbIn.targetPort
+        If adbIn.type <> AddressableType.Block Then
+            If adbIn.targetIPVersion = IPVersion.IPv6 Then
+                CType(adbIn, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(adbIn.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6)).ToString()
+            Else
+                CType(adbIn, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(adbIn.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
             End If
         End If
+        If clientreg.find(New MClient(adbIn.targetAddress, adbIn.targetPort)).Length <> 0 Then Return
+        If adbIn.type = AddressableType.TCP Then
+            If adbIn.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
+                Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(adbIn.targetAddress, adbIn.targetPort, adbIn.name, adbIn.messagePassMode)
+                tcpResvSetReg.Add(tpl)
+                If Not tcpmarshalIPv4.connect(adbIn.targetAddress, adbIn.targetPort) Then tcpResvSetReg.Remove(tpl)
+            ElseIf adbIn.targetIPVersion = IPVersion.IPv6 And Not tcpmarshalIPv6 Is Nothing Then
+                Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(adbIn.targetAddress, adbIn.targetPort, adbIn.name, adbIn.messagePassMode)
+                tcpResvSetReg.Add(tpl)
+                If Not tcpmarshalIPv6.connect(adbIn.targetAddress, adbIn.targetPort) Then tcpResvSetReg.Remove(tpl)
+            End If
+        ElseIf adbIn.type = AddressableType.UDP Then
+            If adbIn.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
+                If adbIn.myAddress = "" Then adbIn.myAddress = external_Address_IPv4
+                If adbIn.myPort = 0 Then adbIn.myPort = external_UDP_Port_IPv4
+                addClient(New Client(adbIn, udpmarshalIPv4), Nothing)
+            ElseIf adbIn.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
+                If adbIn.myAddress = "" Then adbIn.myAddress = external_Address_IPv6
+                If adbIn.myPort = 0 Then adbIn.myPort = external_UDP_Port_IPv6
+                addClient(New Client(adbIn, udpmarshalIPv6), Nothing)
+            End If
+        ElseIf adbIn.type = AddressableType.Block Then
+            Dim arr As IPAddress() = Nothing
+            If adbIn.targetIPVersion = IPVersion.IPv6 Then arr = resolve(adbIn.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6) Else arr = resolve(adbIn.targetAddress, Net.Sockets.AddressFamily.InterNetwork)
+            For Each c As IPAddress In arr
+                addClient(New BlockClient(adbIn, c.ToString()), Nothing)
+            Next
+        End If
+    End Sub
+
+    Private Sub addClient(clIn As Client, forceData As IPacket)
+        If clientreg.find(New MClient(clIn.targetAddress, clIn.targetPort)).Length = 0 Then
+            clientreg.add(clIn)
+            If Not forceData Is Nothing Then clIn.forceReceive(forceData)
+            If Not clIn.stream Is Nothing Then streamreg.add(clIn.stream)
+        End If
+    End Sub
+
+    Private Sub addContact(adbIn As AddressableBase)
+        If contactreg.find(New MContact(adbIn.targetAddress, adbIn.targetPort, adbIn.type)).Length = 0 Then contactreg.add(adbIn)
+    End Sub
+
+    Private Sub removeClient(cl As Client, removeClient As Boolean, stopClient As Boolean)
+        If cl IsNot Nothing Then
+            Dim strm As Streamer = cl.stream
+            If Not strm Is Nothing Then streamreg.remove(strm)
+            If stopClient Then cl.stop()
+            If removeClient Then
+                clientreg.remove(cl)
+            Else
+                cl.updateLVI(True)
+            End If
+        End If
+    End Sub
+
+    Private Sub clearAllClients()
+        For i As Integer = clientreg.count - 1 To 0 Step -1
+            removeClient(clientreg(i), True, True)
+        Next
     End Sub
 
     'TCP Client Reserved Settings Management
@@ -653,6 +567,13 @@ Public NotInheritable Class MainProgram
     End Sub
 
     'Audio Management
+
+    Private Sub muteSelectedStreamer(isMuted As Boolean)
+        streamreg.updateCachedIndices()
+        If streamreg.selectedIndices.Count > 0 Then
+            mmuteStreamer(streamreg(streamreg.selectedIndices(0)), isMuted)
+        End If
+    End Sub
 
     Private Sub mmuteStreamer(strm As Streamer, isMuted As Boolean)
         strm.muted = isMuted

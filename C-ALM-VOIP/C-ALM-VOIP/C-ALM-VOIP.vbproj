@@ -84,9 +84,11 @@
   <ItemGroup>
     <Compile Include="AddrBook\BlockClient.vb" />
     <Compile Include="Utils\IListViewable.vb" />
-    <Compile Include="Utils\IMatcher.vb" />
+    <Compile Include="Utils\Matchers\IMatcher.vb" />
     <Compile Include="Utils\ListViewedRegistry.vb" />
-    <Compile Include="Utils\MClient.vb" />
+    <Compile Include="Utils\Matchers\MClient.vb" />
+    <Compile Include="Utils\Matchers\MAddressableBase.vb" />
+    <Compile Include="Utils\Matchers\MContact.vb" />
     <Compile Include="Views\AboutBx.designer.vb">
       <DependentUpon>AboutBx.vb</DependentUpon>
     </Compile>
