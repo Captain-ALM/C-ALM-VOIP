@@ -10,6 +10,8 @@ Public Module [Global]
     'Global IP Interface Cache
     Public _IPv4Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
     Public _IPv6Interfaces As New SyncLockedList(Of Tuple(Of String, IPAddress))
+    'Global Storage Serializer
+    Public sserializer As ISerialize = New XSerializer()
     'Global Options
     Public settings As GlobalSettings = New GlobalSettings()
     'Global marshals, VOIP units and status
