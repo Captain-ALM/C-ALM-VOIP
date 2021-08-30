@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AddrBook\BlockClient.vb" />
+    <Compile Include="Utils\GlobalSettings.vb" />
     <Compile Include="Utils\IListViewable.vb" />
     <Compile Include="Utils\Matchers\IMatcher.vb" />
     <Compile Include="Utils\ListViewedRegistry.vb" />

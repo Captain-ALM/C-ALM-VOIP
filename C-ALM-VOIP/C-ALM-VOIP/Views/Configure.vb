@@ -94,7 +94,7 @@ Public NotInheritable Class Configure
                 cmbxsniipv4.Items.Add(c.Item1 & " - " & c.Item2.ToString())
             End If
         Next
-        Dim ioi4 As Integer = indexOfIP(selected_interfaceIPv4, _IPv4Interfaces)
+        Dim ioi4 As Integer = indexOfIP(settings.selected_interfaceIPv4, _IPv4Interfaces)
         cmbxsniipv4.SelectedIndex = ioi4
         _IPv6Interfaces.Clear()
         cmbxsniipv6.Items.Clear()
@@ -109,40 +109,40 @@ Public NotInheritable Class Configure
                 cmbxsniipv6.Items.Add(c.Item1 & " - " & c.Item2.ToString())
             End If
         Next
-        Dim ioi6 As Integer = indexOfIP(selected_interfaceIPv6, _IPv6Interfaces)
+        Dim ioi6 As Integer = indexOfIP(settings.selected_interfaceIPv6, _IPv6Interfaces)
         cmbxsniipv6.SelectedIndex = ioi6
         cmbxsid.Items.Clear()
         For Each c As WaveInCapabilities In waveInDevices()
             cmbxsid.Items.Add(c.ProductName)
         Next
-        If input_device > cmbxsid.Items.Count - 1 Then
-            input_device = -1
+        If settings.input_device > cmbxsid.Items.Count - 1 Then
+            settings.input_device = -1
         End If
-        cmbxsid.SelectedIndex = input_device
-        nudsptcpipv4.Value = port_TCP_IPv4
-        nudsptcpipv6.Value = port_TCP_IPv6
-        nudspudpipv4.Value = port_UDP_IPv4
-        nudspudpipv6.Value = port_UDP_IPv6
-        nudtcpbl.Value = TCP_backlog
-        nududpextpIPv4.Value = external_UDP_Port_IPv4
-        nududpextpIPv6.Value = external_UDP_Port_IPv6
-        nudtcpextpIPv4.Value = external_TCP_Port_IPv4
-        nudtcpextpIPv6.Value = external_TCP_Port_IPv6
-        chkbxena.Checked = TCP_delay
-        txtbxextaddIPv4.Text = external_Address_IPv4
-        txtbxextaddIPv6.Text = external_Address_IPv6
-        chkbxrdtcpc.Checked = TCP_remove_disconnected_clients
-        txtbxcnom.Text = myName
-        chkbxsan.Checked = setAdvertisedNames
-        If (Not gserializer Is Nothing) AndAlso TypeOf gserializer Is Serializer Then
+        cmbxsid.SelectedIndex = settings.input_device
+        nudsptcpipv4.Value = settings.port_TCP_IPv4
+        nudsptcpipv6.Value = settings.port_TCP_IPv6
+        nudspudpipv4.Value = settings.port_UDP_IPv4
+        nudspudpipv6.Value = settings.port_UDP_IPv6
+        nudtcpbl.Value = settings.TCP_backlog
+        nududpextpIPv4.Value = settings.external_UDP_Port_IPv4
+        nududpextpIPv6.Value = settings.external_UDP_Port_IPv6
+        nudtcpextpIPv4.Value = settings.external_TCP_Port_IPv4
+        nudtcpextpIPv6.Value = settings.external_TCP_Port_IPv6
+        chkbxena.Checked = settings.TCP_delay
+        txtbxextaddIPv4.Text = settings.external_Address_IPv4
+        txtbxextaddIPv6.Text = settings.external_Address_IPv6
+        chkbxrdtcpc.Checked = settings.TCP_remove_disconnected_clients
+        txtbxcnom.Text = settings.myName
+        chkbxsan.Checked = settings.setAdvertisedNames
+        If (Not settings.gserializer Is Nothing) AndAlso TypeOf settings.gserializer Is Serializer Then
             cmbxis.SelectedIndex = 1
         Else
             cmbxis.SelectedIndex = 0
-            If gserializer Is Nothing Then gserializer = New XSerializer()
+            If settings.gserializer Is Nothing Then settings.gserializer = New XSerializer()
         End If
-        nudtcpto.Value = TCP_beat_timeout
-        nudsr.Value = samplerate
-        nudrb.Value = buffmdmsecs
+        nudtcpto.Value = settings.TCP_beat_timeout
+        nudsr.Value = settings.samplerate
+        nudrb.Value = settings.buffmdmsecs
         If InListening Then
             cmbxsniipv4.Enabled = False
             nudsptcpipv4.Enabled = False

@@ -34,14 +34,14 @@ Public Structure AudioPacket
 
     Public ReadOnly Property getData As Byte() Implements IPacket.getData
         Get
-            If serializer Is Nothing Then serializer = gserializer
+            If serializer Is Nothing Then serializer = settings.gserializer
             Return serializer.serializeObject(Of AudioPacket)(Me)
         End Get
     End Property
 
     Public WriteOnly Property setData As Byte() Implements IPacket.setData
         Set(value As Byte())
-            If serializer Is Nothing Then serializer = gserializer
+            If serializer Is Nothing Then serializer = settings.gserializer
             Dim msg As AudioPacket = serializer.deSerializeObject(Of AudioPacket)(value)
             Me.receiverIP_ = msg.receiverIP_
             Me.receiverPort_ = msg.receiverPort_

@@ -93,11 +93,11 @@ Public Class Editor
                 nudmyport.Controls(0).Enabled = True
                 If caddrbs.type <> AddressableType.Block Then
                     If caddrbs.type = AddressableType.UDP Then
-                        txtbxmyaddr.Text = external_Address_IPv4
-                        nudmyport.Value = external_UDP_Port_IPv4
+                        txtbxmyaddr.Text = settings.external_Address_IPv4
+                        nudmyport.Value = settings.external_UDP_Port_IPv4
                     ElseIf caddrbs.type = AddressableType.TCP Then
-                        txtbxmyaddr.Text = external_Address_IPv4
-                        nudmyport.Value = external_TCP_Port_IPv4
+                        txtbxmyaddr.Text = settings.external_Address_IPv4
+                        nudmyport.Value = settings.external_TCP_Port_IPv4
                     End If
                     txtbxmyaddr.Enabled = True
                     nudmyport.Enabled = True

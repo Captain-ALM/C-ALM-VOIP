@@ -10,10 +10,10 @@ Public NotInheritable Class VOIPSender
     Public Event dataAvailable(bts As Byte())
     Public Sub New()
         mic = New WaveIn()
-        mic.BufferMilliseconds = buffmdmsecs
-        mic.DeviceNumber = input_device
+        mic.BufferMilliseconds = settings.buffmdmsecs
+        mic.DeviceNumber = settings.input_device
         strm = New Streamer("", False)
-        mic.WaveFormat = New WaveFormat(samplerate, 16, 1)
+        mic.WaveFormat = New WaveFormat(settings.samplerate, 16, 1)
         AddHandler mic.DataAvailable, AddressOf dataReceived
         mic.StartRecording()
     End Sub

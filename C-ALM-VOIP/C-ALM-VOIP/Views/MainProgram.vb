@@ -311,33 +311,33 @@ Public NotInheritable Class MainProgram
     'Marshal Management
 
     Private Sub engage()
-        micVOIP = New VOIPSender() With {.samplebuffersize = samplerate * (buffmdmsecs / 1000) * 2}
+        micVOIP = New VOIPSender() With {.samplebuffersize = settings.samplerate * (settings.buffmdmsecs / 1000) * 2}
         spkVOIP = New VOIPReceiver()
-        If Not selected_interfaceIPv4.Equals(IPAddress.None) Then
-            If port_TCP_IPv4 <> 0 Then
-                tcpmarshalIPv4 = New NetMarshalTCP(selected_interfaceIPv4, port_TCP_IPv4, TCP_backlog, TCP_delay) With {.beatTimeout = TCP_beat_timeout, .serializer = gserializer, .bufferSize = 65000}
+        If Not settings.selected_interfaceIPv4.Equals(IPAddress.None) Then
+            If settings.port_TCP_IPv4 <> 0 Then
+                tcpmarshalIPv4 = New NetMarshalTCP(settings.selected_interfaceIPv4, settings.port_TCP_IPv4, settings.TCP_backlog, settings.TCP_delay) With {.beatTimeout = settings.TCP_beat_timeout, .serializer = settings.gserializer, .bufferSize = 65000}
                 AddHandler tcpmarshalIPv4.clientConnected, AddressOf conIPv4
                 AddHandler tcpmarshalIPv4.clientDisconnected, AddressOf discon
                 tcpmarshalIPv4.start()
                 InListening = True
             End If
-            If port_UDP_IPv4 <> 0 Then
-                udpmarshalIPv4 = New NetMarshalUDP(selected_interfaceIPv4, port_UDP_IPv4) With {.serializer = gserializer, .bufferSize = 65000}
+            If settings.port_UDP_IPv4 <> 0 Then
+                udpmarshalIPv4 = New NetMarshalUDP(settings.selected_interfaceIPv4, settings.port_UDP_IPv4) With {.serializer = settings.gserializer, .bufferSize = 65000}
                 AddHandler udpmarshalIPv4.MessageReceived, AddressOf msgRecIPv4
                 udpmarshalIPv4.start()
                 InListening = True
             End If
         End If
-        If Not selected_interfaceIPv6 Is Nothing Then
-            If port_TCP_IPv6 <> 0 Then
-                tcpmarshalIPv6 = New NetMarshalTCP(selected_interfaceIPv6, port_TCP_IPv6, TCP_backlog, TCP_delay) With {.beatTimeout = TCP_beat_timeout, .serializer = gserializer, .bufferSize = 65000}
+        If Not settings.selected_interfaceIPv6 Is Nothing Then
+            If settings.port_TCP_IPv6 <> 0 Then
+                tcpmarshalIPv6 = New NetMarshalTCP(settings.selected_interfaceIPv6, settings.port_TCP_IPv6, settings.TCP_backlog, settings.TCP_delay) With {.beatTimeout = settings.TCP_beat_timeout, .serializer = settings.gserializer, .bufferSize = 65000}
                 AddHandler tcpmarshalIPv6.clientConnected, AddressOf conIPv6
                 AddHandler tcpmarshalIPv6.clientDisconnected, AddressOf discon
                 tcpmarshalIPv6.start()
                 InListening = True
             End If
-            If port_UDP_IPv6 <> 0 Then
-                udpmarshalIPv6 = New NetMarshalUDP(selected_interfaceIPv6, port_UDP_IPv6) With {.serializer = gserializer, .bufferSize = 65000}
+            If settings.port_UDP_IPv6 <> 0 Then
+                udpmarshalIPv6 = New NetMarshalUDP(settings.selected_interfaceIPv6, settings.port_UDP_IPv6) With {.serializer = settings.gserializer, .bufferSize = 65000}
                 AddHandler udpmarshalIPv6.MessageReceived, AddressOf msgRecIPv6
                 udpmarshalIPv6.start()
                 InListening = True
@@ -394,7 +394,7 @@ Public NotInheritable Class MainProgram
         Else
             Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(msg.senderIP, msg.senderPort)))
             If cl Is Nothing Then
-                cl = New Client(New Contact(returnFirstItemOrNothing(Of IPAddress)(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork)).ToString(), msg.senderPort, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv4) With {.myAddress = external_Address_IPv4, .myPort = external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
+                cl = New Client(New Contact(returnFirstItemOrNothing(Of IPAddress)(resolve(msg.senderIP, Sockets.AddressFamily.InterNetwork)).ToString(), msg.senderPort, IPVersion.IPv4, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv4) With {.myAddress = settings.external_Address_IPv4, .myPort = settings.external_UDP_Port_IPv4, .name = msg.senderIP & ":" & msg.senderPort}
                 addClient(cl, msg)
             End If
         End If
@@ -406,7 +406,7 @@ Public NotInheritable Class MainProgram
         Else
             Dim cl As Client = returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(msg.senderIP, msg.senderPort)))
             If cl Is Nothing Then
-                cl = New Client(New Contact(returnFirstItemOrNothing(Of IPAddress)(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6)).ToString(), msg.senderPort, IPVersion.IPv6, AddressableType.UDP), udpmarshalIPv6) With {.myAddress = external_Address_IPv6, .myPort = external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
+                cl = New Client(New Contact(returnFirstItemOrNothing(Of IPAddress)(resolve(msg.senderIP, Sockets.AddressFamily.InterNetworkV6)).ToString(), msg.senderPort, IPVersion.IPv6, AddressableType.UDP) With {.messagePassMode = MessagePassMode.Bidirectional}, udpmarshalIPv6) With {.myAddress = settings.external_Address_IPv6, .myPort = settings.external_UDP_Port_IPv6, .name = msg.senderIP & ":" & msg.senderPort}
                 addClient(cl, msg)
             End If
         End If
@@ -456,7 +456,7 @@ Public NotInheritable Class MainProgram
         If Me.InvokeRequired Then
             Me.Invoke(Sub() discon(ip, port))
         Else
-            removeClient(returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port))), TCP_remove_disconnected_clients, False)
+            removeClient(returnFirstItemOrNothing(Of Client)(clientreg.find(New MClient(ip, port))), settings.TCP_remove_disconnected_clients, False)
         End If
     End Sub
 
@@ -484,12 +484,12 @@ Public NotInheritable Class MainProgram
             End If
         ElseIf adbIn.type = AddressableType.UDP Then
             If adbIn.targetIPVersion = IPVersion.IPv4 And Not udpmarshalIPv4 Is Nothing Then
-                If adbIn.myAddress = "" Then adbIn.myAddress = external_Address_IPv4
-                If adbIn.myPort = 0 Then adbIn.myPort = external_UDP_Port_IPv4
+                If adbIn.myAddress = "" Then adbIn.myAddress = settings.external_Address_IPv4
+                If adbIn.myPort = 0 Then adbIn.myPort = settings.external_UDP_Port_IPv4
                 addClient(New Client(adbIn, udpmarshalIPv4), Nothing)
             ElseIf adbIn.targetIPVersion = IPVersion.IPv6 And Not udpmarshalIPv6 Is Nothing Then
-                If adbIn.myAddress = "" Then adbIn.myAddress = external_Address_IPv6
-                If adbIn.myPort = 0 Then adbIn.myPort = external_UDP_Port_IPv6
+                If adbIn.myAddress = "" Then adbIn.myAddress = settings.external_Address_IPv6
+                If adbIn.myPort = 0 Then adbIn.myPort = settings.external_UDP_Port_IPv6
                 addClient(New Client(adbIn, udpmarshalIPv6), Nothing)
             End If
         ElseIf adbIn.type = AddressableType.Block Then

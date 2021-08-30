@@ -5,55 +5,34 @@ Imports captainalm.Serialize
 Public Class PConfigure
     Implements IEventParser
     Private wp As WorkerPump = Nothing
-    Private _input_device As Integer = -1
-    Private _selected_interfaceIPv4 As IPAddress = IPAddress.None
-    Private _selected_interfaceIPv6 As IPAddress = Nothing
-    Private _port_UDP_IPv4 As Integer = 0
-    Private _port_UDP_IPv6 As Integer = 0
-    Private _port_TCP_IPv4 As Integer = 0
-    Private _port_TCP_IPv6 As Integer = 0
-    Private _external_Address_IPv4 As String = IPAddress.None.ToString()
-    Private _external_Address_IPv6 As String = IPAddress.IPv6None.ToString()
-    Private _external_UDP_Port_IPv4 As Integer = 1
-    Private _external_UDP_Port_IPv6 As Integer = 1
-    Private _external_TCP_Port_IPv4 As Integer = 1
-    Private _external_TCP_Port_IPv6 As Integer = 1
-    Private _TCP_backlog As Integer = 1
-    Private _TCP_delay As Boolean = False
-    Private _TCP_remove_disconnected_clients As Boolean = False
-    Private _TCP_beat_timeout As Integer = 0
-    Private _gserializer As ISerialize = New XSerializer()
-    Private _samplerate As Integer = 12000
-    Private _buffmdmsecs As Integer = 125
-    Private _myName As String = ""
-    Private _setAdvertisedNames As Boolean = True
+    Private _settings As New GlobalSettings()
 
     Public Sub Parse(ev As WorkerEvent) Implements IEventParser.Parse
         If canCastObject(Of Configure)(ev.EventSource.sourceObj) Then
             Dim frm As Configure = castObject(Of Configure)(ev.EventSource.sourceObj)
             If ev.EventType = ETs.Shown Then
-                _selected_interfaceIPv4 = selected_interfaceIPv4
-                _selected_interfaceIPv6 = selected_interfaceIPv6
-                _port_UDP_IPv4 = port_UDP_IPv4
-                _port_UDP_IPv6 = port_UDP_IPv6
-                _port_TCP_IPv4 = port_TCP_IPv4
-                _port_TCP_IPv6 = port_TCP_IPv6
-                _external_Address_IPv4 = external_Address_IPv4
-                _external_Address_IPv6 = external_Address_IPv6
-                _external_UDP_Port_IPv4 = external_UDP_Port_IPv4
-                _external_UDP_Port_IPv6 = external_UDP_Port_IPv6
-                _external_TCP_Port_IPv4 = external_TCP_Port_IPv4
-                _external_TCP_Port_IPv6 = external_TCP_Port_IPv6
-                _TCP_backlog = TCP_backlog
-                _TCP_delay = TCP_delay
-                _input_device = input_device
-                _TCP_remove_disconnected_clients = TCP_remove_disconnected_clients
-                _TCP_beat_timeout = TCP_beat_timeout
-                _gserializer = gserializer
-                _samplerate = samplerate
-                _buffmdmsecs = buffmdmsecs
-                _myName = myName
-                _setAdvertisedNames = setAdvertisedNames
+                _settings.selected_interfaceIPv4 = settings.selected_interfaceIPv4
+                _settings.selected_interfaceIPv6 = settings.selected_interfaceIPv6
+                _settings.port_UDP_IPv4 = settings.port_UDP_IPv4
+                _settings.port_UDP_IPv6 = settings.port_UDP_IPv6
+                _settings.port_TCP_IPv4 = settings.port_TCP_IPv4
+                _settings.port_TCP_IPv6 = settings.port_TCP_IPv6
+                _settings.external_Address_IPv4 = settings.external_Address_IPv4
+                _settings.external_Address_IPv6 = settings.external_Address_IPv6
+                _settings.external_UDP_Port_IPv4 = settings.external_UDP_Port_IPv4
+                _settings.external_UDP_Port_IPv6 = settings.external_UDP_Port_IPv6
+                _settings.external_TCP_Port_IPv4 = settings.external_TCP_Port_IPv4
+                _settings.external_TCP_Port_IPv6 = settings.external_TCP_Port_IPv6
+                _settings.TCP_backlog = settings.TCP_backlog
+                _settings.TCP_delay = settings.TCP_delay
+                _settings.input_device = settings.input_device
+                _settings.TCP_remove_disconnected_clients = settings.TCP_remove_disconnected_clients
+                _settings.TCP_beat_timeout = settings.TCP_beat_timeout
+                _settings.gserializer = settings.gserializer
+                _settings.samplerate = settings.samplerate
+                _settings.buffmdmsecs = settings.buffmdmsecs
+                _settings.myName = settings.myName
+                _settings.setAdvertisedNames = settings.setAdvertisedNames
                 configfin = False
             End If
         ElseIf ev.EventSource.parentObjs IsNot Nothing AndAlso ev.EventSource.parentObjs.Count > 0 Then
@@ -62,95 +41,95 @@ Public Class PConfigure
                 Dim frm As Configure = castObject(Of Configure)(ra(0))
                 Dim args As EventArgsDataContainer = castObject(Of EventArgsDataContainer)(ev.EventData)
                 If ev.EventSource.sourceObj Is frm.butOK And ev.EventType = ETs.Click Then
-                    selected_interfaceIPv4 = _selected_interfaceIPv4
-                    selected_interfaceIPv6 = _selected_interfaceIPv6
-                    port_UDP_IPv4 = _port_UDP_IPv4
-                    port_UDP_IPv6 = _port_UDP_IPv6
-                    port_TCP_IPv4 = _port_TCP_IPv4
-                    port_TCP_IPv6 = _port_TCP_IPv6
-                    external_Address_IPv4 = _external_Address_IPv4
-                    external_Address_IPv6 = _external_Address_IPv6
-                    external_UDP_Port_IPv4 = _external_UDP_Port_IPv4
-                    external_UDP_Port_IPv6 = _external_UDP_Port_IPv6
-                    external_TCP_Port_IPv4 = _external_TCP_Port_IPv4
-                    external_TCP_Port_IPv6 = _external_TCP_Port_IPv6
-                    TCP_backlog = _TCP_backlog
-                    TCP_delay = _TCP_delay
-                    input_device = _input_device
-                    TCP_remove_disconnected_clients = _TCP_remove_disconnected_clients
-                    TCP_beat_timeout = _TCP_beat_timeout
+                    settings.selected_interfaceIPv4 = _settings.selected_interfaceIPv4
+                    settings.selected_interfaceIPv6 = _settings.selected_interfaceIPv6
+                    settings.port_UDP_IPv4 = _settings.port_UDP_IPv4
+                    settings.port_UDP_IPv6 = _settings.port_UDP_IPv6
+                    settings.port_TCP_IPv4 = _settings.port_TCP_IPv4
+                    settings.port_TCP_IPv6 = _settings.port_TCP_IPv6
+                    settings.external_Address_IPv4 = _settings.external_Address_IPv4
+                    settings.external_Address_IPv6 = _settings.external_Address_IPv6
+                    settings.external_UDP_Port_IPv4 = _settings.external_UDP_Port_IPv4
+                    settings.external_UDP_Port_IPv6 = _settings.external_UDP_Port_IPv6
+                    settings.external_TCP_Port_IPv4 = _settings.external_TCP_Port_IPv4
+                    settings.external_TCP_Port_IPv6 = _settings.external_TCP_Port_IPv6
+                    settings.TCP_backlog = _settings.TCP_backlog
+                    settings.TCP_delay = _settings.TCP_delay
+                    settings.input_device = _settings.input_device
+                    settings.TCP_remove_disconnected_clients = _settings.TCP_remove_disconnected_clients
+                    settings.TCP_beat_timeout = _settings.TCP_beat_timeout
                     If Not InListening Then
-                        If gserializer Is Nothing Then
-                            gserializer = _gserializer
+                        If settings.gserializer Is Nothing Then
+                            settings.gserializer = _settings.gserializer
                         Else
-                            If Not Object.ReferenceEquals(gserializer, _gserializer) Then
-                                Dim os As ISerialize = gserializer
-                                gserializer = _gserializer
+                            If Not Object.ReferenceEquals(settings.gserializer, _settings.gserializer) Then
+                                Dim os As ISerialize = settings.gserializer
+                                settings.gserializer = _settings.gserializer
                                 os.Dispose()
                             End If
                         End If
                     Else
-                        If gserializer Is Nothing Then gserializer = New XSerializer()
+                        If settings.gserializer Is Nothing Then settings.gserializer = New XSerializer()
                     End If
-                    samplerate = _samplerate
-                    buffmdmsecs = _buffmdmsecs
-                    myName = _myName
-                    setAdvertisedNames = _setAdvertisedNames
+                    settings.samplerate = _settings.samplerate
+                    settings.buffmdmsecs = _settings.buffmdmsecs
+                    settings.myName = _settings.myName
+                    settings.setAdvertisedNames = _settings.setAdvertisedNames
                     configfin = True
                 ElseIf ev.EventSource.sourceObj Is frm.butCANCEL And ev.EventType = ETs.Click Then
                     configfin = True
                 ElseIf ev.EventSource.sourceObj Is frm.nudsptcpipv4 And ev.EventType = ETs.Leave Then
-                    _port_TCP_IPv4 = args.held
+                    _settings.port_TCP_IPv4 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudspudpipv4 And ev.EventType = ETs.Leave Then
-                    _port_UDP_IPv4 = args.held
+                    _settings.port_UDP_IPv4 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudsptcpipv6 And ev.EventType = ETs.Leave Then
-                    _port_TCP_IPv6 = args.held
+                    _settings.port_TCP_IPv6 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudspudpipv6 And ev.EventType = ETs.Leave Then
-                    _port_UDP_IPv6 = args.held
+                    _settings.port_UDP_IPv6 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudtcpbl And ev.EventType = ETs.Leave Then
-                    _TCP_backlog = args.held
+                    _settings.TCP_backlog = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nududpextpIPv4 And ev.EventType = ETs.Leave Then
-                    _external_UDP_Port_IPv4 = args.held
+                    _settings.external_UDP_Port_IPv4 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nududpextpIPv6 And ev.EventType = ETs.Leave Then
-                    _external_UDP_Port_IPv6 = args.held
+                    _settings.external_UDP_Port_IPv6 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudtcpextpIPv4 And ev.EventType = ETs.Leave Then
-                    _external_TCP_Port_IPv4 = args.held
+                    _settings.external_TCP_Port_IPv4 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudtcpextpIPv6 And ev.EventType = ETs.Leave Then
-                    _external_TCP_Port_IPv6 = args.held
+                    _settings.external_TCP_Port_IPv6 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxextaddIPv4 And ev.EventType = ETs.Leave Then
-                    _external_Address_IPv4 = args.held
+                    _settings.external_Address_IPv4 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxextaddIPv6 And ev.EventType = ETs.Leave Then
-                    _external_Address_IPv6 = args.held
+                    _settings.external_Address_IPv6 = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.chkbxena And ev.EventType = ETs.Leave Then
-                    _TCP_delay = args.held
+                    _settings.TCP_delay = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.chkbxrdtcpc And ev.EventType = ETs.Leave Then
-                    _TCP_remove_disconnected_clients = args.held
+                    _settings.TCP_remove_disconnected_clients = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxsid And ev.EventType = ETs.Leave Then
-                    _input_device = args.held
+                    _settings.input_device = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxsniipv4 And ev.EventType = ETs.Leave Then
-                    If args.held > -1 Then _selected_interfaceIPv4 = _IPv4Interfaces(args.held).Item2
+                    If args.held > -1 Then _settings.selected_interfaceIPv4 = _IPv4Interfaces(args.held).Item2
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxsniipv6 And ev.EventType = ETs.Leave Then
-                    If args.held > -1 Then _selected_interfaceIPv6 = _IPv6Interfaces(args.held).Item2
+                    If args.held > -1 Then _settings.selected_interfaceIPv6 = _IPv6Interfaces(args.held).Item2
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxis And ev.EventType = ETs.Leave Then
                     If Not InListening Then
                         If args.held = 0 Then
-                            If _gserializer IsNot Nothing Then _gserializer.Dispose()
-                            _gserializer = New XSerializer()
+                            If _settings.gserializer IsNot Nothing Then _settings.gserializer.Dispose()
+                            _settings.gserializer = New XSerializer()
                         ElseIf args.held = 1 Then
-                            If _gserializer IsNot Nothing Then _gserializer.Dispose()
-                            _gserializer = New Serializer()
+                            If _settings.gserializer IsNot Nothing Then _settings.gserializer.Dispose()
+                            _settings.gserializer = New Serializer()
                         End If
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxcnom And ev.EventType = ETs.Leave Then
-                    _myName = args.held
+                    _settings.myName = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.chkbxsan And ev.EventType = ETs.Leave Then
-                    _setAdvertisedNames = args.held
+                    _settings.setAdvertisedNames = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudtcpto And ev.EventType = ETs.Leave Then
-                    _TCP_beat_timeout = args.held
+                    _settings.TCP_beat_timeout = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudsr And ev.EventType = ETs.Leave Then
-                    _samplerate = args.held
+                    _settings.samplerate = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.nudrb And ev.EventType = ETs.Leave Then
-                    _buffmdmsecs = args.held
+                    _settings.buffmdmsecs = args.held
                 End If
             End If
         End If
