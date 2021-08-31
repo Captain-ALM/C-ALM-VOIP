@@ -12,6 +12,7 @@ Public Class Streamer
     Protected _name As String = ""
     Protected _up As Boolean = False
     Protected _lvi As ListViewItem = Nothing
+    Protected slocklvi As New Object()
     Public Event dataExgest(data As Byte())
     Public Event dataExgestWithVolume(data As Single())
 
@@ -105,25 +106,33 @@ Public Class Streamer
     End Property
 
     Public Overridable Sub updateLVI(u As Boolean) Implements IListViewable.updateItem
-        If (Not _lvi Is Nothing) AndAlso (Not _lvi.ListView Is Nothing) AndAlso _lvi.ListView.InvokeRequired Then
-            _lvi.ListView.Invoke(Sub() Me.updateLVI(u))
-        Else
-            If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
-            If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_m) Else _lvi.SubItems(1).Text = _m
-            If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(Me.volume * 100) Else _lvi.SubItems(2).Text = Me.volume * 100
-            'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
-            'Uneeded as the list view automatically updates
-        End If
+        SyncLock slocklvi
+            If (Not _lvi Is Nothing) AndAlso (Not _lvi.ListView Is Nothing) AndAlso _lvi.ListView.InvokeRequired Then
+                _lvi.ListView.Invoke(Sub() updateLVIActual(u))
+            Else
+                updateLVIActual(u)
+            End If
+        End SyncLock
+    End Sub
+
+    Protected Overridable Sub updateLVIActual(u As Boolean)
+        If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
+        If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_m) Else _lvi.SubItems(1).Text = _m
+        If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(Me.volume * 100) Else _lvi.SubItems(2).Text = Me.volume * 100
     End Sub
 
     Public ReadOnly Property item As ListViewItem Implements IListViewable.item
         Get
-            Return _lvi
+            SyncLock slocklvi
+                Return _lvi
+            End SyncLock
         End Get
     End Property
 
     Public Sub cleanItem() Implements IListViewable.cleanItem
-        _lvi = Nothing
+        SyncLock slocklvi
+            _lvi = Nothing
+        End SyncLock
     End Sub
 End Class
 

@@ -118,6 +118,7 @@ Public NotInheritable Class MainProgram
                     Threading.Thread.Sleep(125)
                 End While
                 saveSettings(settings)
+                advToAllClients()
             End If
             wp.addEvent(New WorkerEvent(butrconf, New Object() {Me}, ETs.Click, e))
         End If
@@ -515,13 +516,14 @@ Public NotInheritable Class MainProgram
             Dim arr As IPAddress() = Nothing
             If adbIn.targetIPVersion = IPVersion.IPv6 Then arr = resolve(adbIn.targetAddress, Net.Sockets.AddressFamily.InterNetworkV6) Else arr = resolve(adbIn.targetAddress, Net.Sockets.AddressFamily.InterNetwork)
             For Each c As IPAddress In arr
-                addClient(New BlockClient(adbIn, c.ToString()), Nothing)
+                addClient(New BlockClient(adbIn, c.ToString()) With {.messagePassMode = MessagePassMode.Disable}, Nothing)
             Next
         End If
     End Sub
 
     Private Sub addClient(clIn As Client, forceData As IPacket)
         If clientreg.find(New MClient(clIn.targetAddress, clIn.targetPort)).Length = 0 Then
+            clIn.sendAdvertisement()
             clientreg.add(clIn)
             If Not forceData Is Nothing Then clIn.forceReceive(forceData)
             If Not clIn.stream Is Nothing Then streamreg.add(clIn.stream)
@@ -543,6 +545,12 @@ Public NotInheritable Class MainProgram
                 cl.updateLVI(True)
             End If
         End If
+    End Sub
+
+    Private Sub advToAllClients()
+        For i As Integer = clientreg.count - 1 To 0 Step -1
+            clientreg(i).sendAdvertisement()
+        Next
     End Sub
 
     Private Sub clearAllClients()

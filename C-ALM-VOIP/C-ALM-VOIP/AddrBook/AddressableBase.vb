@@ -13,6 +13,8 @@ Public MustInherit Class AddressableBase
     Protected _passmode As MessagePassMode = messagePassMode.Disable
     Protected _targver As IPVersion = IPVersion.None
     Protected _lvi As ListViewItem = Nothing
+    <NonSerialized>
+    Protected slocklvi As New Object()
 
     Public Sub New(other As AddressableBase)
         _name = other._name
@@ -129,26 +131,34 @@ Public MustInherit Class AddressableBase
     Public MustOverride Function duplicateToNew() As AddressableBase
 
     Public Overridable Sub updateLVI(u As Boolean) Implements IListViewable.updateItem
-        If (Not _lvi Is Nothing) AndAlso (Not _lvi.ListView Is Nothing) AndAlso _lvi.ListView.InvokeRequired Then
-            _lvi.ListView.Invoke(Sub() Me.updateLVI(u))
-        Else
-            If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
-            If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_targaddress) Else _lvi.SubItems(1).Text = _targaddress
-            If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(_targport) Else _lvi.SubItems(2).Text = _targport
-            If _lvi.SubItems.Count < 4 Then _lvi.SubItems.Add(_type.ToString()) Else _lvi.SubItems(3).Text = _type.ToString()
-            'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
-            'Uneeded as the list view automatically updates
-        End If
+        SyncLock slocklvi
+            If (Not _lvi Is Nothing) AndAlso (Not _lvi.ListView Is Nothing) AndAlso _lvi.ListView.InvokeRequired Then
+                _lvi.ListView.Invoke(Sub() updateLVIActual(u))
+            Else
+                updateLVIActual(u)
+            End If
+        End SyncLock
+    End Sub
+
+    Protected Overridable Sub updateLVIActual(u As Boolean)
+        If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
+        If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_targaddress) Else _lvi.SubItems(1).Text = _targaddress
+        If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(_targport) Else _lvi.SubItems(2).Text = _targport
+        If _lvi.SubItems.Count < 4 Then _lvi.SubItems.Add(_type.ToString()) Else _lvi.SubItems(3).Text = _type.ToString()
     End Sub
 
     Public ReadOnly Property item As ListViewItem Implements IListViewable.item
         Get
-            Return _lvi
+            SyncLock slocklvi
+                Return _lvi
+            End SyncLock
         End Get
     End Property
 
     Public Sub cleanItem() Implements IListViewable.cleanItem
-        _lvi = Nothing
+        SyncLock slocklvi
+            _lvi = Nothing
+        End SyncLock
     End Sub
 End Class
 

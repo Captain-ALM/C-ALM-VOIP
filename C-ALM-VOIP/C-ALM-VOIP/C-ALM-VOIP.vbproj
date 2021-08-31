@@ -97,7 +97,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="AddrBook\AddressableBase.vb" />
-    <Compile Include="VOIPSys\AudioPacket.vb" />
+    <Compile Include="VOIPSys\Packets\AdvPacket.vb" />
+    <Compile Include="VOIPSys\Packets\AudioPacket.vb" />
     <Compile Include="AddrBook\Client.vb" />
     <Compile Include="Views\Configure.Designer.vb">
       <DependentUpon>Configure.vb</DependentUpon>

@@ -32,12 +32,21 @@ Public Class Client
     End Sub
 
     Protected Overridable Sub msgrec(msg As IPacket)
-        If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
+        If _type = AddressableType.Block Or _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
         If isForMe(msg) Then
-            If msg.dataType = GetType(Tuple(Of Byte(), DateTime)) And isNewerTimeStamp(msg.data) Then
+            If msg.dataType = GetType(Tuple(Of Byte(), DateTime)) AndAlso isNewerTimeStamp(msg.data) Then
                 _lts = CType(msg.data, Tuple(Of Byte(), DateTime)).Item2
                 If Not _str Is Nothing Then _
                     _str.ingestData(CType(msg.data, Tuple(Of Byte(), DateTime)).Item1, False)
+            ElseIf msg.dataType = GetType(Tuple(Of String, String, Integer)) Then
+                If settings.setAdvertisedNames Then
+                    Me.name = CType(msg.data, Tuple(Of String, String, Integer)).Item1
+                    Me.updateLVI(True)
+                    If Not _str Is Nothing Then _
+                        _str.updateLVI(True)
+                End If
+                Me.advertisedAddress = CType(msg.data, Tuple(Of String, String, Integer)).Item2
+                Me.advertisedPort = CType(msg.data, Tuple(Of String, String, Integer)).Item3
             End If
         End If
     End Sub
@@ -52,7 +61,7 @@ Public Class Client
     End Function
 
     Protected Overridable Sub msgsnd(bts As Byte())
-        If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Receive Then Exit Sub
+        If _type = AddressableType.Block Or _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Receive Then Exit Sub
         Dim ap As AudioPacket = Nothing
         If _type = AddressableType.TCP Then
             ap = New AudioPacket() With {.bytes = bts, .receiverIP = _cl.duplicatedInternalSocketConfig.remoteIPAddress, .receiverPort = _cl.duplicatedInternalSocketConfig.remotePort, .senderIP = _cl.duplicatedInternalSocketConfig.localIPAddress, .senderPort = _cl.duplicatedInternalSocketConfig.localPort}
@@ -60,6 +69,25 @@ Public Class Client
             ap = New AudioPacket() With {.bytes = bts, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
         End If
         ap.timestamp = DateTime.UtcNow
+        _cl.sendMessage(ap)
+    End Sub
+
+    Public Overridable Sub sendAdvertisement()
+        If _type = AddressableType.Block Or _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Receive Then Exit Sub
+        Dim ap As AdvPacket = Nothing
+        If _type = AddressableType.TCP Then
+            If _targver = IPVersion.IPv6 Then
+                ap = New AdvPacket() With {.advName = settings.myName, .advIP = settings.external_Address_IPv6, .advPort = settings.external_TCP_Port_IPv6, .receiverIP = _cl.duplicatedInternalSocketConfig.remoteIPAddress, .receiverPort = _cl.duplicatedInternalSocketConfig.remotePort, .senderIP = _cl.duplicatedInternalSocketConfig.localIPAddress, .senderPort = _cl.duplicatedInternalSocketConfig.localPort}
+            Else
+                ap = New AdvPacket() With {.advName = settings.myName, .advIP = settings.external_Address_IPv4, .advPort = settings.external_TCP_Port_IPv4, .receiverIP = _cl.duplicatedInternalSocketConfig.remoteIPAddress, .receiverPort = _cl.duplicatedInternalSocketConfig.remotePort, .senderIP = _cl.duplicatedInternalSocketConfig.localIPAddress, .senderPort = _cl.duplicatedInternalSocketConfig.localPort}
+            End If
+        ElseIf _type = AddressableType.UDP Then
+            If _targver = IPVersion.IPv6 Then
+                ap = New AdvPacket() With {.advName = settings.myName, .advIP = settings.external_Address_IPv6, .advPort = settings.external_UDP_Port_IPv6, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
+            Else
+                ap = New AdvPacket() With {.advName = settings.myName, .advIP = settings.external_Address_IPv4, .advPort = settings.external_UDP_Port_IPv4, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
+            End If
+        End If
         _cl.sendMessage(ap)
     End Sub
 
@@ -164,14 +192,8 @@ Public Class Client
         Return tstchk.Item2 > _lts
     End Function
 
-    Public Overrides Sub updateLVI(u As Boolean)
-        If (Not _lvi Is Nothing) AndAlso (Not _lvi.ListView Is Nothing) AndAlso _lvi.ListView.InvokeRequired Then
-            _lvi.ListView.Invoke(Sub() Me.updateLVI(u))
-        Else
-            MyBase.updateLVI(False)
-            If _lvi.SubItems.Count < 5 Then _lvi.SubItems.Add(Me.connected) Else _lvi.SubItems(4).Text = Me.connected
-            'If Not (_lvi.ListView Is Nothing) And u Then Update List View Somehow (Via Flag)
-            'Uneeded as the list view automatically updates
-        End If
+    Protected Overrides Sub updateLVIActual(u As Boolean)
+        MyBase.updateLVIActual(False)
+        If _lvi.SubItems.Count < 5 Then _lvi.SubItems.Add(Me.connected) Else _lvi.SubItems(4).Text = Me.connected
     End Sub
 End Class
