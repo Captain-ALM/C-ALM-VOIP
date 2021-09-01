@@ -43,4 +43,7 @@ Public Class BlockClient
         Set(value As MessagePassMode)
         End Set
     End Property
+
+    Public Overrides Sub sendAdvertisement()
+    End Sub
 End Class

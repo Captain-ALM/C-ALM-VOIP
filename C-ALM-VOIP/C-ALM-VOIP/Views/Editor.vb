@@ -80,6 +80,8 @@ Public Class Editor
         End While
         SyncLock slockchker
             'Begin Population
+            Label7.Text = "My Address:"
+            Label8.Text = "My Port:"
             If ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact Then
                 cmbxipv.Enabled = True
                 cmbxtype.Enabled = True
@@ -91,16 +93,15 @@ Public Class Editor
                 txtbxmyaddr.ReadOnly = False
                 nudmyport.ReadOnly = False
                 nudmyport.Controls(0).Enabled = True
-                If caddrbs.type <> AddressableType.Block Then
-                    If caddrbs.type = AddressableType.UDP Then
-                        txtbxmyaddr.Text = settings.external_Address_IPv4
-                        nudmyport.Value = settings.external_UDP_Port_IPv4
-                    ElseIf caddrbs.type = AddressableType.TCP Then
-                        txtbxmyaddr.Text = settings.external_Address_IPv4
-                        nudmyport.Value = settings.external_TCP_Port_IPv4
-                    End If
+                If caddrbs.type = AddressableType.UDP Then
+                    txtbxmyaddr.Text = settings.external_Address_IPv4
+                    nudmyport.Value = settings.external_UDP_Port_IPv4
                     txtbxmyaddr.Enabled = True
                     nudmyport.Enabled = True
+                    cmbxstrmode.Enabled = True
+                ElseIf caddrbs.type = AddressableType.TCP Then
+                    txtbxmyaddr.Enabled = False
+                    nudmyport.Enabled = False
                     cmbxstrmode.Enabled = True
                 Else
                     txtbxmyaddr.Enabled = False
@@ -123,8 +124,15 @@ Public Class Editor
                 nudport.ReadOnly = True
                 nudport.Controls(0).Enabled = False
                 If ceditm = EditorMode.EditClient Then
-                    txtbxmyaddr.Text = caddrbs.advertisedAddress
-                    nudmyport.Value = caddrbs.advertisedPort
+                    If caddrbs.type = AddressableType.TCP And TypeOf caddrbs Is Client Then
+                        Label7.Text = "Actual Address:"
+                        Label8.Text = "Actual Port:"
+                        txtbxmyaddr.Text = CType(caddrbs, Client).advertisedAddress
+                        nudmyport.Value = CType(caddrbs, Client).advertisedPort
+                    Else
+                        txtbxmyaddr.Text = caddrbs.myAddress
+                        nudmyport.Value = caddrbs.myPort
+                    End If
                     txtbxmyaddr.Enabled = True
                     nudmyport.Enabled = True
                     cmbxstrmode.Enabled = True
@@ -255,6 +263,10 @@ Public Class Editor
             txtbxmyaddr.Enabled = False
             nudmyport.Enabled = False
             cmbxstrmode.Enabled = False
+        ElseIf cmbxtype.SelectedIndex + 1 = AddressableType.TCP And ceditm <> EditorMode.EditClient Then
+            txtbxmyaddr.Enabled = False
+            nudmyport.Enabled = False
+            cmbxstrmode.Enabled = True
         Else
             txtbxmyaddr.Enabled = True
             nudmyport.Enabled = True

@@ -10,6 +10,8 @@ Public Class Client
     Protected _str As Streamer = Nothing
     Protected _cl As NetMarshalBase = Nothing
     Protected _lts As DateTime = DateTime.UtcNow
+    Protected _advaddress As String = ""
+    Protected _advport As Integer = 0
 
     Public Sub New(other As Contact)
         MyBase.New(other)
@@ -24,8 +26,33 @@ Public Class Client
     End Sub
 
     Public Overrides Function duplicateToNew() As AddressableBase
-        Return New Contact(Me)
+        Dim toret As New Contact(Me.advertisedAddress, Me.advertisedPort, Me.targetIPVersion, Me.type) With {.name = Me.name, .messagePassMode = Me.messagePassMode}
+        If Me.type = AddressableType.UDP Then
+            toret.myAddress = Me.myAddress
+            toret.myPort = Me.myPort
+        End If
+        Return toret
     End Function
+
+    Public Overridable Property advertisedAddress As String
+        Get
+            If _advaddress Is Nothing OrElse _advaddress = "" Then Return _targaddress
+            Return _advaddress
+        End Get
+        Set(value As String)
+            _advaddress = value
+        End Set
+    End Property
+
+    Public Overridable Property advertisedPort As Integer
+        Get
+            If _advport = 0 Then Return _targport
+            Return _advport
+        End Get
+        Set(value As Integer)
+            _advport = value
+        End Set
+    End Property
 
     Public Overridable Sub forceReceive(msg As IPacket)
         Me.msgrec(msg)
@@ -33,6 +60,7 @@ Public Class Client
 
     Protected Overridable Sub msgrec(msg As IPacket)
         If _type = AddressableType.Block Or _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
+
         If isForMe(msg) Then
             If msg.dataType = GetType(Tuple(Of Byte(), DateTime)) AndAlso isNewerTimeStamp(msg.data) Then
                 _lts = CType(msg.data, Tuple(Of Byte(), DateTime)).Item2

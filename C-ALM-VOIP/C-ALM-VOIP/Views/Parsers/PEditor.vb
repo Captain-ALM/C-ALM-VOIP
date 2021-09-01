@@ -29,9 +29,9 @@ Public Class PEditor
                             If _caddrbs.type = AddressableType.UDP Then
                                 caddrbs.myAddress = _caddrbs.myAddress
                                 caddrbs.myPort = _caddrbs.myPort
-                            ElseIf _caddrbs.type = AddressableType.TCP Then
-                                caddrbs.advertisedAddress = _caddrbs.advertisedAddress
-                                caddrbs.advertisedPort = _caddrbs.advertisedPort
+                            ElseIf _caddrbs.type = AddressableType.TCP And ceditm = EditorMode.EditClient And TypeOf _caddrbs Is Client Then
+                                CType(caddrbs, Client).advertisedAddress = CType(_caddrbs, Client).advertisedAddress
+                                CType(caddrbs, Client).advertisedPort = CType(_caddrbs, Client).advertisedPort
                             End If
                             If ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact Then
                                 CType(caddrbs, Contact).type = _caddrbs.type
@@ -59,8 +59,8 @@ Public Class PEditor
                     If ceditm <> EditorMode.EditBlocker Then
                         If _caddrbs.type = AddressableType.UDP Then
                             _caddrbs.myPort = args.held
-                        ElseIf _caddrbs.type = AddressableType.TCP Then
-                            _caddrbs.advertisedPort = args.held
+                        ElseIf _caddrbs.type = AddressableType.TCP And ceditm = EditorMode.EditClient And TypeOf _caddrbs Is Client Then
+                            CType(_caddrbs, Client).advertisedPort = args.held
                         End If
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxaddr And ev.EventType = ETs.Leave Then
@@ -72,8 +72,8 @@ Public Class PEditor
                     If ceditm <> EditorMode.EditBlocker Then
                         If _caddrbs.type = AddressableType.UDP Then
                             _caddrbs.myAddress = args.held
-                        ElseIf _caddrbs.type = AddressableType.TCP Then
-                            _caddrbs.advertisedAddress = args.held
+                        ElseIf _caddrbs.type = AddressableType.TCP And ceditm = EditorMode.EditClient And TypeOf _caddrbs Is Client Then
+                            CType(_caddrbs, Client).advertisedAddress = args.held
                         End If
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxname And ev.EventType = ETs.Leave Then

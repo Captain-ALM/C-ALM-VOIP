@@ -226,6 +226,11 @@ calmclientandserver
 	<value>Boolean</value>
 	<returns>Whether length headers are used when passing messages</returns>
 	<remarks></remarks>
+</member><member name="M:captainalm.CALMNetMarshal.NetMarshalTCPClient.releaseCache">
+	<summary>
+ Releases the received message cache to the event
+ </summary>
+	<remarks></remarks>
 </member><member name="T:captainalm.CALMNetMarshal.NetMarshalTCPClient">
 	<summary>
  This class can be retrieved from the NetMarshalTCP and represents a separate client.

@@ -296,8 +296,8 @@ Public NotInheritable Class MainProgram
             clientreg.updateCachedIndices()
             If clientreg.selectedIndices.Count > 0 Then
                 editfin = False
-                ceditm = EditorMode.EditClient
                 caddrbs = clientreg(clientreg.selectedIndices(0))
+                If caddrbs.type = AddressableType.Block Then ceditm = EditorMode.EditBlocker Else ceditm = EditorMode.EditClient
                 wp.showForm(Of Editor)(0, Me)
                 While Not editfin
                     Threading.Thread.Sleep(125)
@@ -491,7 +491,7 @@ Public NotInheritable Class MainProgram
                 CType(adbIn, Contact).targetAddress = returnFirstItemOrNothing(Of IPAddress)(resolve(adbIn.targetAddress, Net.Sockets.AddressFamily.InterNetwork)).ToString()
             End If
         End If
-        If clientreg.find(New MClient(adbIn.targetAddress, adbIn.targetPort)).Length <> 0 Then Return
+        If clientreg.find(New MClient(adbIn.targetAddress, adbIn.targetPort)).Length <> 0 And adbIn.type <> AddressableType.Block Then Return
         If adbIn.type = AddressableType.TCP Then
             If adbIn.targetIPVersion = IPVersion.IPv4 And Not tcpmarshalIPv4 Is Nothing Then
                 Dim tpl As New Tuple(Of String, Integer, String, voip.MessagePassMode)(adbIn.targetAddress, adbIn.targetPort, adbIn.name, adbIn.messagePassMode)
@@ -522,11 +522,16 @@ Public NotInheritable Class MainProgram
     End Sub
 
     Private Sub addClient(clIn As Client, forceData As IPacket)
-        If clientreg.find(New MClient(clIn.targetAddress, clIn.targetPort)).Length = 0 Then
+        Dim arr As Client() = clientreg.find(New MClient(clIn.targetAddress, clIn.targetPort))
+        If arr.Length = 0 Then
             clIn.sendAdvertisement()
             clientreg.add(clIn)
             If Not forceData Is Nothing Then clIn.forceReceive(forceData)
             If Not clIn.stream Is Nothing Then streamreg.add(clIn.stream)
+        ElseIf clIn.type = AddressableType.Block Then
+            For Each c As Client In arr
+                c.messagePassMode = MessagePassMode.Disable
+            Next
         End If
     End Sub
 
