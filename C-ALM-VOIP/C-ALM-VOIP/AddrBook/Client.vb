@@ -9,12 +9,16 @@ Public Class Client
 
     Protected _str As Streamer = Nothing
     Protected _cl As NetMarshalBase = Nothing
-    Protected _m As Boolean = False
-    Protected _lts As New Tuple(Of Integer, Integer, Integer)(0, 0, 0)
+    Protected _lts As DateTime = DateTime.UtcNow
+    Protected _advaddress As String = ""
+    Protected _advport As Integer = 0
+
+    Public Sub New(other As Contact)
+        MyBase.New(other)
+    End Sub
 
     Public Sub New(other As Contact, client As NetMarshalBase)
         MyBase.New(other)
-        'If other.messagePassMode = voip.MessagePassMode.Bidirectional Or other.messagePassMode = voip.MessagePassMode.Receive Then _
         _str = spkVOIP.createStreamer(other.name)
         _cl = client
         AddHandler _cl.MessageReceived, AddressOf msgrec
@@ -22,20 +26,55 @@ Public Class Client
     End Sub
 
     Public Overrides Function duplicateToNew() As AddressableBase
-        Return New Contact(Me)
+        Dim toret As New Contact(Me.advertisedAddress, Me.advertisedPort, Me.targetIPVersion, Me.type) With {.name = Me.name, .messagePassMode = Me.messagePassMode}
+        If Me.type = AddressableType.UDP Then
+            toret.myAddress = Me.myAddress
+            toret.myPort = Me.myPort
+        End If
+        Return toret
     End Function
+
+    Public Overridable Property advertisedAddress As String
+        Get
+            If _advaddress Is Nothing OrElse _advaddress = "" Then Return _targaddress
+            Return _advaddress
+        End Get
+        Set(value As String)
+            _advaddress = value
+        End Set
+    End Property
+
+    Public Overridable Property advertisedPort As Integer
+        Get
+            If _advport = 0 Then Return _targport
+            Return _advport
+        End Get
+        Set(value As Integer)
+            _advport = value
+        End Set
+    End Property
 
     Public Overridable Sub forceReceive(msg As IPacket)
         Me.msgrec(msg)
     End Sub
 
     Protected Overridable Sub msgrec(msg As IPacket)
-        If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
-        If isForMe(msg) And Not _m Then
-            If msg.dataType = GetType(Tuple(Of Byte(), Integer, Integer, Integer)) And isNewerTimeStamp(msg.data) Then
-                _lts = New Tuple(Of Integer, Integer, Integer)(CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item2, CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item3, CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item4)
+        If _type = AddressableType.Block Or _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Send Then Exit Sub
+
+        If isForMe(msg) Then
+            If msg.dataType = GetType(Tuple(Of Byte(), DateTime)) AndAlso isNewerTimeStamp(msg.data) Then
+                _lts = CType(msg.data, Tuple(Of Byte(), DateTime)).Item2
                 If Not _str Is Nothing Then _
-                    _str.ingestData(CType(msg.data, Tuple(Of Byte(), Integer, Integer, Integer)).Item1, False)
+                    _str.ingestData(CType(msg.data, Tuple(Of Byte(), DateTime)).Item1, False)
+            ElseIf msg.dataType = GetType(Tuple(Of String, String, Integer)) Then
+                If settings.setAdvertisedNames Then
+                    Me.name = CType(msg.data, Tuple(Of String, String, Integer)).Item1
+                    Me.updateLVI(True)
+                    If Not _str Is Nothing Then _
+                        _str.updateLVI(True)
+                End If
+                Me.advertisedAddress = CType(msg.data, Tuple(Of String, String, Integer)).Item2
+                Me.advertisedPort = CType(msg.data, Tuple(Of String, String, Integer)).Item3
             End If
         End If
     End Sub
@@ -50,22 +89,39 @@ Public Class Client
     End Function
 
     Protected Overridable Sub msgsnd(bts As Byte())
-        If _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Receive Then Exit Sub
+        If _type = AddressableType.Block Or _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Receive Then Exit Sub
         Dim ap As AudioPacket = Nothing
         If _type = AddressableType.TCP Then
             ap = New AudioPacket() With {.bytes = bts, .receiverIP = _cl.duplicatedInternalSocketConfig.remoteIPAddress, .receiverPort = _cl.duplicatedInternalSocketConfig.remotePort, .senderIP = _cl.duplicatedInternalSocketConfig.localIPAddress, .senderPort = _cl.duplicatedInternalSocketConfig.localPort}
         ElseIf _type = AddressableType.UDP Then
             ap = New AudioPacket() With {.bytes = bts, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
         End If
-        Dim ts As Tuple(Of Integer, Integer, Integer) = generateTimestamp()
-        ap.year = ts.Item1
-        ap.day = ts.Item2
-        ap.millisecond = ts.Item3
+        ap.timestamp = DateTime.UtcNow
+        _cl.sendMessage(ap)
+    End Sub
+
+    Public Overridable Sub sendAdvertisement()
+        If _type = AddressableType.Block Or _passmode = voip.MessagePassMode.Disable Or _passmode = voip.MessagePassMode.Receive Then Exit Sub
+        Dim ap As AdvPacket = Nothing
+        If _type = AddressableType.TCP Then
+            If _targver = IPVersion.IPv6 Then
+                ap = New AdvPacket() With {.advName = settings.myName, .advIP = settings.external_Address_IPv6, .advPort = settings.external_TCP_Port_IPv6, .receiverIP = _cl.duplicatedInternalSocketConfig.remoteIPAddress, .receiverPort = _cl.duplicatedInternalSocketConfig.remotePort, .senderIP = _cl.duplicatedInternalSocketConfig.localIPAddress, .senderPort = _cl.duplicatedInternalSocketConfig.localPort}
+            Else
+                ap = New AdvPacket() With {.advName = settings.myName, .advIP = settings.external_Address_IPv4, .advPort = settings.external_TCP_Port_IPv4, .receiverIP = _cl.duplicatedInternalSocketConfig.remoteIPAddress, .receiverPort = _cl.duplicatedInternalSocketConfig.remotePort, .senderIP = _cl.duplicatedInternalSocketConfig.localIPAddress, .senderPort = _cl.duplicatedInternalSocketConfig.localPort}
+            End If
+        ElseIf _type = AddressableType.UDP Then
+            If _targver = IPVersion.IPv6 Then
+                ap = New AdvPacket() With {.advName = settings.myName, .advIP = settings.external_Address_IPv6, .advPort = settings.external_UDP_Port_IPv6, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
+            Else
+                ap = New AdvPacket() With {.advName = settings.myName, .advIP = settings.external_Address_IPv4, .advPort = settings.external_UDP_Port_IPv4, .receiverIP = _targaddress, .receiverPort = _targport, .senderIP = _myaddress, .senderPort = _myport}
+            End If
+        End If
         _cl.sendMessage(ap)
     End Sub
 
     Public Overridable ReadOnly Property connected As Boolean
         Get
+            If _cl Is Nothing Then Return False
             Return _cl.ready
         End Get
     End Property
@@ -160,30 +216,12 @@ Public Class Client
         End Get
     End Property
 
-    Protected Overridable Function generateTimestamp() As Tuple(Of Integer, Integer, Integer)
-        Dim toret As New Tuple(Of Integer, Integer, Integer)(DateTime.Now.Year, DateTime.Now.DayOfYear, (DateTime.Now.Hour * 3600000) + (DateTime.Now.Minute * 60000) + (DateTime.Now.Second * 1000) + DateTime.Now.Millisecond)
-        Return toret
+    Protected Overridable Function isNewerTimeStamp(tstchk As Tuple(Of Byte(), DateTime)) As Boolean
+        Return tstchk.Item2 > _lts
     End Function
 
-    Protected Overridable Function isNewerTimeStamp(tstchk As Tuple(Of Byte(), Integer, Integer, Integer)) As Boolean
-        If tstchk.Item2 > _lts.Item1 Then
-            Return True
-        ElseIf tstchk.Item2 < _lts.Item1 Then
-            Return False
-        Else
-            If tstchk.Item3 > _lts.Item2 Then
-                Return True
-            ElseIf tstchk.Item3 < _lts.Item2 Then
-                Return False
-            Else
-                If tstchk.Item4 > _lts.Item3 Then
-                    Return True
-                ElseIf tstchk.Item4 < _lts.Item3 Then
-                    Return False
-                Else
-                    Return False
-                End If
-            End If
-        End If
-    End Function
+    Protected Overrides Sub updateLVIActual(u As Boolean)
+        MyBase.updateLVIActual(False)
+        If _lvi.SubItems.Count < 5 Then _lvi.SubItems.Add(Me.connected) Else _lvi.SubItems(4).Text = Me.connected
+    End Sub
 End Class

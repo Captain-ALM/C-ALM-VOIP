@@ -23,9 +23,7 @@ Public NotInheritable Class AboutBx
     Private Sub OKButton_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles OKButton.Click
         Me.Close()
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(OKButton, l, EventTypes.Click, e))
+            wp.addEvent(New WorkerEvent(OKButton, New Object() {Me}, EventTypes.Click, e))
         End If
     End Sub
 
@@ -78,7 +76,7 @@ Public NotInheritable Class AboutBx
         Me.LabelVersion.Text = String.Format("Version {0}", My.Application.Info.Version.ToString)
         Me.LabelCopyright.Text = My.Application.Info.Copyright
         Me.LabelCompanyName.Text = My.Application.Info.CompanyName
-        Me.TextBoxDescription.Text = "Description: " & vbCrLf & My.Application.Info.Description & vbCrLf & description
+        Me.TextBoxDescription.Text = "Description: " & vbCrLf & My.Application.Info.Description & vbCrLf & vbCrLf & "CALM-WorkerPump Version:" & vbCrLf & GetType(captainalm.workerpumper.WorkerPump).Assembly.GetName.Version.ToString() & vbCrLf & vbCrLf & "calmclientandserver Version:" & vbCrLf & GetType(captainalm.CALMNetMarshal.NetMarshalBase).Assembly.GetName.Version.ToString() & vbCrLf & vbCrLf & "NAudio Version:" & vbCrLf & GetType(NAudio.MmException).Assembly.GetName.Version.ToString() & vbCrLf & vbCrLf & description
         Me.TextBox1.Text = "License: " & vbCrLf & license
         If ue Then wp.addEvent(Me, EventTypes.Shown, e)
     End Sub

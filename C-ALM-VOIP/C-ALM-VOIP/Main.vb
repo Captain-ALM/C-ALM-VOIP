@@ -14,10 +14,13 @@ Module Main
     Public Const quote As Char = """c"
     Public programAssembly As Assembly = Assembly.GetEntryAssembly()
     Public programPath As String = programAssembly.Location
+    Public programName As String = Path.GetFileNameWithoutExtension(programPath)
     Public execdir As String = Path.GetDirectoryName(programPath)
     Public worker As WorkerPump = Nothing
     Public forms As New List(Of Form)
     Public parsers As New List(Of IEventParser)
+    Public contactStoreLoc As String = execdir & "\" + programName & ".contacts"
+    Public settingsStoreLoc As String = execdir & "\" + programName & ".settings"
 
     Public Sub main()
         Try
@@ -26,10 +29,12 @@ Module Main
                 runtime()
             Catch ex As Exception
                 Dim r As DialogResult = New UnhandledExceptionBooter(New UnhandledExceptionViewer(False, True, True, ex)).showForm()
+                Environment.Exit(1)
             End Try
             shutdown()
         Catch ex As Exception
             Dim r As DialogResult = New UnhandledExceptionBooter(New UnhandledExceptionViewer(False, True, True, ex)).showForm()
+            Environment.Exit(1)
         End Try
         Environment.Exit(0)
     End Sub
@@ -54,6 +59,22 @@ Module Main
             End If
         Catch ex As IOException
         End Try
+
+        Dim args As String() = Environment.GetCommandLineArgs()
+        If args.Length > 1 Then
+            For i As Integer = 1 To args.Length - 1 Step 1
+                Try
+                    If File.Exists(args(i)) Then
+                        If Path.GetExtension(args(i)) = ".contacts" Then
+                            contactStoreLoc = args(i)
+                        ElseIf Path.GetExtension(args(i)) = ".settings" Then
+                            settingsStoreLoc = args(i)
+                        End If
+                    End If
+                Catch ex As IOException
+                End Try
+            Next
+        End If
 
         worker = New WorkerPump()
         AddHandler worker.OnPumpException, AddressOf ope
@@ -82,7 +103,10 @@ Module Main
     End Sub
 
     Public Sub shutdown()
-        If worker.Pumping() Then worker.stopPumpForce()
+        If worker.Pumping() Then
+            worker.joinPump(2500)
+            worker.stopPumpForce()
+        End If
         RemoveHandler worker.OnPumpException, AddressOf ope
         If Not worker.Disposing And Not worker.IsDisposed Then worker.Dispose()
         worker = Nothing
@@ -109,99 +133,9 @@ Module Main
 
     Sub oae(sender As Object, ex As ThreadExceptionEventArgs)
         Dim r As DialogResult = New UnhandledExceptionBooter(New UnhandledExceptionViewer(True, True, True, ex.Exception)).showForm()
+        If r = DialogResult.Abort Then Environment.Exit(1)
     End Sub
 End Module
-
-''' <summary>
-''' Internal Binary Serializer Helper.
-''' </summary>
-''' <remarks></remarks>
-Friend NotInheritable Class BinarySerializer
-    Private Shared formatter As New BinaryFormatter()
-    Private Shared slock As New Object()
-    Public Shared Function serialize(obj As Object) As String
-        Try
-            Dim toreturn As String = ""
-            SyncLock slock
-                Dim ms As New MemoryStream()
-                formatter.Serialize(ms, obj)
-                toreturn = Convert.ToBase64String(ms.ToArray)
-                ms.Dispose()
-                ms = Nothing
-            End SyncLock
-            Return toreturn
-        Catch ex As ArgumentNullException
-            Return ""
-        Catch ex As FormatException
-            Return ""
-        Catch ex As IOException
-            Return ""
-        Catch ex As SerializationException
-            Return ""
-        End Try
-    End Function
-    Public Shared Function serialize(Of t)(obj As t) As String
-        Try
-            Dim toreturn As String = ""
-            SyncLock slock
-                Dim ms As New MemoryStream()
-                formatter.Serialize(ms, obj)
-                toreturn = Convert.ToBase64String(ms.ToArray)
-                ms.Dispose()
-                ms = Nothing
-            End SyncLock
-            Return toreturn
-        Catch ex As ArgumentNullException
-            Return ""
-        Catch ex As FormatException
-            Return ""
-        Catch ex As IOException
-            Return ""
-        Catch ex As SerializationException
-            Return ""
-        End Try
-    End Function
-    Public Shared Function deserialize(ser As String) As Object
-        Try
-            Dim toreturn As Object = Nothing
-            SyncLock slock
-                Dim ms As New MemoryStream(Convert.FromBase64String(ser))
-                toreturn = formatter.Deserialize(ms)
-                ms.Dispose()
-                ms = Nothing
-            End SyncLock
-            Return toreturn
-        Catch ex As ArgumentNullException
-            Return Nothing
-        Catch ex As FormatException
-            Return Nothing
-        Catch ex As IOException
-            Return Nothing
-        Catch ex As SerializationException
-            Return Nothing
-        End Try
-    End Function
-    Public Shared Function deserialize(Of t)(ser As String) As t
-        Try
-            Dim toreturn As t = Nothing
-            SyncLock slock
-                Dim ms As New MemoryStream(Convert.FromBase64String(ser))
-                toreturn = formatter.Deserialize(ms)
-                ms.Dispose()
-                ms = Nothing
-            End SyncLock
-            Return toreturn
-        Catch ex As ArgumentNullException
-            Return Nothing
-        Catch ex As FormatException
-            Return Nothing
-        Catch ex As IOException
-            Return Nothing
-        Catch ex As SerializationException
-            Return Nothing
-        End Try
-    End Function
-End Class
 
 Friend NotInheritable Class UnhandledExceptionBooter
     Private expviewer As UnhandledExceptionViewer = Nothing
@@ -219,14 +153,5 @@ Friend NotInheritable Class UnhandledExceptionBooter
         Else
             Return DialogResult.None
         End If
-    End Function
-End Class
-
-Friend NotInheritable Class DeepCopyHelper
-    Public Shared Function deepCopy(obj As Object) As Object
-        Return BinarySerializer.deserialize(BinarySerializer.serialize(obj))
-    End Function
-    Public Shared Function deepCopy(Of t)(obj As t) As t
-        Return BinarySerializer.deserialize(Of t)(BinarySerializer.serialize(Of t)(obj))
     End Function
 End Class

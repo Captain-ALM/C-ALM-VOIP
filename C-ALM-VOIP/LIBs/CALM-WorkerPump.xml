@@ -1,0 +1,353 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+CALM-WorkerPump
+</name>
+</assembly>
+<members>
+<member name="P:captainalm.workerpumper.My.Resources.Resources.ResourceManager">
+	<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member><member name="P:captainalm.workerpumper.My.Resources.Resources.Culture">
+	<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member><member name="T:captainalm.workerpumper.My.Resources.Resources">
+	<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member><member name="P:captainalm.workerpumper.IWorkerPumpReceiver.WorkerPump">
+	<summary>
+ Gets or sets the WorkerPump of a supporting class.
+ </summary>
+	<value>The worker pump instance.</value>
+	<returns>The worker pump the class uses.</returns>
+	<remarks></remarks>
+</member><member name="T:captainalm.workerpumper.IWorkerPumpReceiver">
+	<summary>
+ This Interface is used to get and set the WorkerPump a Supporting Instance Uses.
+ </summary>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.IEventParser.Parse(captainalm.workerpumper.WorkerEvent)">
+	<summary>
+ Parses a WorkerEvent.
+ </summary>
+	<param name="ev">The WorkerEvent to parse.</param>
+	<remarks></remarks>
+</member><member name="T:captainalm.workerpumper.IEventParser">
+	<summary>
+ This Interface is Used For Event Parsers.
+ </summary>
+	<remarks></remarks>
+</member><member name="E:captainalm.workerpumper.WorkerPump.OnPumpException">
+	<summary>
+ Raised when an Exception Occurs on the pump thread.
+ </summary>
+	<param name="ex">The exception that occured.</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.#ctor">
+	<summary>
+ Creates a new instance of worker pump.
+ </summary>
+	<remarks></remarks>
+</member><member name="P:captainalm.workerpumper.WorkerPump.IsDisposed">
+	<summary>
+ Whether this object has been disposed.
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:captainalm.workerpumper.WorkerPump.Disposing">
+	<summary>
+ Whether this object is disposing.
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:captainalm.workerpumper.WorkerPump.PumpBusy">
+	<summary>
+ Whether the pump has event data to process.
+ </summary>
+	<value></value>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.addFormInstance``1(``0)">
+	<summary>
+ Adds a form to the form registry.
+ </summary>
+	<param name="f">The form instance.</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.startPump">
+	<summary>
+ Starts the pump.
+ </summary>
+	<remarks></remarks>
+</member><member name="P:captainalm.workerpumper.WorkerPump.Pumping">
+	<summary>
+ Returns whether the pump is pumping events.
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.stopPump">
+	<summary>
+ Stops the pump.
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.stopPumpForce">
+	<summary>
+ Force stops the pump.
+ </summary>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.joinPump(System.Int32)">
+	<summary>
+ Joins the pump thread for a certain number of milliseconds.
+ </summary>
+	<param name="millisecondsTimeout"></param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.addEvent(captainalm.workerpumper.WorkerEvent)">
+	<summary>
+ Adds an event to the EventQueue of the pump.
+ </summary>
+	<param name="ev">The Worker Event</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.addEvent(System.Object,captainalm.workerpumper.EventType,System.EventArgs)">
+	<summary>
+ Adds an event to the EventQueue of the pump.
+ </summary>
+	<param name="es">Event Source Object</param>
+	<param name="et">Event Type</param>
+	<param name="ed">Event Args</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.addEvent``1(System.Object,``0,captainalm.workerpumper.EventType,System.EventArgs)">
+	<summary>
+ Adds an event to the EventQueue of the pump.
+ </summary>
+	<typeparam name="t">The parent source object type</typeparam>
+	<param name="es">Event Source Object</param>
+	<param name="sp">Event Source Parent Object</param>
+	<param name="et">Event Type</param>
+	<param name="ed">Event Args</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.addEvent(System.Object,System.Object[],captainalm.workerpumper.EventType,System.EventArgs)">
+	<summary>
+ Adds an event to the EventQueue of the pump.
+ </summary>
+	<param name="es">Event Source Object</param>
+	<param name="sops">Event Source Parent Object Array</param>
+	<param name="et">Event Type</param>
+	<param name="ed">Event Args</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.addParser(captainalm.workerpumper.IEventParser)">
+	<summary>
+ Adds an event parser to the pump.
+ </summary>
+	<param name="p">The Parser instance.</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.showForm``1(System.Int32,System.Windows.Forms.Form)">
+	<summary>
+ Shows a registered form.
+ </summary>
+	<typeparam name="t">The form type to show.</typeparam>
+	<param name="index">The index of the form's register of its type.</param>
+	<param name="owner">The owner to have.</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.removeForm``1(System.Int32)">
+	<summary>
+ Removes a registered form of the specified type.
+ </summary>
+	<typeparam name="t">The form type.</typeparam>
+	<param name="index">The index of the form's register of its type.</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.removeForms``1">
+	<summary>
+ Removes all forms of a specified type from the registry.
+ </summary>
+	<typeparam name="t">The type of form.</typeparam>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.removeParser``1(System.Int32)">
+	<summary>
+ Removes a registered event parser of the specified type.
+ </summary>
+	<typeparam name="t">The event parser type.</typeparam>
+	<param name="index">The index of the event parser's register of its type.</param>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.removeParsers``1">
+	<summary>
+ Removes all event parsers of a specified type from the registry.
+ </summary>
+	<typeparam name="t">The type of event parser.</typeparam>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerPump.Dispose">
+	<summary>
+ Releases all the resources of the contained objects.
+ </summary>
+	<remarks></remarks>
+</member><member name="T:captainalm.workerpumper.WorkerPump">
+	<summary>
+ Provides a worker pump so forms can have processing done on a different thread through events and parsers.
+ </summary>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.WorkerEvent.EventSource">
+	<summary>
+ Defines the event source.
+ </summary>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.WorkerEvent.EventType">
+	<summary>
+ Defines the event type.
+ </summary>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.WorkerEvent.EventData">
+	<summary>
+ Defines the event argument.
+ </summary>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.WorkerEvent.EventReplaceMode">
+	<summary>
+ Defines the event replace mode.
+ </summary>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerEvent.#ctor(System.Object,captainalm.workerpumper.EventType,System.EventArgs)">
+	<summary>
+ Creates a new worker event.
+ </summary>
+	<param name="so">Source Object</param>
+	<param name="et">Event Type</param>
+	<param name="ed">Event Data</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerEvent.#ctor(System.Object,System.Object[],captainalm.workerpumper.EventType,System.EventArgs)">
+	<summary>
+ Creates a new worker event.
+ </summary>
+	<param name="so">Source Object</param>
+	<param name="sop">Source Object Parent Array</param>
+	<param name="et">Event Type</param>
+	<param name="ed">Event Data</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerEvent.Equals(System.Object)">
+	<summary>
+ Checks if this object is equal to another.
+ </summary>
+	<param name="obj">The object to check with</param>
+	<returns>Whether this object is equal to another</returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerEvent.GetHashCode">
+	<summary>
+ Returns the hash code of the object
+ </summary>
+	<returns>The hash code</returns>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.WorkerEvent.Source.sourceObj">
+	<summary>
+ Defines the ultimate child source object.
+ </summary>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.WorkerEvent.Source.parentObjs">
+	<summary>
+ Defines all the parent objects.
+ </summary>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerEvent.Source.#ctor(System.Object,System.Object[])">
+	<summary>
+ Creates a new worker event.
+ </summary>
+	<param name="so">Source Object</param>
+	<param name="pos">Source Object Parent Array</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerEvent.Source.Equals(System.Object)">
+	<summary>
+ Checks if this object is equal to another.
+ </summary>
+	<param name="obj">The object to check with</param>
+	<returns>Whether this object is equal to another</returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.WorkerEvent.Source.GetHashCode">
+	<summary>
+ Returns the hash code of the object
+ </summary>
+	<returns>The hash code</returns>
+	<remarks></remarks>
+</member><member name="T:captainalm.workerpumper.WorkerEvent.Source">
+	<summary>
+ Defines a source object.
+ </summary>
+	<remarks></remarks>
+</member><member name="T:captainalm.workerpumper.WorkerEvent">
+	<summary>
+ This contains information about a worker event.
+ </summary>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.ReplaceMode.ReplaceExisting">
+	<summary>
+ Replaces the last event of the same type, source and parent objects if it exists in the pump already
+ </summary>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.ReplaceMode.KeepExisting">
+	<summary>
+ Does not replace the event of the same type, source and parent objects if it exists in the pump already
+ </summary>
+	<remarks></remarks>
+</member><member name="F:captainalm.workerpumper.ReplaceMode.Queue">
+	<summary>
+ Enqueues the event regardless of if an event of the same type, source and parent objects exists
+ </summary>
+	<remarks></remarks>
+</member><member name="T:captainalm.workerpumper.ReplaceMode">
+	<summary>
+ Defines the way WorkerEvent classes are queued to the WorkerPump.
+ </summary>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.EventType.#ctor(System.String)">
+	<summary>
+ Initalises the passed data as a lowercase string.
+ </summary>
+	<param name="data">The EventType</param>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.EventType.getEvent">
+	<summary>
+ Returns the EventType (Lowercase String Name of the Event)
+ </summary>
+	<returns></returns>
+	<remarks></remarks>
+</member><member name="P:captainalm.workerpumper.EventType.isValid">
+	<summary>
+ Returns if this event is valid (Instanated and not blank)
+ </summary>
+	<value>A boolean</value>
+	<returns>Whether the event has been instanated and is not blank</returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.EventType.Equals(System.Object)">
+	<summary>
+ Checks if this object is equal to another.
+ </summary>
+	<param name="obj">The object to check with</param>
+	<returns>Whether this object is equal to another</returns>
+	<remarks></remarks>
+</member><member name="M:captainalm.workerpumper.EventType.GetHashCode">
+	<summary>
+ Returns the hash code of the object
+ </summary>
+	<returns>The hash code</returns>
+	<remarks></remarks>
+</member><member name="T:captainalm.workerpumper.EventType">
+	<summary>
+ Defines the type of worker event raised.
+ </summary>
+	<remarks></remarks>
+</member><member name="T:captainalm.workerpumper.EventTypes">
+	<summary>
+ Provides some pre-defined EventTypes.
+ </summary>
+	<remarks></remarks>
+</member>
+</members>
+</doc>

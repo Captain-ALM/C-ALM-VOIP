@@ -384,6 +384,7 @@ Partial Class MainProgram
         Me.ListViewcl.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader14, Me.ColumnHeader1, Me.ColumnHeader2, Me.ColumnHeader3, Me.ColumnHeader4})
         Me.ListViewcl.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListViewcl.FullRowSelect = True
+        Me.ListViewcl.HideSelection = False
         Me.ListViewcl.Location = New System.Drawing.Point(3, 39)
         Me.ListViewcl.MultiSelect = False
         Me.ListViewcl.Name = "ListViewcl"
@@ -451,6 +452,7 @@ Partial Class MainProgram
         Me.ListViewcl2.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader13, Me.ColumnHeader5, Me.ColumnHeader6, Me.ColumnHeader7})
         Me.ListViewcl2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListViewcl2.FullRowSelect = True
+        Me.ListViewcl2.HideSelection = False
         Me.ListViewcl2.Location = New System.Drawing.Point(3, 39)
         Me.ListViewcl2.MultiSelect = False
         Me.ListViewcl2.Name = "ListViewcl2"
@@ -594,6 +596,7 @@ Partial Class MainProgram
         Me.ListViewsc.Columns.AddRange(New System.Windows.Forms.ColumnHeader() {Me.ColumnHeader15, Me.ColumnHeader16, Me.ColumnHeader12})
         Me.ListViewsc.Dock = System.Windows.Forms.DockStyle.Fill
         Me.ListViewsc.FullRowSelect = True
+        Me.ListViewsc.HideSelection = False
         Me.ListViewsc.Location = New System.Drawing.Point(3, 3)
         Me.ListViewsc.MultiSelect = False
         Me.ListViewsc.Name = "ListViewsc"

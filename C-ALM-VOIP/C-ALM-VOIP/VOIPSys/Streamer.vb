@@ -2,6 +2,8 @@
 Imports NAudio.Wave.SampleProviders
 
 Public Class Streamer
+    Implements IListViewable
+
     Protected _vsp As VolumeSampleProvider = Nothing
     Protected _wp As BufferedWaveProvider = Nothing
     Protected _wsp As Pcm16BitToSampleProvider = Nothing
@@ -9,11 +11,15 @@ Public Class Streamer
     Protected _m As Boolean = False
     Protected _name As String = ""
     Protected _up As Boolean = False
+    Protected _lvi As ListViewItem = Nothing
+    Protected slocklvi As New Object()
     Public Event dataExgest(data As Byte())
     Public Event dataExgestWithVolume(data As Single())
 
     Public Sub New(name As String, havevolume As Boolean)
-        _wp = New BufferedWaveProvider(New WaveFormat(8000, 16, 1))
+        _wp = New BufferedWaveProvider(New WaveFormat(settings.samplerate, 16, 1))
+        _wp.DiscardOnBufferOverflow = True
+        _wp.BufferDuration = New TimeSpan(0, 0, 0, 0, settings.buffmdmsecs * 8)
         _wsp = New Pcm16BitToSampleProvider(_wp)
         If havevolume Then
             _vsp = New VolumeSampleProvider(_wsp)
@@ -98,6 +104,36 @@ Public Class Streamer
             Return _up
         End Get
     End Property
+
+    Public Overridable Sub updateLVI(u As Boolean) Implements IListViewable.updateItem
+        SyncLock slocklvi
+            If (Not _lvi Is Nothing) AndAlso (Not _lvi.ListView Is Nothing) AndAlso _lvi.ListView.InvokeRequired Then
+                _lvi.ListView.Invoke(Sub() updateLVIActual(u))
+            Else
+                updateLVIActual(u)
+            End If
+        End SyncLock
+    End Sub
+
+    Protected Overridable Sub updateLVIActual(u As Boolean)
+        If _lvi Is Nothing Then _lvi = New ListViewItem(_name) Else _lvi.Text = name
+        If _lvi.SubItems.Count < 2 Then _lvi.SubItems.Add(_m) Else _lvi.SubItems(1).Text = _m
+        If _lvi.SubItems.Count < 3 Then _lvi.SubItems.Add(Me.volume * 100) Else _lvi.SubItems(2).Text = Me.volume * 100
+    End Sub
+
+    Public ReadOnly Property item As ListViewItem Implements IListViewable.item
+        Get
+            SyncLock slocklvi
+                Return _lvi
+            End SyncLock
+        End Get
+    End Property
+
+    Public Sub cleanItem() Implements IListViewable.cleanItem
+        SyncLock slocklvi
+            _lvi = Nothing
+        End SyncLock
+    End Sub
 End Class
 
 

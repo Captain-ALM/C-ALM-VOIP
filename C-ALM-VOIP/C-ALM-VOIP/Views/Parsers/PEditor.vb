@@ -19,58 +19,75 @@ Public Class PEditor
                 Dim frm As Editor = castObject(Of Editor)(ra(0))
                 Dim args As EventArgsDataContainer = castObject(Of EventArgsDataContainer)(ev.EventData)
                 If ev.EventSource.sourceObj Is frm.OK_Button And ev.EventType = ETs.Click Then
-                    If ceditm = EditorMode.Create Then
-                        CType(caddrbs, Contact).messagePassMode = _caddrbs.messagePassMode
-                        caddrbs.myAddress = _caddrbs.myAddress
-                        caddrbs.myPort = _caddrbs.myPort
+                    If frm.chkipformat() And frm.chkprtnum() Then
+                        frm.Invoke(Sub()
+                                       frm.DialogResult = DialogResult.OK
+                                       frm.Close()
+                                   End Sub)
                         caddrbs.name = _caddrbs.name
-                        CType(caddrbs, Contact).targetAddress = _caddrbs.targetAddress
-                        CType(caddrbs, Contact).targetIPVersion = _caddrbs.targetIPVersion
-                        CType(caddrbs, Contact).targetPort = _caddrbs.targetPort
-                        CType(caddrbs, Contact).type = _caddrbs.type
-                    ElseIf ceditm = EditorMode.EditClient Then
-                        caddrbs.myAddress = _caddrbs.myAddress
-                        caddrbs.myPort = _caddrbs.myPort
-                        caddrbs.name = _caddrbs.name
-                    ElseIf ceditm = EditorMode.EditContact Then
-                        CType(caddrbs, Contact).messagePassMode = _caddrbs.messagePassMode
-                        caddrbs.myAddress = _caddrbs.myAddress
-                        caddrbs.myPort = _caddrbs.myPort
-                        caddrbs.name = _caddrbs.name
-                        CType(caddrbs, Contact).targetAddress = _caddrbs.targetAddress
-                        CType(caddrbs, Contact).targetIPVersion = _caddrbs.targetIPVersion
-                        CType(caddrbs, Contact).targetPort = _caddrbs.targetPort
-                        CType(caddrbs, Contact).type = _caddrbs.type
+                        If ceditm <> EditorMode.EditBlocker Then
+                            If _caddrbs.type = AddressableType.UDP Then
+                                caddrbs.myAddress = _caddrbs.myAddress
+                                caddrbs.myPort = _caddrbs.myPort
+                            ElseIf _caddrbs.type = AddressableType.TCP And ceditm = EditorMode.EditClient And TypeOf _caddrbs Is Client Then
+                                CType(caddrbs, Client).advertisedAddress = CType(_caddrbs, Client).advertisedAddress
+                                CType(caddrbs, Client).advertisedPort = CType(_caddrbs, Client).advertisedPort
+                            End If
+                            If ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact Then
+                                CType(caddrbs, Contact).type = _caddrbs.type
+                                CType(caddrbs, Contact).targetAddress = _caddrbs.targetAddress
+                                CType(caddrbs, Contact).targetIPVersion = _caddrbs.targetIPVersion
+                                CType(caddrbs, Contact).targetPort = _caddrbs.targetPort
+                            End If
+                            caddrbs.messagePassMode = _caddrbs.messagePassMode
+                        End If
+                        _caddrbs = Nothing
+                        editsuccess = True
+                        editfin = True
+                    Else
+                        frm.Invoke(Sub() frm.OK_Button.Enabled = True)
                     End If
-                    _caddrbs = Nothing
-                    editsuccess = True
-                    editfin = True
                 ElseIf ev.EventSource.sourceObj Is frm.Cancel_Button And ev.EventType = ETs.Leave Then
                     editfin = True
                 ElseIf ev.EventSource.sourceObj Is frm.nudport And ev.EventType = ETs.Leave Then
-                    If ceditm <> EditorMode.EditClient Then
+                    frm.chkprtnum()
+                    If ceditm <> EditorMode.EditClient And ceditm <> EditorMode.EditBlocker Then
                         CType(_caddrbs, Contact).targetPort = args.held
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.nudmyport And ev.EventType = ETs.Leave Then
-                    _caddrbs.myPort = args.held
+                    frm.chkprtnum()
+                    If ceditm <> EditorMode.EditBlocker Then
+                        If _caddrbs.type = AddressableType.UDP Then
+                            _caddrbs.myPort = args.held
+                        ElseIf _caddrbs.type = AddressableType.TCP And ceditm = EditorMode.EditClient And TypeOf _caddrbs Is Client Then
+                            CType(_caddrbs, Client).advertisedPort = args.held
+                        End If
+                    End If
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxaddr And ev.EventType = ETs.Leave Then
-                    If ceditm <> EditorMode.EditClient Then
+                    frm.chkipformat()
+                    If ceditm <> EditorMode.EditClient And ceditm <> EditorMode.EditBlocker Then
                         CType(_caddrbs, Contact).targetAddress = args.held
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxmyaddr And ev.EventType = ETs.Leave Then
-                    _caddrbs.myAddress = args.held
+                    If ceditm <> EditorMode.EditBlocker Then
+                        If _caddrbs.type = AddressableType.UDP Then
+                            _caddrbs.myAddress = args.held
+                        ElseIf _caddrbs.type = AddressableType.TCP And ceditm = EditorMode.EditClient And TypeOf _caddrbs Is Client Then
+                            CType(_caddrbs, Client).advertisedAddress = args.held
+                        End If
+                    End If
                 ElseIf ev.EventSource.sourceObj Is frm.txtbxname And ev.EventType = ETs.Leave Then
                     _caddrbs.name = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxtype And ev.EventType = ETs.Leave Then
-                    If ceditm <> EditorMode.EditClient Then
+                    frm.chkprtnum()
+                    If ceditm <> EditorMode.EditClient And ceditm <> EditorMode.EditBlocker Then
                         CType(_caddrbs, Contact).type = args.held + 1
                     End If
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxstrmode And ev.EventType = ETs.Leave Then
-                    If ceditm <> EditorMode.EditClient Then
-                        CType(_caddrbs, Contact).messagePassMode = args.held + 2
-                    End If
+                    If ceditm <> EditorMode.EditBlocker Then _caddrbs.messagePassMode = args.held
                 ElseIf ev.EventSource.sourceObj Is frm.cmbxipv And ev.EventType = ETs.Leave Then
-                    If ceditm <> EditorMode.EditClient Then
+                    frm.chkipformat()
+                    If ceditm <> EditorMode.EditClient And ceditm <> EditorMode.EditBlocker Then
                         CType(_caddrbs, Contact).targetIPVersion = args.held + 1
                     End If
                 End If
@@ -97,12 +114,7 @@ Public Class PEditor
     End Function
 
     Private Function canCastObject(Of t)(f As Object) As Boolean
-        Try
-            Dim nf As t = f
-            Return True
-        Catch ex As InvalidCastException
-            Return False
-        End Try
+        Return GetType(t).IsAssignableFrom(f.GetType())
     End Function
 
     Private Function getValueFromControl(Of t)(ctrl As Control, del As [Delegate]) As t

@@ -2,6 +2,7 @@
 Imports System.Net
 Imports captainalm.CALMNetLib
 Imports NAudio.Wave
+Imports captainalm.Serialize
 
 Public NotInheritable Class Configure
     Implements IWorkerPumpReceiver
@@ -70,7 +71,7 @@ Public NotInheritable Class Configure
         nudspudpipv6.BackColor = Color.White
         butOK.Enabled = True
         butCANCEL.Enabled = True
-        updat()
+        updprtchk()
         configfin = True
         If ue Then wp.addEvent(Me, ETs.Shown, e)
         While configfin
@@ -93,7 +94,7 @@ Public NotInheritable Class Configure
                 cmbxsniipv4.Items.Add(c.Item1 & " - " & c.Item2.ToString())
             End If
         Next
-        Dim ioi4 As Integer = indexOfIP(selected_interfaceIPv4, _IPv4Interfaces)
+        Dim ioi4 As Integer = indexOfIP(settings.selected_interfaceIPv4, _IPv4Interfaces)
         cmbxsniipv4.SelectedIndex = ioi4
         _IPv6Interfaces.Clear()
         cmbxsniipv6.Items.Clear()
@@ -108,27 +109,40 @@ Public NotInheritable Class Configure
                 cmbxsniipv6.Items.Add(c.Item1 & " - " & c.Item2.ToString())
             End If
         Next
-        Dim ioi6 As Integer = indexOfIP(selected_interfaceIPv6, _IPv6Interfaces)
+        Dim ioi6 As Integer = indexOfIP(settings.selected_interfaceIPv6, _IPv6Interfaces)
         cmbxsniipv6.SelectedIndex = ioi6
         cmbxsid.Items.Clear()
         For Each c As WaveInCapabilities In waveInDevices()
             cmbxsid.Items.Add(c.ProductName)
         Next
-        If input_device > cmbxsid.Items.Count - 1 Then
-            input_device = -1
+        If settings.input_device > cmbxsid.Items.Count - 1 Then
+            settings.input_device = -1
         End If
-        cmbxsid.SelectedIndex = input_device
-        nudsptcpipv4.Value = port_TCP_IPv4
-        nudsptcpipv6.Value = port_TCP_IPv6
-        nudspudpipv4.Value = port_UDP_IPv4
-        nudspudpipv6.Value = port_UDP_IPv6
-        nudtcpbl.Value = TCP_backlog
-        nududpextpIPv4.Value = external_UDP_Port_IPv4
-        nududpextpIPv6.Value = external_UDP_Port_IPv6
-        chkbxena.Checked = TCP_delay
-        txtbxudpextaddIPv4.Text = external_UDP_Address_IPv4
-        txtbxudpextaddIPv6.Text = external_UDP_Address_IPv6
-        chkbxrdtcpc.Checked = TCP_remove_disconnected_clients
+        cmbxsid.SelectedIndex = settings.input_device
+        nudsptcpipv4.Value = settings.port_TCP_IPv4
+        nudsptcpipv6.Value = settings.port_TCP_IPv6
+        nudspudpipv4.Value = settings.port_UDP_IPv4
+        nudspudpipv6.Value = settings.port_UDP_IPv6
+        nudtcpbl.Value = settings.TCP_backlog
+        nududpextpIPv4.Value = settings.external_UDP_Port_IPv4
+        nududpextpIPv6.Value = settings.external_UDP_Port_IPv6
+        nudtcpextpIPv4.Value = settings.external_TCP_Port_IPv4
+        nudtcpextpIPv6.Value = settings.external_TCP_Port_IPv6
+        chkbxena.Checked = settings.TCP_delay
+        txtbxextaddIPv4.Text = settings.external_Address_IPv4
+        txtbxextaddIPv6.Text = settings.external_Address_IPv6
+        chkbxrdtcpc.Checked = settings.TCP_remove_disconnected_clients
+        txtbxcnom.Text = settings.myName
+        chkbxsan.Checked = settings.setAdvertisedNames
+        If (Not settings.gserializer Is Nothing) AndAlso TypeOf settings.gserializer Is Serializer Then
+            cmbxis.SelectedIndex = 1
+        Else
+            cmbxis.SelectedIndex = 0
+            If settings.gserializer Is Nothing Then settings.gserializer = New XSerializer()
+        End If
+        nudtcpto.Value = settings.TCP_beat_timeout
+        nudsr.Value = settings.samplerate
+        nudrb.Value = settings.buffmdmsecs
         If InListening Then
             cmbxsniipv4.Enabled = False
             nudsptcpipv4.Enabled = False
@@ -139,6 +153,10 @@ Public NotInheritable Class Configure
             cmbxsid.Enabled = False
             nudtcpbl.Enabled = False
             chkbxena.Enabled = False
+            nudtcpto.Enabled = False
+            cmbxis.Enabled = False
+            nudsr.Enabled = False
+            nudrb.Enabled = False
         Else
             cmbxsniipv4.Enabled = True
             nudsptcpipv4.Enabled = True
@@ -149,6 +167,10 @@ Public NotInheritable Class Configure
             cmbxsid.Enabled = True
             nudtcpbl.Enabled = True
             chkbxena.Enabled = True
+            nudtcpto.Enabled = True
+            cmbxis.Enabled = True
+            nudsr.Enabled = True
+            nudrb.Enabled = True
         End If
         butOK.Select()
         'End Population
@@ -168,141 +190,86 @@ Public NotInheritable Class Configure
 
     Private Sub cmbxsniipv4_Leave(sender As Object, e As EventArgs) Handles cmbxsniipv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxsniipv4, l, ETs.Leave, New EventArgsDataContainer(cmbxsniipv4.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxsniipv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxsniipv4.SelectedIndex)))
         End If
     End Sub
 
     Private Sub nudspudpipv4_Leave(sender As Object, e As EventArgs) Handles nudspudpipv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudspudpipv4, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv4.Value)))
+            wp.addEvent(New WorkerEvent(nudspudpipv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudspudpipv4.Value)))
         End If
-        updat()
+        updprtchk()
     End Sub
 
     Private Sub nudsptcpipv4_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudsptcpipv4, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv4.Value)))
+            wp.addEvent(New WorkerEvent(nudsptcpipv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudsptcpipv4.Value)))
         End If
-        updat()
+        updprtchk()
     End Sub
 
     Private Sub cmbxsniipv6_Leave(sender As Object, e As EventArgs) Handles cmbxsniipv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxsniipv6, l, ETs.Leave, New EventArgsDataContainer(cmbxsniipv6.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxsniipv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxsniipv6.SelectedIndex)))
         End If
     End Sub
 
     Private Sub nudspudpipv6_Leave(sender As Object, e As EventArgs) Handles nudspudpipv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudspudpipv6, l, ETs.Leave, New EventArgsDataContainer(nudspudpipv6.Value)))
+            wp.addEvent(New WorkerEvent(nudspudpipv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudspudpipv6.Value)))
         End If
-        updat()
+        updprtchk()
     End Sub
 
     Private Sub nudsptcpipv6_Leave(sender As Object, e As EventArgs) Handles nudsptcpipv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudsptcpipv6, l, ETs.Leave, New EventArgsDataContainer(nudsptcpipv6.Value)))
+            wp.addEvent(New WorkerEvent(nudsptcpipv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudsptcpipv6.Value)))
         End If
-        updat()
+        updprtchk()
     End Sub
-
-    Protected Function updat() As Boolean
-        Dim toret As Boolean = True
-        If nudspudpipv4.Value = nudsptcpipv4.Value Or nudspudpipv4.Value = nudsptcpipv6.Value Or nudspudpipv4.Value = nudspudpipv6.Value Then
-            nudspudpipv4.BackColor = Color.Orange
-            toret = False
-        Else
-            nudspudpipv4.BackColor = Color.White
-        End If
-        If nudspudpipv6.Value = nudsptcpipv4.Value Or nudspudpipv6.Value = nudsptcpipv6.Value Or nudspudpipv6.Value = nudspudpipv4.Value Then
-            nudspudpipv6.BackColor = Color.Orange
-            toret = False
-        Else
-            nudspudpipv6.BackColor = Color.White
-        End If
-        If nudsptcpipv4.Value = nudspudpipv4.Value Or nudsptcpipv4.Value = nudsptcpipv6.Value Or nudsptcpipv4.Value = nudspudpipv6.Value Then
-            nudsptcpipv4.BackColor = Color.Orange
-            toret = False
-        Else
-            nudsptcpipv4.BackColor = Color.White
-        End If
-        If nudsptcpipv6.Value = nudspudpipv4.Value Or nudsptcpipv6.Value = nudsptcpipv4.Value Or nudsptcpipv6.Value = nudspudpipv6.Value Then
-            nudsptcpipv6.BackColor = Color.Orange
-            toret = False
-        Else
-            nudsptcpipv6.BackColor = Color.White
-        End If
-        Return toret
-    End Function
 
     Private Sub nudtcpbl_Leave(sender As Object, e As EventArgs) Handles nudtcpbl.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nudtcpbl, l, ETs.Leave, New EventArgsDataContainer(nudtcpbl.Value)))
+            wp.addEvent(New WorkerEvent(nudtcpbl, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudtcpbl.Value)))
         End If
     End Sub
 
     Private Sub chkbxena_Leave(sender As Object, e As EventArgs) Handles chkbxena.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(chkbxena, l, ETs.Leave, New EventArgsDataContainer(chkbxena.Checked)))
+            wp.addEvent(New WorkerEvent(chkbxena, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(chkbxena.Checked)))
         End If
     End Sub
 
-    Private Sub txtbxudpextaddIPv4_Leave(sender As Object, e As EventArgs) Handles txtbxudpextaddIPv4.Leave
+    Private Sub txtbxextaddIPv4_Leave(sender As Object, e As EventArgs) Handles txtbxextaddIPv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxudpextaddIPv4, l, ETs.Leave, New EventArgsDataContainer(txtbxudpextaddIPv4.Text)))
+            wp.addEvent(New WorkerEvent(txtbxextaddIPv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxextaddIPv4.Text)))
         End If
     End Sub
 
     Private Sub nududpextpIPv4_Leave(sender As Object, e As EventArgs) Handles nududpextpIPv4.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nududpextpIPv4, l, ETs.Leave, New EventArgsDataContainer(nududpextpIPv4.Value)))
+            wp.addEvent(New WorkerEvent(nududpextpIPv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nududpextpIPv4.Value)))
         End If
     End Sub
 
-    Private Sub txtbxudpextaddIPv6_Leave(sender As Object, e As EventArgs) Handles txtbxudpextaddIPv6.Leave
+    Private Sub txtbxextaddIPv6_Leave(sender As Object, e As EventArgs) Handles txtbxextaddIPv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(txtbxudpextaddIPv6, l, ETs.Leave, New EventArgsDataContainer(txtbxudpextaddIPv6.Text)))
+            wp.addEvent(New WorkerEvent(txtbxextaddIPv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxextaddIPv6.Text)))
         End If
     End Sub
 
     Private Sub nududpextpIPv6_Leave(sender As Object, e As EventArgs) Handles nududpextpIPv6.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(nududpextpIPv6, l, ETs.Leave, New EventArgsDataContainer(nududpextpIPv6.Value)))
+            wp.addEvent(New WorkerEvent(nududpextpIPv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nududpextpIPv6.Value)))
         End If
     End Sub
 
     Private Sub butOK_Click(sender As Object, e As EventArgs) Handles butOK.Click
-        If Not updat() Then Exit Sub
+        If Not updprtchk() Then Exit Sub
         butOK.Enabled = False
         butOK.Select()
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butOK, l, ETs.Click, New EventArgsDataContainer(Nothing)))
+            wp.addEvent(New WorkerEvent(butOK, New Object() {Me}, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
         Me.DialogResult = Windows.Forms.DialogResult.OK
         Me.Close()
@@ -313,9 +280,7 @@ Public NotInheritable Class Configure
         butCANCEL.Select()
         configfin = True
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(butCANCEL, l, ETs.Click, New EventArgsDataContainer(Nothing)))
+            wp.addEvent(New WorkerEvent(butCANCEL, New Object() {Me}, ETs.Click, New EventArgsDataContainer(Nothing)))
         End If
         Me.DialogResult = Windows.Forms.DialogResult.Cancel
         Me.Close()
@@ -323,17 +288,61 @@ Public NotInheritable Class Configure
 
     Private Sub cmbxsid_Leave(sender As Object, e As EventArgs) Handles cmbxsid.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(cmbxsid, l, ETs.Leave, New EventArgsDataContainer(cmbxsid.SelectedIndex)))
+            wp.addEvent(New WorkerEvent(cmbxsid, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxsid.SelectedIndex)))
         End If
     End Sub
 
     Private Sub chkbxrdtcpc_Leave(sender As Object, e As EventArgs) Handles chkbxrdtcpc.Leave
         If ue Then
-            Dim l As New List(Of Object)
-            l.Add(Me)
-            wp.addEvent(New WorkerEvent(chkbxrdtcpc, l, ETs.Leave, New EventArgsDataContainer(chkbxrdtcpc.Checked)))
+            wp.addEvent(New WorkerEvent(chkbxrdtcpc, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(chkbxrdtcpc.Checked)))
+        End If
+    End Sub
+
+    Private Sub nudtcpto_Leave(sender As Object, e As EventArgs) Handles nudtcpto.Leave
+        If ue Then
+            wp.addEvent(New WorkerEvent(nudtcpto, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudtcpto.Value)))
+        End If
+    End Sub
+
+    Private Sub txtbxcnom_Leave(sender As Object, e As EventArgs) Handles txtbxcnom.Leave
+        If ue Then
+            wp.addEvent(New WorkerEvent(txtbxcnom, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(txtbxcnom.Text)))
+        End If
+    End Sub
+
+    Private Sub chkbxsan_Leave(sender As Object, e As EventArgs) Handles chkbxsan.Leave
+        If ue Then
+            wp.addEvent(New WorkerEvent(chkbxsan, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(chkbxsan.Checked)))
+        End If
+    End Sub
+
+    Private Sub cmbxis_Leave(sender As Object, e As EventArgs) Handles cmbxis.Leave
+        If ue Then
+            wp.addEvent(New WorkerEvent(cmbxis, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(cmbxis.SelectedIndex)))
+        End If
+    End Sub
+
+    Private Sub nudsr_Leave(sender As Object, e As EventArgs) Handles nudsr.Leave
+        If ue Then
+            wp.addEvent(New WorkerEvent(nudsr, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudsr.Value)))
+        End If
+    End Sub
+
+    Private Sub nudrb_Leave(sender As Object, e As EventArgs) Handles nudrb.Leave
+        If ue Then
+            wp.addEvent(New WorkerEvent(nudrb, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudrb.Value)))
+        End If
+    End Sub
+
+    Private Sub nudtcpextpIPv4_Leave(sender As Object, e As EventArgs) Handles nudtcpextpIPv4.Leave
+        If ue Then
+            wp.addEvent(New WorkerEvent(nudtcpextpIPv4, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudtcpextpIPv4.Value)))
+        End If
+    End Sub
+
+    Private Sub nudtcpextpIPv6_Leave(sender As Object, e As EventArgs) Handles nudtcpextpIPv6.Leave
+        If ue Then
+            wp.addEvent(New WorkerEvent(nudtcpextpIPv6, New Object() {Me}, ETs.Leave, New EventArgsDataContainer(nudtcpextpIPv6.Value)))
         End If
     End Sub
 
@@ -360,4 +369,47 @@ Public NotInheritable Class Configure
         Next
         Return wic.ToArray()
     End Function
+
+    Protected Function updprtchk() As Boolean
+        Dim toret As Boolean = True
+        If (nudspudpipv4.Value = nudsptcpipv4.Value) And nudspudpipv4.Value <> 0 And cmbxsniipv4.SelectedIndex > 0 Then
+            nudspudpipv4.BackColor = Color.Orange
+            toret = False
+        Else
+            nudspudpipv4.BackColor = Color.White
+        End If
+        If (nudspudpipv6.Value = nudsptcpipv6.Value) And nudspudpipv6.Value <> 0 And cmbxsniipv6.SelectedIndex > 0 Then
+            nudspudpipv6.BackColor = Color.Orange
+            toret = False
+        Else
+            nudspudpipv6.BackColor = Color.White
+        End If
+        If (nudsptcpipv4.Value = nudspudpipv4.Value) And nudsptcpipv4.Value <> 0 And cmbxsniipv4.SelectedIndex > 0 Then
+            nudsptcpipv4.BackColor = Color.Orange
+            toret = False
+        Else
+            nudsptcpipv4.BackColor = Color.White
+        End If
+        If (nudsptcpipv6.Value = nudspudpipv6.Value) And nudsptcpipv6.Value <> 0 And cmbxsniipv6.SelectedIndex > 0 Then
+            nudsptcpipv6.BackColor = Color.Orange
+            toret = False
+        Else
+            nudsptcpipv6.BackColor = Color.White
+        End If
+        Return toret
+    End Function
+
+    Private Sub cmbxsniipv4_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxsniipv4.SelectedIndexChanged
+        If ue Then
+            wp.addEvent(New WorkerEvent(cmbxsniipv4, New Object() {Me}, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxsniipv4.SelectedIndex)))
+        End If
+        updprtchk()
+    End Sub
+
+    Private Sub cmbxsniipv6_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbxsniipv6.SelectedIndexChanged
+        If ue Then
+            wp.addEvent(New WorkerEvent(cmbxsniipv6, New Object() {Me}, ETs.SelectedIndexChanged, New EventArgsDataContainer(cmbxsniipv6.SelectedIndex)))
+        End If
+        updprtchk()
+    End Sub
 End Class
