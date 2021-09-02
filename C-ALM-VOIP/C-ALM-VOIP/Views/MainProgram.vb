@@ -33,6 +33,7 @@ Public NotInheritable Class MainProgram
     End Sub
 
     Public Sub whenClosed()
+        If SClose Then Exit Sub
         disengage()
     End Sub
 
@@ -88,6 +89,8 @@ Public NotInheritable Class MainProgram
             Threading.Thread.Sleep(125)
         End While
         If ue Then wp.addEvent(Me, ETs.Shown, e)
+        InStarting = False
+        If SClose Then Me.Close()
         engage()
     End Sub
 

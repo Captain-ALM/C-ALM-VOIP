@@ -16,7 +16,9 @@ Public Module [Global]
     'Global Options
     Public settings As GlobalSettings = New GlobalSettings()
     'Global marshals, VOIP units and status
+    Public InStarting As Boolean = True
     Public InListening As Boolean = False
+    Public SClose As Boolean = False
     Public tcpmarshalIPv4 As NetMarshalTCP = Nothing
     Public tcpmarshalIPv6 As NetMarshalTCP = Nothing
     Public udpmarshalIPv4 As NetMarshalUDP = Nothing

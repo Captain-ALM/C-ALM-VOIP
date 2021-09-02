@@ -58,6 +58,9 @@ Public NotInheritable Class Configure
         Me.Hide()
         Me.OnFormClosing(New FormClosingEventArgs(CloseReason.UserClosing, False))
         If Me.DialogResult = Windows.Forms.DialogResult.None Then Me.DialogResult = Windows.Forms.DialogResult.OK
+        If InStarting And Me.DialogResult = Windows.Forms.DialogResult.Cancel Then
+            SClose = True
+        End If
     End Sub
 #End Region
 

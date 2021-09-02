@@ -408,7 +408,7 @@ Public Class Editor
             Else
                 ctyp = cmbxtype.SelectedIndex + 1
             End If
-            Dim iblkm As Boolean = (ceditm = EditorMode.EditBlocker) Or ((ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact) And ctyp = AddressableType.Block)
+            Dim iblkm As Boolean = (ceditm = EditorMode.EditBlocker) Or ((ceditm = EditorMode.Create Or ceditm = EditorMode.EditContact) And (ctyp = AddressableType.Block Or ctyp = AddressableType.TCP))
             Dim ptr1 As Integer
             If Me.InvokeRequired Then
                 ptr1 = Me.Invoke(Function() As Integer
